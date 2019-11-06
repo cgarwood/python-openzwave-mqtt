@@ -1,13 +1,15 @@
 from typing import Callable, Dict
-import attr
 
 
-@attr.s
 class OZWOptions:
-
-    sent_message: Callable[[str, dict], None] = attr.ib()
-    topic_prefix: str = attr.ib(default="/openzwave/")
-    listeners: Dict[str, Callable] = attr.ib(factory=dict)
+    def __init__(
+        self,
+        sent_message: Callable[[str, dict], None],
+        topic_prefix: str = "/openzwave/",
+    ):
+        self.sent_message = sent_message
+        self.topic_prefix = topic_prefix
+        self.listeners = {}
 
     def listen(self, event, listener):
         self.listeners.setdefault(event, []).append(listener)
