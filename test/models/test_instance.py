@@ -17,7 +17,7 @@ def test_recursive_remove(mgr):
     mgr.options.listen(EVENT_INSTANCE_REMOVED, events.append)
 
     # Instantiate instance, node, value
-    mgr.mock_receive_json("/openzwave/1/node/2/values/3/", {"value": "yo"})
+    mgr.mock_receive_json("/openzwave/1/node/2/value/3/", {"value": "yo"})
 
     mgr.receive_message("/openzwave/1", "")
 
