@@ -13,6 +13,7 @@ EVENT_INSTANCE_STATUS_CHANGED = "instance_status_changed"
 EVENT_NODE_ADDED = "node_added"
 EVENT_NODE_CHANGED = "node_changed"
 EVENT_NODE_REMOVED = "node_removed"
+EVENT_NODE_STATISTICS_CHANGED = "node_statistics_changed"
 
 EVENT_VALUE_ADDED = "value_added"
 EVENT_VALUE_CHANGED = "value_changed"

@@ -7,7 +7,7 @@ from .options import OZWOptions
 
 class ItemCollection:
     def __init__(
-        self, options: OZWOptions, item_class: Callable[[OZWOptions, str], "ZwaveBase"],
+        self, options: OZWOptions, item_class: Callable[[OZWOptions, str], "ZwaveBase"]
     ):
         self.options = options
         self.item_class = item_class
