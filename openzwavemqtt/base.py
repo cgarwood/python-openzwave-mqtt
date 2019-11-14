@@ -1,5 +1,5 @@
 from abc import ABC
-from typing import Callable, Deque
+from typing import Callable, Deque, Optional
 
 from .const import EVENT_PLACEHOLDER, EMPTY, LOGGER
 from .options import OZWOptions
@@ -7,9 +7,13 @@ from .options import OZWOptions
 
 class ItemCollection:
     def __init__(
-        self, options: OZWOptions, item_class: Callable[[OZWOptions, str], "ZwaveBase"]
+        self,
+        options: OZWOptions,
+        parent: "ZWaveBase",
+        item_class: Callable[[OZWOptions, str], "ZwaveBase"],
     ):
         self.options = options
+        self.parent = parent
         self.item_class = item_class
         self.collection = {}
 
@@ -30,7 +34,9 @@ class ItemCollection:
             return
 
         elif item is None:
-            item = self.collection[item_id] = self.item_class(self.options, item_id)
+            item = self.collection[item_id] = self.item_class(
+                self.options, self.parent, item_id
+            )
             added = True
 
         if len(topic) == 0 and message is EMPTY:
@@ -67,8 +73,11 @@ class ZWaveBase(ABC):
     EVENT_CHANGED = EVENT_PLACEHOLDER
     EVENT_REMOVED = EVENT_PLACEHOLDER
 
-    def __init__(self, options: OZWOptions, item_id: str):
+    def __init__(
+        self, options: OZWOptions, parent: Optional["ZWaveBase"], item_id: str
+    ):
         self.options = options
+        self.parent = parent
         self.id = item_id
         self.collections = self.create_collections()
         self.data = EMPTY

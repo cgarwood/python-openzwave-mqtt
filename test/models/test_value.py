@@ -14,6 +14,7 @@ def test_value_events(mgr):
     assert len(events) == 1
     assert events[0].id == "3"
     assert events[0].value == "yo"
+    assert events[0].parent.id == "2"
 
     # Listen for value changed
     mgr.options.listen(EVENT_VALUE_CHANGED, events.append)

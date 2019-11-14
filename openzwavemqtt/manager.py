@@ -12,11 +12,11 @@ class OZWManager(ZWaveBase):
     EVENT_CHANGED = None
 
     def __init__(self, options: OZWOptions):
-        super().__init__(options, None)
+        super().__init__(options, None, None)
 
     def create_collections(self):
         """Create collections that the manager supports."""
-        return {"instance": ItemCollection(self.options, OZWInstance)}
+        return {"instance": ItemCollection(self.options, self, OZWInstance)}
 
     def receive_message(self, topic: str, message: dict):
         """Receive an MQTT message."""

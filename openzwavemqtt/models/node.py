@@ -14,6 +14,6 @@ class OZWNode(ZWaveBase):
     def create_collections(self):
         """Create collections that Node supports."""
         return {
-            "value": ItemCollection(self.options, OZWValue),
-            "statistics": OZWNodeStatistics(self.options, OZWNodeStatistics),
+            "value": ItemCollection(self.options, self, OZWValue),
+            "statistics": OZWNodeStatistics(self.options, self, OZWNodeStatistics),
         }
