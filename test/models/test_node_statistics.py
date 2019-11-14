@@ -41,3 +41,4 @@ def test_statistics(mgr):
     assert statistics.average_response_rtt == 47
     assert statistics.average_request_rtt == 31
     assert statistics.send_count == 10
+    assert statistics.parent.id == "2"
