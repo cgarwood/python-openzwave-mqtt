@@ -22,6 +22,12 @@ class MockManager(OZWManager):
 
 
 @pytest.fixture
-def mgr():
+def options():
     """Fixture for a manager."""
-    return MockManager()
+    return MockOptions()
+
+
+@pytest.fixture
+def mgr(options):
+    """Fixture for a manager."""
+    return MockManager(options)
