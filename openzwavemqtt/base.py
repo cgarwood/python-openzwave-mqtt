@@ -63,6 +63,11 @@ class ItemCollection:
 
 class ZWaveBase(ABC):
 
+    # Name the direct collection that lives underneath this object
+    # but is not named in the topic. A message to /openzwave/1 will
+    # be interpreted as if sent to /openzwave/<DIRECT_COLLECTION>/1
+    DIRECT_COLLECTION = None
+
     EVENT_ADDED = EVENT_PLACEHOLDER
     EVENT_CHANGED = EVENT_PLACEHOLDER
     EVENT_REMOVED = EVENT_PLACEHOLDER
@@ -90,20 +95,27 @@ class ZWaveBase(ABC):
 
     def process_message(self, topic: Deque[str], message: dict):
         """Process a new message."""
-        if len(topic) > 0 and topic[-1] == "":
-            topic.pop()
-
         if len(topic) == 0:
             should_notify = self.data is not EMPTY
             self.data = message
             if should_notify:
                 self.options.notify(self.EVENT_CHANGED, self)
+            return
 
-        elif topic[0] in self.collections:
+        if topic[0] in self.collections:
             collection_type = topic.popleft()
-            self.collections[collection_type].process_message(topic, message)
+
+        elif topic[0].isnumeric():
+            collection_type = self.DIRECT_COLLECTION
+
         else:
-            self._warn_cannot_handle(topic, message)
+            collection_type = None
+
+        if collection_type is not None:
+            self.collections[collection_type].process_message(topic, message)
+            return
+
+        self._warn_cannot_handle(topic, message)
 
     def _warn_cannot_handle(self, topic: Deque[str], message: dict):
         LOGGER.warning(
