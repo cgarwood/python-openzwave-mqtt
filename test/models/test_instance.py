@@ -6,7 +6,7 @@ from openzwavemqtt.const import (
 
 
 def test_statistics(mgr):
-    mgr.mock_receive_json("/openzwave/1/statistics/", {"some_stat": "some-stat-data"})
+    mgr.mock_receive_json("openzwave/1/statistics/", {"some_stat": "some-stat-data"})
     assert mgr.get_instance("1").get_statistics().some_stat == "some-stat-data"
 
 
@@ -17,9 +17,11 @@ def test_recursive_remove(mgr):
     mgr.options.listen(EVENT_INSTANCE_REMOVED, events.append)
 
     # Instantiate instance, node, value
-    mgr.mock_receive_json("/openzwave/1/node/2/value/3/", {"value": "yo"})
+    mgr.mock_receive_json(
+        "openzwave/1/node/2/instance/1/commandclass/4/value/3", {"value": "yo"}
+    )
 
-    mgr.receive_message("/openzwave/1", "")
+    mgr.receive_message("openzwave/1", "")
 
     assert len(events) == 3
     assert events[0].id == "3", events  # value
