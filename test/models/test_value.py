@@ -8,6 +8,11 @@ from openzwavemqtt.const import (
 def test_value_events(mgr):
     events = []
 
+    # Fill parent data.
+    mgr.mock_receive_json("openzwave/1/node/2", {})
+    mgr.mock_receive_json("openzwave/1/node/2/instance/1", {})
+    mgr.mock_receive_json("openzwave/1/node/2/instance/1/commandclass/4", {})
+
     # Listen for value added
     mgr.options.listen(EVENT_VALUE_ADDED, events.append)
     mgr.mock_receive_json(

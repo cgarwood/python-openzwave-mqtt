@@ -9,6 +9,7 @@ from .models.instance import OZWInstance
 
 class OZWManager(ZWaveBase):
     DIRECT_COLLECTION = "instance"
+    DEFAULT_VALUE = None
     EVENT_CHANGED = None
 
     def __init__(self, options: OZWOptions):

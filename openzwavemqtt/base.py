@@ -74,6 +74,10 @@ class ZWaveBase(ABC):
     # be interpreted as if sent to /openzwave/<DIRECT_COLLECTION>/1
     DIRECT_COLLECTION = None
 
+    # Default value of this object. If untouched, all messages for child objects
+    # will be held until information for this object has been received.
+    DEFAULT_VALUE = EMPTY
+
     EVENT_ADDED = EVENT_PLACEHOLDER
     EVENT_CHANGED = EVENT_PLACEHOLDER
     EVENT_REMOVED = EVENT_PLACEHOLDER
@@ -85,7 +89,8 @@ class ZWaveBase(ABC):
         self.parent = parent
         self.id = item_id
         self.collections = self.create_collections()
-        self.data = EMPTY
+        self.data = self.DEFAULT_VALUE
+        self.pending_messages = []
         assert self.EVENT_CHANGED != EVENT_PLACEHOLDER
 
         # Create helpers
@@ -105,10 +110,22 @@ class ZWaveBase(ABC):
     def process_message(self, topic: Deque[str], message: dict):
         """Process a new message."""
         if len(topic) == 0:
-            should_notify = self.data is not EMPTY
+            is_init_msg = self.data is EMPTY
             self.data = message
-            if should_notify:
+
+            if not is_init_msg:
                 self.options.notify(self.EVENT_CHANGED, self)
+                return
+
+            # Process all messages for the children.
+            for pend_topic, pend_message in self.pending_messages:
+                self.process_message(pend_topic, pend_message)
+            self.pending_messages = None
+            return
+
+        # If this object has not been initialized, queue up messages.
+        if self.data is EMPTY:
+            self.pending_messages.append((topic, message))
             return
 
         if topic[0] in self.collections:
