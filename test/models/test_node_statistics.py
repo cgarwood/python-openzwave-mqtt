@@ -35,6 +35,8 @@ def test_statistics(mgr):
         "txTime": 0,
     }
 
+    mgr.mock_receive_json("openzwave/1", {})
+    mgr.mock_receive_json("openzwave/1/node/2", {})
     mgr.mock_receive_json("openzwave/1/node/2/statistics/", RESPONSE_JSON)
     statistics = mgr.get_instance("1").get_node("2").get_statistics()
     assert statistics.ack_channel == 0

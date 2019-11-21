@@ -10,15 +10,6 @@ from ..const import (
 from .node import OZWNode
 
 
-class OZWInstanceStatistics(ZWaveBase):
-
-    EVENT_CHANGED = EVENT_INSTANCE_STATISTICS_CHANGED
-
-    @property
-    def some_stat(self):
-        return self.data.get("some_stat")
-
-
 class OZWInstanceStatus(ZWaveBase):
 
     EVENT_CHANGED = EVENT_INSTANCE_STATUS_CHANGED
@@ -37,6 +28,7 @@ class OZWInstanceStatus(ZWaveBase):
 
 
 class OZWInstance(ZWaveBase):
+    DEFAULT_VALUE = None
 
     EVENT_ADDED = EVENT_INSTANCE_ADDED
     EVENT_CHANGED = EVENT_INSTANCE_CHANGED
@@ -46,6 +38,5 @@ class OZWInstance(ZWaveBase):
         """Create collections that Node supports."""
         return {
             "node": ItemCollection(self.options, self, OZWNode),
-            "statistics": OZWInstanceStatistics(self.options, self, None),
             "status": OZWInstanceStatus(self.options, self, None),
         }
