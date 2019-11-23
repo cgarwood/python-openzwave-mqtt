@@ -10,7 +10,7 @@ class OZWValue(ZWaveBase):
 
     @property
     def value(self):
-        return self.data.get("value")
+        return self.data.get("Value")
 
     @property
     def change_verified(self):
