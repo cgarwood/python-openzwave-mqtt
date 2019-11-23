@@ -19,7 +19,7 @@ class OZWManager(ZWaveBase):
         """Create collections that the manager supports."""
         return {"instance": ItemCollection(self.options, self, OZWInstance)}
 
-    def receive_message(self, topic: str, message: dict):
+    def receive_message(self, topic: str, message: str):
         """Receive an MQTT message."""
         assert topic.startswith(self.options.topic_prefix)
 
