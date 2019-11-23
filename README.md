@@ -37,3 +37,12 @@ We will process the messages in the reverse order:
 
 1. `openzwave/1/node/2`
 2. `openzwave/1/node/2/statistics`
+
+## Gathering Data
+
+This library is instantiated using messages received from MQTT. To make development easier, we have created two helper scripts. One that will dump all MQTT messages and one that will read messages from a text file and instantiate an `OZWManager` with all the data. This can be used to develop, test or reproduce bugs.
+
+```
+python3 -m script.dump_mqtt > dump.csv
+python3 -m script.instance_from_file dump.csv
+```
