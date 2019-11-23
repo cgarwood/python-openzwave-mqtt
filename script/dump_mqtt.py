@@ -41,6 +41,5 @@ if __name__ == "__main__":
     if mqtt is None:
         print("Please install paho-mqtt to use this script.")
         print("python3 -m pip install paho-mqtt")
-        return
-
-    main()
+    else:
+        main()
