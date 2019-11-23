@@ -41,3 +41,15 @@ class OZWInstance(ZWaveBase):
             "status": OZWInstanceStatus(self.options, self, None),
             "statistics": OZWInstanceStatistics(self.options, self, None),
         }
+
+    def send_message(self, topic, payload=""):
+        instance_id = self.id
+        topic_prefix = self.options.topic_prefix
+        full_topic = f"{topic_prefix}{instance_id}/command/{topic}/"
+        self.options.sent_message(full_topic, payload)
+
+    def add_node(self, secure=False):
+        self.send_message("addnode", {"secure": secure})
+
+    def cancel_controller_command(self):
+        self.send_message("cancelcontrollercommand")
