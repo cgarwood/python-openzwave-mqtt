@@ -1,6 +1,5 @@
 from ..base import ZWaveBase, ItemCollection
 from ..const import (
-    EVENT_INSTANCE_STATISTICS_CHANGED,
     EVENT_INSTANCE_STATUS_CHANGED,
     EVENT_INSTANCE_ADDED,
     EVENT_INSTANCE_CHANGED,
@@ -8,6 +7,7 @@ from ..const import (
 )
 
 from .node import OZWNode
+from .instance_statistics import OZWInstanceStatistics
 
 
 class OZWInstanceStatus(ZWaveBase):
@@ -39,4 +39,5 @@ class OZWInstance(ZWaveBase):
         return {
             "node": ItemCollection(self.options, self, OZWNode),
             "status": OZWInstanceStatus(self.options, self, None),
+            "statistics": OZWInstanceStatistics(self.options, self, None),
         }
