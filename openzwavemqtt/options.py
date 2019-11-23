@@ -5,7 +5,7 @@ class OZWOptions:
     def __init__(
         self,
         sent_message: Callable[[str, dict], None],
-        topic_prefix: str = "openzwave/",
+        topic_prefix: str = "OpenZWave/",
     ):
         self.sent_message = sent_message
         self.topic_prefix = topic_prefix
