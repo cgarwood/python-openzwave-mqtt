@@ -16,7 +16,7 @@ def test_value_events(mgr):
     # Listen for value added
     mgr.options.listen(EVENT_VALUE_ADDED, events.append)
     mgr.mock_receive_json(
-        "openzwave/1/node/2/instance/1/commandclass/4/value/3", {"value": "yo"}
+        "openzwave/1/node/2/instance/1/commandclass/4/value/3", {"Value": "yo"}
     )
     assert len(events) == 1
     assert events[0].id == "3"
@@ -26,7 +26,7 @@ def test_value_events(mgr):
     # Listen for value changed
     mgr.options.listen(EVENT_VALUE_CHANGED, events.append)
     mgr.mock_receive_json(
-        "openzwave/1/node/2/instance/1/commandclass/4/value/3", {"value": "yo2"}
+        "openzwave/1/node/2/instance/1/commandclass/4/value/3", {"Value": "yo2"}
     )
     assert len(events) == 2
     assert events[0].id == "3"
