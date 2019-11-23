@@ -11,4 +11,4 @@ def test_receive_message(mgr):
 
     mgr.process_message = mock_process_message
 
-    mgr.receive_message("openzwave/1/node/2/value/3/", '{"mock":"payload"}')
+    mgr.receive_message("OpenZWave/1/node/2/value/3/", '{"mock":"payload"}')
