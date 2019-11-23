@@ -49,7 +49,7 @@ class OZWInstance(ZWaveBase):
         self.options.sent_message(full_topic, payload)
 
     def add_node(self, secure=False):
-        self.send_message("addnode", {"secure": False})
+        self.send_message("addnode", {"secure": secure})
 
     def cancel_controller_command(self):
         self.send_message("cancelcontrollercommand")
