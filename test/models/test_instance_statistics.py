@@ -24,8 +24,8 @@ def test_statistics(mgr):
         "broadcastWriteCnt": 9,
     }
 
-    mgr.mock_receive_json("openzwave/1", {})
-    mgr.mock_receive_json("openzwave/1/statistics/", RESPONSE_JSON)
+    mgr.mock_receive_json("OpenZWave/1", {})
+    mgr.mock_receive_json("OpenZWave/1/statistics/", RESPONSE_JSON)
     statistics = mgr.get_instance("1").get_statistics()
     assert statistics.sof_count == 148
     assert statistics.read_count == 147
