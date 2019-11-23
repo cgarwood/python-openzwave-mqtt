@@ -38,6 +38,10 @@ We will process the messages in the reverse order:
 1. `openzwave/1/node/2`
 2. `openzwave/1/node/2/statistics`
 
+## Modelling Rules
+
+This library should not aim to do fancy things. We should, as much as possible, represent the data from MQTT as-is. We don't want to change names besides making them Pythonic (CamelCase -> snake_case).
+
 ## Gathering Data
 
 This library is instantiated using messages received from MQTT. To make development easier, we have created two helper scripts. One that will dump all MQTT messages and one that will read messages from a text file and instantiate an `OZWManager` with all the data. This can be used to develop, test or reproduce bugs.

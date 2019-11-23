@@ -1,3 +1,4 @@
+"""Model for Node Instance."""
 from ..base import ZWaveBase, ItemCollection
 from ..const import (
     EVENT_NODE_INSTANCE_ADDED,

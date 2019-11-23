@@ -1,3 +1,4 @@
+"""Model for OZW Instance."""
 from ..base import ZWaveBase, ItemCollection
 from ..const import (
     EVENT_INSTANCE_STATUS_CHANGED,

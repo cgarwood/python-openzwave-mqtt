@@ -33,7 +33,7 @@ class ItemCollection:
         if item is None and message is EMPTY:
             return
 
-        elif item is None:
+        if item is None:
             item = self.collection[item_id] = self.item_class(
                 self.options, self.parent, item_id
             )
@@ -101,8 +101,10 @@ class ZWaveBase(ABC):
         """Get helper to work with collection helpers."""
         return self
 
-    def create_collections(self) -> Dict[str, Union[ItemCollection, "ZWaveBase"]]:
+    @staticmethod
+    def create_collections() -> Dict[str, Union[ItemCollection, "ZWaveBase"]]:
         """Create collections that this type supports.
+
         Each collection is either an instance of ZWaveBase or ItemCollection.
         """
         return {}

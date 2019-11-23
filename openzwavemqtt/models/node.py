@@ -1,3 +1,4 @@
+"""Model for Node."""
 from typing import List
 
 from ..base import ZWaveBase, ItemCollection
