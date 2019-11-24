@@ -1,4 +1,5 @@
-from typing import Callable, Dict
+"""Options class."""
+from typing import Callable
 
 
 class OZWOptions:

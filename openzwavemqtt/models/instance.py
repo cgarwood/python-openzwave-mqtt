@@ -1,3 +1,4 @@
+"""Model for OZW Instance."""
 from ..base import ZWaveBase, ItemCollection
 from ..const import (
     EVENT_INSTANCE_STATUS_CHANGED,
@@ -23,8 +24,14 @@ class OZWInstanceStatus(ZWaveBase):
         return self.data.get("homeID")
 
     @property
-    def manufacturer_db_ready(self):
+    def manufacturer_specific_db_ready(self) -> bool:
+        """Return ManufacturerSpecificDBReady."""
         return self.data.get("ManufacturerSpecificDBReady")
+
+    @property
+    def time_stamp(self) -> int:
+        """Return TimeStamp."""
+        return self.data.get("TimeStamp")
 
 
 class OZWInstance(ZWaveBase):

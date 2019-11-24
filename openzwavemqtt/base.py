@@ -1,5 +1,5 @@
 from abc import ABC
-from typing import Callable, Deque, Optional
+from typing import Callable, Dict, Deque, Optional, Union
 
 from .const import EVENT_PLACEHOLDER, EMPTY, LOGGER
 from .options import OZWOptions
@@ -33,7 +33,7 @@ class ItemCollection:
         if item is None and message is EMPTY:
             return
 
-        elif item is None:
+        if item is None:
             item = self.collection[item_id] = self.item_class(
                 self.options, self.parent, item_id
             )
@@ -90,7 +90,7 @@ class ZWaveBase(ABC):
         self.id = item_id
         self.collections = self.create_collections()
         self.data = self.DEFAULT_VALUE
-        self.pending_messages = []
+        self.pending_messages = None
         assert self.EVENT_CHANGED != EVENT_PLACEHOLDER
 
         # Create helpers
@@ -101,8 +101,10 @@ class ZWaveBase(ABC):
         """Get helper to work with collection helpers."""
         return self
 
-    def create_collections(self):
+    @staticmethod
+    def create_collections() -> Dict[str, Union[ItemCollection, "ZWaveBase"]]:
         """Create collections that this type supports.
+
         Each collection is either an instance of ZWaveBase or ItemCollection.
         """
         return {}
@@ -118,13 +120,17 @@ class ZWaveBase(ABC):
                 return
 
             # Process all messages for the children.
-            for pend_topic, pend_message in self.pending_messages:
-                self.process_message(pend_topic, pend_message)
-            self.pending_messages = None
+            if self.pending_messages is not None:
+                for pend_topic, pend_message in self.pending_messages:
+                    self.process_message(pend_topic, pend_message)
+                self.pending_messages = None
+
             return
 
         # If this object has not been initialized, queue up messages.
         if self.data is EMPTY:
+            if self.pending_messages is None:
+                self.pending_messages = []
             self.pending_messages.append((topic, message))
             return
 
