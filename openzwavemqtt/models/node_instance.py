@@ -27,4 +27,4 @@ class OZWNodeInstance(ZWaveBase):
 
     def create_collections(self):
         """Create collections that Node supports."""
-        return {"commandclass": ItemCollection(self.options, self, OZWCommandClass)}
+        return {"commandclass": ItemCollection(OZWCommandClass)}
