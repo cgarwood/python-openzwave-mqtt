@@ -1,3 +1,5 @@
+import pytest
+
 from collections import deque
 from openzwavemqtt import base
 
@@ -19,7 +21,7 @@ class Level2(base.ZWaveBase):
     EVENT_REMOVED = "level2_removed"
 
     def create_collections(self):
-        return {"level3": base.ItemCollection(self.options, self, Level3)}
+        return {"level3": base.ItemCollection(Level3)}
 
 
 class Level1(base.ZWaveBase):
@@ -29,11 +31,15 @@ class Level1(base.ZWaveBase):
     EVENT_REMOVED = "level1_removed"
 
     def create_collections(self):
-        return {"level2": base.ItemCollection(self.options, self, Level2)}
+        return {"level2": base.ItemCollection(Level2)}
 
 
-def test_direct_collection(options, caplog):
-    level1 = Level1(options, None, None)
+@pytest.fixture
+def level1(options):
+    return Level1(options, None, None, None)
+
+
+def test_direct_collection(level1, caplog):
     level1.process_message(deque(), {"info": 1})
     level1.process_message(deque(["2"]), {"info": 1})
     level1.process_message(deque(["2", "3"]), {"hello": 1})
@@ -45,11 +51,9 @@ def test_direct_collection(options, caplog):
     assert "cannot process message" in caplog.text
 
 
-def test_pending_messages(options):
+def test_pending_messages(level1, options):
     events = []
     options.notify = lambda event, data: events.append(event)
-
-    level1 = Level1(options, None, None)
 
     # Only message for level3 has been received, level2 is none
     level1.process_message(deque(["2", "3"]), {"hello": 1})
@@ -67,10 +71,9 @@ def test_pending_messages(options):
     assert events == ["level2_added", "level3_added"]
 
 
-def test_recursive_remove(options):
+def test_recursive_remove(level1, options):
     events = []
 
-    level1 = Level1(options, None, None)
     level1.process_message(deque(), {"info": 1})
     level1.process_message(deque(["2"]), {"info": 1})
     level1.process_message(deque(["2", "3"]), {"hello": 1})
@@ -79,3 +82,37 @@ def test_recursive_remove(options):
     level1.process_message(deque(["2"]), base.EMPTY)
 
     assert events == ["level3_removed", "level2_removed"]
+
+
+def test_topic(options):
+    """Test topic property."""
+
+    class Level4(base.ZWaveBase):
+        EVENT_ADDED = "level4_added"
+        EVENT_CHANGED = "level4_change"
+        EVENT_REMOVED = "level4_removed"
+
+    class Level3Statistics(base.ZWaveBase):
+        EVENT_CHANGED = "level3statistics_change"
+
+    # Patch in a non-direct collection
+    Level3.create_collections = lambda _: {
+        "level4": base.ItemCollection(Level4),
+        "statistics": Level3Statistics,
+    }
+
+    level1 = Level1(options, None, None, None)
+    level1.process_message(deque(), {"info": 1})
+    level1.process_message(deque(["2"]), {"info": 1})
+    level1.process_message(deque(["2", "3"]), {"hello": 1})
+    level1.process_message(deque(["2", "3", "level4", "4"]), {"hello": 1})
+    level1.process_message(deque(["2", "3", "statistics"]), {"hello": 1})
+
+    assert (
+        level1.get_level2("2").get_level3("3").get_level4("4").topic
+        == "OpenZWave/2/3/level4/4"
+    )
+    assert (
+        level1.get_level2("2").get_level3("3").get_statistics().topic
+        == "OpenZWave/2/3/statistics"
+    )

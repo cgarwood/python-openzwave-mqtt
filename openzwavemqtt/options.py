@@ -12,6 +12,9 @@ class OZWOptions:
         self.topic_prefix = topic_prefix
         self.listeners = {}
 
+        # Make sure topic prefix ends in a slash
+        assert topic_prefix[-1] == "/"
+
     def listen(self, event, listener):
         self.listeners.setdefault(event, []).append(listener)
 

@@ -96,3 +96,6 @@ virtualization/vagrant/config
 !.vscode/cSpell.json
 !.vscode/extensions.json
 !.vscode/tasks.json
+
+# Typing
+.mypy_cache
