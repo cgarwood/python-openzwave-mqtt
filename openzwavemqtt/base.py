@@ -1,5 +1,5 @@
 from abc import ABC
-from typing import Callable, Dict, Deque, Optional, Union, Type
+from typing import Dict, Deque, Optional, Union, Type
 
 from .const import EVENT_PLACEHOLDER, EMPTY, LOGGER
 from .options import OZWOptions
