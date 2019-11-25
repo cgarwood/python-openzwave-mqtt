@@ -1,9 +1,9 @@
 """Model for Value."""
-from ..base import ZWaveBase
 from ..const import EVENT_VALUE_ADDED, EVENT_VALUE_CHANGED, EVENT_VALUE_REMOVED
+from .node_child_base import OZWNodeChildBase
 
 
-class OZWValue(ZWaveBase):
+class OZWValue(OZWNodeChildBase):
 
     EVENT_ADDED = EVENT_VALUE_ADDED
     EVENT_CHANGED = EVENT_VALUE_CHANGED
@@ -98,11 +98,6 @@ class OZWValue(ZWaveBase):
     def event(self) -> str:
         """Return Event."""
         return self.data.get("Event")
-
-    @property
-    def node(self) -> int:
-        """Return Node."""
-        return self.data.get("Node")
 
     @property
     def time_stamp(self) -> int:

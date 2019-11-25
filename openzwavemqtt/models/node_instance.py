@@ -1,5 +1,5 @@
 """Model for Node Instance."""
-from ..base import ZWaveBase, ItemCollection
+from ..base import ItemCollection
 from ..const import (
     EVENT_NODE_INSTANCE_ADDED,
     EVENT_NODE_INSTANCE_CHANGED,
@@ -7,9 +7,10 @@ from ..const import (
 )
 
 from .command_class import OZWCommandClass
+from .node_child_base import OZWNodeChildBase
 
 
-class OZWNodeInstance(ZWaveBase):
+class OZWNodeInstance(OZWNodeChildBase):
 
     EVENT_ADDED = EVENT_NODE_INSTANCE_ADDED
     EVENT_CHANGED = EVENT_NODE_INSTANCE_CHANGED

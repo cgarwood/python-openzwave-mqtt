@@ -1,4 +1,4 @@
-from ..base import ZWaveBase, ItemCollection
+from ..base import ItemCollection
 from ..const import (
     EVENT_COMMAND_CLASS_ADDED,
     EVENT_COMMAND_CLASS_CHANGED,
@@ -6,9 +6,10 @@ from ..const import (
 )
 
 from .value import OZWValue
+from .node_child_base import OZWNodeChildBase
 
 
-class OZWCommandClass(ZWaveBase):
+class OZWCommandClass(OZWNodeChildBase):
 
     EVENT_ADDED = EVENT_COMMAND_CLASS_ADDED
     EVENT_CHANGED = EVENT_COMMAND_CLASS_CHANGED
