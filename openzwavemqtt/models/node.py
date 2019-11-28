@@ -199,6 +199,17 @@ class OZWNode(ZWaveBase):
         """Return Neighbors."""
         return self.data.get("Neighbors")
 
+    @property
+    def values(self):
+        """Return list of OZWValue child items."""
+        _values = []
+        for instance in self.collections["instance"]:
+            for cc in instance.collections["commandclass"]:
+                for value in cc.collections["value"]:
+                    _values.append(value)
+
+        return _values
+
     def create_collections(self):
         """Create collections that Node supports."""
         return {
