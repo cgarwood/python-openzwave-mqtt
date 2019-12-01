@@ -42,6 +42,27 @@ We will process the messages in the reverse order:
 
 This library should not aim to do fancy things. We should, as much as possible, represent the data from MQTT as-is. We don't want to change names besides making them Pythonic (CamelCase -> snake_case).
 
+## Automatic added helpers
+
+Models will have automatic helpers added based on their child models. For example, the `Node` model has the following child collections:
+
+```python
+    def create_collections(self):
+        """Create collections that Node supports."""
+        return {
+            # A collection of children
+            "instance": ItemCollection(OZWNodeInstance),
+            # A single child
+            "statistics": OZWNodeStatistics,
+        }
+```
+
+This means that `Node` has the following automatic functions created:
+
+- `get_instance(item_id)` to get an instance by ID.
+- `instances()` to get an iterator over all available instances.
+- `get_statistics()` get the direct child.
+
 ## Gathering Data
 
 This library is instantiated using messages received from MQTT. To make development easier, we have created two helper scripts. One that will dump all MQTT messages and one that will read messages from a text file and instantiate an `OZWManager` with all the data. This can be used to develop, test or reproduce bugs.

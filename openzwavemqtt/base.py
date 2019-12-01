@@ -91,6 +91,9 @@ class ZWaveBase(ABC):
     # will be held until information for this object has been received.
     DEFAULT_VALUE = EMPTY
 
+    # Use in case there is a special plural name of this class.
+    PLURAL_NAME = None
+
     EVENT_ADDED = EVENT_PLACEHOLDER
     EVENT_CHANGED = EVENT_PLACEHOLDER
     EVENT_REMOVED = EVENT_PLACEHOLDER
@@ -138,6 +141,13 @@ class ZWaveBase(ABC):
                 continue
 
             setattr(self, f"get_{item_type}", collection.get)
+
+            plural_name = collection.item_class.PLURAL_NAME or f"{item_type}s"
+            if hasattr(self, plural_name):
+                raise RuntimeError(
+                    f"Cannot add {plural_name} function to {type(self).__name__}. Already exists."
+                )
+            setattr(self, plural_name, collection.collection.values)
 
             if item_type == self.DIRECT_COLLECTION:
                 coll_topic_part: Optional[str] = None
