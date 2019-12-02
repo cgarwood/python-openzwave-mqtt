@@ -49,14 +49,13 @@ class OZWInstance(ZWaveBase):
             "statistics": OZWInstanceStatistics,
         }
 
-    def send_message(self, topic, payload=""):
-        instance_id = self.id
+    def send_command(self, command: str, payload: str = ""):
         topic_prefix = self.options.topic_prefix
-        full_topic = f"{topic_prefix}{instance_id}/command/{topic}/"
-        self.options.sent_message(full_topic, payload)
+        full_topic = f"{topic_prefix}{self.id}/command/{command}/"
+        self.options.send_command(full_topic, payload)
 
     def add_node(self, secure=False):
-        self.send_message("addnode", {"secure": secure})
+        self.send_command("addnode", {"secure": secure})
 
     def cancel_controller_command(self):
-        self.send_message("cancelcontrollercommand")
+        self.send_command("cancelcontrollercommand")

@@ -5,10 +5,10 @@ from typing import Callable
 class OZWOptions:
     def __init__(
         self,
-        sent_message: Callable[[str, dict], None],
+        send_message: Callable[[str, dict], None],
         topic_prefix: str = "OpenZWave/",
     ):
-        self.sent_message = sent_message
+        self.send_message = send_message
         self.topic_prefix = topic_prefix
         self.listeners = {}
 

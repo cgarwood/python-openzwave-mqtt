@@ -34,10 +34,7 @@ def test_value_events(mgr):
 
     # Show how to use collection helpers
     assert (
-        mgr.get_instance("1")
-        .get_node("2")
-        .get_instance("1")
-        .get_commandclass("4")
+        list(mgr.get_instance("1").get_node("2").get_instance("1").commandclasses())[0]
         .get_value("3")
         .value
         == "yo2"
