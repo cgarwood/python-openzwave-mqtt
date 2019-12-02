@@ -15,6 +15,8 @@ class OZWCommandClass(OZWNodeChildBase):
     EVENT_CHANGED = EVENT_COMMAND_CLASS_CHANGED
     EVENT_REMOVED = EVENT_COMMAND_CLASS_REMOVED
 
+    PLURAL_NAME = "commandclasses"
+
     @property
     def instance(self) -> int:
         """Return Instance."""
