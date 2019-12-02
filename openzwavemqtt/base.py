@@ -31,7 +31,7 @@ class ItemCollection:
 
     def process_message(self, topic: Deque[str], message: dict):
         """Process a new message."""
-        item_id = topic.popleft()
+        item_id = int(topic.popleft())
         item = self.collection.get(item_id)
         added = False
 
@@ -103,7 +103,7 @@ class ZWaveBase(ABC):
         options: OZWOptions,
         parent: Optional["ZWaveBase"],
         topic_part: str,
-        item_id: Optional[str],
+        item_id: Optional[int],
     ):
         """Initialize the model."""
         # Runtime options

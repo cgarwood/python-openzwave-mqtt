@@ -26,7 +26,7 @@ def test_statistics(mgr):
 
     mgr.mock_receive_json("OpenZWave/1", {})
     mgr.mock_receive_json("OpenZWave/1/statistics/", RESPONSE_JSON)
-    statistics = mgr.get_instance("1").get_statistics()
+    statistics = mgr.get_instance(1).get_statistics()
 
     assert statistics.sof_count == 148
     assert statistics.read_count == 147
