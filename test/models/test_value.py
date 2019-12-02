@@ -23,6 +23,9 @@ def test_value_events(mgr):
     assert events[0].value == "yo"
     assert events[0].parent.id == "4"
 
+    # Test OZWNode.values shortcut
+    assert mgr.get_instance("1").get_node("2").values[0].id == "3"
+
     # Listen for value changed
     mgr.options.listen(EVENT_VALUE_CHANGED, events.append)
     mgr.mock_receive_json(
