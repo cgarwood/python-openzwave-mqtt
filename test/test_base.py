@@ -20,6 +20,8 @@ class Level2(base.ZWaveBase):
     EVENT_CHANGED = "level2_change"
     EVENT_REMOVED = "level2_removed"
 
+    PLURAL_NAME = "level_twos"
+
     def create_collections(self):
         return {"level3": base.ItemCollection(Level3)}
 
@@ -116,3 +118,17 @@ def test_topic(options):
         level1.get_level2("2").get_level3("3").get_statistics().topic
         == "OpenZWave/2/3/statistics"
     )
+
+
+def test_automatic_collections(level1):
+    level1.process_message(deque(), {"info": 1})
+    level1.process_message(deque(["2"]), {"info": 1})
+    level1.process_message(deque(["2", "3"]), {"hello": 1})
+
+    # Test overridden using PLURAL_NAME
+    assert list(level1.level_twos()) == [level1.get_level2("2")]
+
+    # Test default name
+    assert list(level1.get_level2("2").level3s()) == [
+        level1.get_level2("2").get_level3("3")
+    ]
