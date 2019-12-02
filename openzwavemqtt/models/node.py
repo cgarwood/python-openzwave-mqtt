@@ -1,11 +1,14 @@
 """Model for Node."""
-from typing import List
+from typing import Iterable, List, TYPE_CHECKING
 
 from ..base import ZWaveBase, ItemCollection
 from ..const import EVENT_NODE_ADDED, EVENT_NODE_CHANGED, EVENT_NODE_REMOVED
 
 from .node_statistics import OZWNodeStatistics
 from .node_instance import OZWNodeInstance
+
+if TYPE_CHECKING:
+    from .value import OZWValue
 
 
 class OZWNode(ZWaveBase):
@@ -199,16 +202,15 @@ class OZWNode(ZWaveBase):
         """Return Neighbors."""
         return self.data.get("Neighbors")
 
-    @property
-    def values(self):
-        """Return list of OZWValue child items."""
-        _values = []
-        for instance in self.collections["instance"]:
-            for cc in instance.collections["commandclass"]:
-                for value in cc.collections["value"]:
-                    _values.append(value)
-
-        return _values
+    def values(self) -> Iterable["OZWValue"]:
+        """Iterate over all OZWValue child items."""
+        # pylint: disable=no-member
+        return (
+            value
+            for instance in self.instances()
+            for cc in instance.commandclasses()
+            for value in cc.values()
+        )
 
     def create_collections(self):
         """Create collections that Node supports."""

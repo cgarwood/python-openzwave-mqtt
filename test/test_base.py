@@ -45,11 +45,11 @@ def test_direct_collection(level1, caplog):
     level1.process_message(deque(), {"info": 1})
     level1.process_message(deque(["2"]), {"info": 1})
     level1.process_message(deque(["2", "3"]), {"hello": 1})
-    assert level1.get_level2("2").get_level3("3").hello == 1
+    assert level1.get_level2(2).get_level3(3).hello == 1
 
     # Only works on numbers
     level1.process_message(deque(["2", "a"]), {"hello": 1})
-    assert level1.get_level2("2").get_level3("a") is None
+    assert level1.get_level2(2).get_level3("a") is None
     assert "cannot process message" in caplog.text
 
 
@@ -59,17 +59,17 @@ def test_pending_messages(level1, options):
 
     # Only message for level3 has been received, level2 is none
     level1.process_message(deque(["2", "3"]), {"hello": 1})
-    assert level1.get_level2("2") is None
+    assert level1.get_level2(2) is None
     assert events == []
 
     # Message for level2, level3 received, level1 still None
     level1.process_message(deque(["2"]), {"hello": 1})
-    assert level1.get_level2("2") is None
+    assert level1.get_level2(2) is None
     assert events == []
 
     # Level 1 receives data, process all child messages.
     level1.process_message(deque(), {"info": 1})
-    assert level1.get_level2("2").get_level3("3").hello == 1
+    assert level1.get_level2(2).get_level3(3).hello == 1
     assert events == ["level2_added", "level3_added"]
 
 
@@ -111,11 +111,11 @@ def test_topic(options):
     level1.process_message(deque(["2", "3", "statistics"]), {"hello": 1})
 
     assert (
-        level1.get_level2("2").get_level3("3").get_level4("4").topic
+        level1.get_level2(2).get_level3(3).get_level4(4).topic
         == "OpenZWave/2/3/level4/4"
     )
     assert (
-        level1.get_level2("2").get_level3("3").get_statistics().topic
+        level1.get_level2(2).get_level3(3).get_statistics().topic
         == "OpenZWave/2/3/statistics"
     )
 
@@ -126,9 +126,7 @@ def test_automatic_collections(level1):
     level1.process_message(deque(["2", "3"]), {"hello": 1})
 
     # Test overridden using PLURAL_NAME
-    assert list(level1.level_twos()) == [level1.get_level2("2")]
+    assert list(level1.level_twos()) == [level1.get_level2(2)]
 
     # Test default name
-    assert list(level1.get_level2("2").level3s()) == [
-        level1.get_level2("2").get_level3("3")
-    ]
+    assert list(level1.get_level2(2).level3s()) == [level1.get_level2(2).get_level3(3)]
