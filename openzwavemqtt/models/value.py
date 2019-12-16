@@ -1,5 +1,7 @@
 """Model for Value."""
-from ..const import EVENT_VALUE_ADDED, EVENT_VALUE_CHANGED, EVENT_VALUE_REMOVED
+from typing import cast
+
+from ..const import EVENT_VALUE_ADDED, EVENT_VALUE_CHANGED, EVENT_VALUE_REMOVED, LOGGER
 from .node_child_base import OZWNodeChildBase
 
 
@@ -103,3 +105,18 @@ class OZWValue(OZWNodeChildBase):
     def time_stamp(self) -> int:
         """Return TimeStamp."""
         return self.data.get("TimeStamp")
+
+    @property
+    def ozw_instance(self):
+        from .instance import OZWInstance
+
+        parent = self.parent
+        while parent is not None and not isinstance(parent, OZWInstance):
+            parent = parent.parent
+
+        if isinstance(parent, OZWInstance):
+            return cast(OZWInstance, parent)
+
+    def send_value(self, new_value):
+        LOGGER.warning(self.ozw_instance.__dict__)
+

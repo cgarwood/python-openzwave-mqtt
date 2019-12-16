@@ -43,6 +43,15 @@ def test_value_events(mgr):
         == "yo2"
     )
 
+    value = (
+        mgr.get_instance("1")
+        .get_node("2")
+        .get_instance("1")
+        .get_commandclass("4")
+        .get_value("3")
+    )
+    assert value.send_value("yoyo")
+
     # Listen for value removed
     mgr.options.listen(EVENT_VALUE_REMOVED, events.append)
     mgr.receive_message("OpenZWave/1/node/2/instance/1/commandclass/4/value/3", "")
