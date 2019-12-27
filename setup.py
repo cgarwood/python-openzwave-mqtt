@@ -1,8 +1,10 @@
 from setuptools import setup
 
+VERSION = "0.0.1"
+
 setup(
     name="python-openzwave-mqtt",
-    version="0.0.1",
+    version=VERSION,
     url="https://github.com/cgarwood/python-openzwave-mqtt",
     download_url="https://github.com/cgarwood/python-openzwave-mqtt",
     author="Charles Garwood",
