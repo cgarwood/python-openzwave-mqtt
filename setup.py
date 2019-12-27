@@ -7,6 +7,7 @@ setup(
     download_url="https://github.com/cgarwood/python-openzwave-mqtt",
     author="Charles Garwood",
     author_email="cgarwood@gmail.com",
+    description="Converts MQTT messages from qt-openzwave into Python objects and events",
     packages=["openzwavemqtt"],
     include_package_data=True,
     zip_safe=False,
