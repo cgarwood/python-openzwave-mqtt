@@ -6,6 +6,7 @@ from .node_child_base import OZWNodeChildBase
 
 
 class OZWValue(OZWNodeChildBase):
+    """Representation of an OpenZWave Value object."""
 
     EVENT_ADDED = EVENT_VALUE_ADDED
     EVENT_CHANGED = EVENT_VALUE_CHANGED
@@ -108,6 +109,7 @@ class OZWValue(OZWNodeChildBase):
 
     @property
     def ozw_instance(self):
+        """Return OZWInstance this value belongs to."""
         from .instance import OZWInstance
 
         parent = self.parent
@@ -118,5 +120,8 @@ class OZWValue(OZWNodeChildBase):
             return cast(OZWInstance, parent)
 
     def send_value(self, new_value):
-        LOGGER.warning(self.ozw_instance.__dict__)
-
+        """Send an updated value to MQTT."""
+        instance_id = self.ozw_instance.id
+        full_topic = f"{self.options.topic_prefix}{instance_id}/command/setvalue/"
+        payload = {"ValueIDKey": self.value_id_key, "Value": new_value}
+        self.options.send_message(full_topic, payload)
