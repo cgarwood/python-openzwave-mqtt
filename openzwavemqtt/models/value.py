@@ -1,9 +1,12 @@
 """Model for Value."""
-from ..const import EVENT_VALUE_ADDED, EVENT_VALUE_CHANGED, EVENT_VALUE_REMOVED
+from typing import cast
+
+from ..const import EVENT_VALUE_ADDED, EVENT_VALUE_CHANGED, EVENT_VALUE_REMOVED, LOGGER
 from .node_child_base import OZWNodeChildBase
 
 
 class OZWValue(OZWNodeChildBase):
+    """Representation of an OpenZWave Value object."""
 
     EVENT_ADDED = EVENT_VALUE_ADDED
     EVENT_CHANGED = EVENT_VALUE_CHANGED
@@ -103,3 +106,22 @@ class OZWValue(OZWNodeChildBase):
     def time_stamp(self) -> int:
         """Return TimeStamp."""
         return self.data.get("TimeStamp")
+
+    @property
+    def ozw_instance(self):
+        """Return OZWInstance this value belongs to."""
+        from .instance import OZWInstance
+
+        parent = self.parent
+        while parent is not None and not isinstance(parent, OZWInstance):
+            parent = parent.parent
+
+        if isinstance(parent, OZWInstance):
+            return cast(OZWInstance, parent)
+
+    def send_value(self, new_value):
+        """Send an updated value to MQTT."""
+        instance_id = self.ozw_instance.id
+        full_topic = f"{self.options.topic_prefix}{instance_id}/command/setvalue/"
+        payload = {"ValueIDKey": self.value_id_key, "Value": new_value}
+        self.options.send_message(full_topic, payload)

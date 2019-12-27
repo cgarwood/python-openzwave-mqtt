@@ -28,3 +28,8 @@ EVENT_VALUE_CHANGED = "value_changed"
 EVENT_VALUE_REMOVED = "value_removed"
 
 EMPTY = {}
+
+TYPE_BOOL = "Bool"
+TYPE_LIST = "List"
+TYPE_STRING = "String"
+TYPE_DECIMAL = "Decimal"
