@@ -1,6 +1,6 @@
 Python library for the OpenZWave MQTT implementation.
 
-Consumes MQTT output from https://github.com/OpenZWave/qt-openzwave/blob/master/docs/MQTT.md
+Consumes MQTT output from https://github.com/OpenZWave/qt-openzwave
 
 For Home Assistant integration, see the custom component [homeassistant-zwave_mqtt](https://github.com/cgarwood/homeassistant-zwave_mqtt).
 
