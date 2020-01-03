@@ -1,6 +1,6 @@
 Python library for the OpenZWave MQTT implementation.
 
-Consumes MQTT output from https://github.com/OpenZWave/qt-openzwave/blob/mqtt/docs/MQTT.md
+Consumes MQTT output from https://github.com/OpenZWave/qt-openzwave
 
 ## Structure
 
