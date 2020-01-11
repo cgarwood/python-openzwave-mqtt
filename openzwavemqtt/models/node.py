@@ -53,7 +53,7 @@ class OZWNode(ZWaveBase):
         return self.data.get("isSecurityv1")
 
     @property
-    def is_z_wave_plus(self) -> bool:
+    def is_zwave_plus(self) -> bool:
         """Return isZWavePlus."""
         return self.data.get("isZWavePlus")
 
