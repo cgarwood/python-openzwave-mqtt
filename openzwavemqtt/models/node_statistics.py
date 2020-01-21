@@ -50,6 +50,21 @@ class OZWNodeStatistics(ZWaveBase):
         return self.data.get("lastRecievedTimeStamp")
 
     @property
+    def last_request_rtt(self):
+        """Return lastRequestRTT."""
+        return self.data.get("lastRequestRTT")
+
+    @property
+    def last_response_rtt(self):
+        """Return lastResponseRTT."""
+        return self.data.get("lastResponseRTT")
+
+    @property
+    def last_sent_time_stamp(self):
+        """Return lastSentTimeStamp."""
+        return self.data.get("lastSentTimeStamp")
+
+    @property
     def last_tx_channel(self):
         """Return lastTXChannel."""
         return self.data.get("lastTXChannel")
