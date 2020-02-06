@@ -1,5 +1,5 @@
 """Model for OZW Instance."""
-from ..base import ZWaveBase, ItemCollection
+from ..base import ZWaveBase, ItemCollection, DiscardMessages
 from ..const import (
     EVENT_INSTANCE_STATUS_CHANGED,
     EVENT_INSTANCE_ADDED,
@@ -47,6 +47,7 @@ class OZWInstance(ZWaveBase):
             "node": ItemCollection(OZWNode),
             "status": OZWInstanceStatus,
             "statistics": OZWInstanceStatistics,
+            "command": DiscardMessages,
         }
 
     def send_command(self, command: str, payload: str = ""):

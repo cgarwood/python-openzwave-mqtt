@@ -222,6 +222,16 @@ class ZWaveBase(ABC):
         )
 
 
+class DiscardMessages(ZWaveBase):
+    """Class that discards all messages sent to it."""
+
+    EVENT_CHANGED = None
+
+    def process_message(self, topic: Deque[str], message: dict):
+        """Process incoming message."""
+        pass
+
+
 def create_getter(obj):
     """Return a function that returns an object.
 
