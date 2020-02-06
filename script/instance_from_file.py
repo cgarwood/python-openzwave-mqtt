@@ -30,6 +30,8 @@ def load_mgr_from_file(mgr: openzwavemqtt.OZWManager, file_path):
 
 
 def camelcase_to_snake_case(name):
+    # Otherwise ZWave -> _z_wave_ in names.
+    name = name.replace("ZWave", "Zwave")
     s1 = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", name)
     return re.sub("([a-z0-9])([A-Z])", r"\1_\2", s1).lower()
 

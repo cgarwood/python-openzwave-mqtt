@@ -1,3 +1,4 @@
+from unittest.mock import patch
 import pytest
 
 from collections import deque
@@ -98,17 +99,20 @@ def test_topic(options):
         EVENT_CHANGED = "level3statistics_change"
 
     # Patch in a non-direct collection
-    Level3.create_collections = lambda _: {
-        "level4": base.ItemCollection(Level4),
-        "statistics": Level3Statistics,
-    }
-
-    level1 = Level1(options, None, None, None)
-    level1.process_message(deque(), {"info": 1})
-    level1.process_message(deque(["2"]), {"info": 1})
-    level1.process_message(deque(["2", "3"]), {"hello": 1})
-    level1.process_message(deque(["2", "3", "level4", "4"]), {"hello": 1})
-    level1.process_message(deque(["2", "3", "statistics"]), {"hello": 1})
+    with patch.object(
+        Level3,
+        "create_collections",
+        lambda _: {
+            "level4": base.ItemCollection(Level4),
+            "statistics": Level3Statistics,
+        },
+    ):
+        level1 = Level1(options, None, None, None)
+        level1.process_message(deque(), {"info": 1})
+        level1.process_message(deque(["2"]), {"info": 1})
+        level1.process_message(deque(["2", "3"]), {"hello": 1})
+        level1.process_message(deque(["2", "3", "level4", "4"]), {"hello": 1})
+        level1.process_message(deque(["2", "3", "statistics"]), {"hello": 1})
 
     assert (
         level1.get_level2(2).get_level3(3).get_level4(4).topic
@@ -141,3 +145,15 @@ def test_warn_unhandled(level1, caplog):
         "Level2 cannot process message OpenZWave/2/something: {'info': 1}"
         in caplog.text
     )
+
+
+def test_discarder(level1, options, caplog):
+    """Test we can discard messages."""
+    with patch.object(
+        Level1, "create_collections", lambda _: {"command": base.DiscardMessages},
+    ):
+        level1 = Level1(options, None, None, None)
+        level1.process_message(deque(), {"info": 1})
+        level1.process_message(deque(["command"]), {"info": 1})
+
+    assert "cannot process message" not in caplog.text

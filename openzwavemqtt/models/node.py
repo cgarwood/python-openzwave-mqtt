@@ -6,6 +6,7 @@ from ..const import EVENT_NODE_ADDED, EVENT_NODE_CHANGED, EVENT_NODE_REMOVED
 
 from .node_statistics import OZWNodeStatistics
 from .node_instance import OZWNodeInstance
+from .node_association import OZWNodeAssocation
 
 if TYPE_CHECKING:
     from .value import OZWValue
@@ -216,5 +217,6 @@ class OZWNode(ZWaveBase):
         """Create collections that Node supports."""
         return {
             "instance": ItemCollection(OZWNodeInstance),
+            "association": ItemCollection(OZWNodeAssocation),
             "statistics": OZWNodeStatistics,
         }
