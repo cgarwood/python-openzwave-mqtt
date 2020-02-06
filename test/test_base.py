@@ -130,3 +130,14 @@ def test_automatic_collections(level1):
 
     # Test default name
     assert list(level1.get_level2(2).level3s()) == [level1.get_level2(2).get_level3(3)]
+
+
+def test_warn_unhandled(level1, caplog):
+    level1.process_message(deque(), {"info": 1})
+    level1.process_message(deque(["2"]), {"info": 1})
+    level1.process_message(deque(["2", "something"]), {"info": 1})
+
+    assert (
+        "Level2 cannot process message OpenZWave/2/something: {'info': 1}"
+        in caplog.text
+    )
