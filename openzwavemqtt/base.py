@@ -217,7 +217,7 @@ class ZWaveBase(ABC):
         LOGGER.warning(
             "%s cannot process message %s: %s",
             type(self).__name__,
-            self.topic,
+            f"{self.topic}/{'/'.join(topic)}",
             message,
         )
 
