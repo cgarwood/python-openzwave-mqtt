@@ -1,7 +1,7 @@
 """Setup module for python-openzwave-mqtt."""
 from setuptools import find_packages, setup
 
-VERSION = "0.0.4"
+VERSION = "0.0.5"
 
 
 def readme():
