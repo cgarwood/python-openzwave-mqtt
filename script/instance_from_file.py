@@ -2,7 +2,7 @@ import argparse
 import re
 
 import openzwavemqtt
-from openzwavemqtt.base import ZWaveBase
+from openzwavemqtt import base
 
 
 class ExitException(Exception):
@@ -31,12 +31,16 @@ def load_mgr_from_file(mgr: openzwavemqtt.OZWManager, file_path):
 
 def camelcase_to_snake_case(name):
     # Otherwise ZWave -> _z_wave_ in names.
-    name = name.replace("ZWave", "Zwave")
+    name = (
+        name.replace("ZWave", "Zwave")
+        .replace("OpenZwave", "Openzwave")
+        .replace("_", "")
+    )
     s1 = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", name)
     return re.sub("([a-z0-9])([A-Z])", r"\1_\2", s1).lower()
 
 
-def verify_integrity(model: ZWaveBase, warned=None):
+def verify_integrity(model: base.ZWaveBase, warned=None):
     if warned is None:
         warned = set()
 
@@ -72,12 +76,13 @@ def verify_integrity(model: ZWaveBase, warned=None):
 
     # Process children
     for model_or_collection in model.collections.values():
-        if isinstance(model_or_collection, ZWaveBase):
+        if isinstance(model_or_collection, base.ZWaveBase):
             verify_integrity(model_or_collection, warned)
             continue
 
-        for model in model_or_collection.collection.values():
-            verify_integrity(model, warned)
+        if isinstance(model_or_collection, base.ItemCollection):
+            for model in model_or_collection.collection.values():
+                verify_integrity(model, warned)
 
 
 def main():

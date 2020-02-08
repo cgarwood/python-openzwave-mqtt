@@ -1,5 +1,5 @@
 from abc import ABC
-from typing import Dict, Deque, Optional, Union, Type
+from typing import Dict, Deque, Optional, Union, Type, Callable
 
 from .const import EVENT_PLACEHOLDER, EMPTY, LOGGER
 from .options import OZWOptions
@@ -131,13 +131,17 @@ class ZWaveBase(ABC):
 
         # Process collections
         for item_type, collection in self.create_collections().items():
-            if not isinstance(collection, ItemCollection):
+            if isinstance(collection, type):  # OZWBase
                 self.collections[item_type] = collection(
                     self.options, self, item_type, None
                 )
                 setattr(
                     self, f"get_{item_type}", create_getter(self.collections[item_type])
                 )
+                continue
+
+            if not isinstance(collection, ItemCollection):
+                self.collections[item_type] = collection
                 continue
 
             setattr(self, f"get_{item_type}", collection.get)
@@ -222,14 +226,32 @@ class ZWaveBase(ABC):
         )
 
 
-class DiscardMessages(ZWaveBase):
+class DiscardMessages:
     """Class that discards all messages sent to it."""
-
-    EVENT_CHANGED = None
 
     def process_message(self, topic: Deque[str], message: dict):
         """Process incoming message."""
         pass
+
+
+class EventMessages:
+    """Class that converts messages to events."""
+
+    def __init__(
+        self,
+        options: OZWOptions,
+        event: str,
+        type_extractor: Callable[[Deque[str], dict], str],
+    ):
+        """Initialize EventMessages."""
+        self.options = options
+        self.event = event
+        self.type_extractor = type_extractor
+
+    def process_message(self, topic: Deque[str], message: dict):
+        """Process incoming message."""
+        event_type = self.type_extractor(topic, message)
+        self.options.notify(self.event, {"event": event_type, "data": message})
 
 
 def create_getter(obj):

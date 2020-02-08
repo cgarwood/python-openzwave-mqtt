@@ -1,17 +1,18 @@
 """Model for OZW Instance."""
-from ..base import ZWaveBase, ItemCollection, DiscardMessages
+from .. import base
 from ..const import (
     EVENT_INSTANCE_STATUS_CHANGED,
     EVENT_INSTANCE_ADDED,
     EVENT_INSTANCE_CHANGED,
     EVENT_INSTANCE_REMOVED,
+    EVENT_INSTANCE_EVENT,
 )
 
 from .node import OZWNode
 from .instance_statistics import OZWInstanceStatistics
 
 
-class OZWInstanceStatus(ZWaveBase):
+class OZWInstanceStatus(base.ZWaveBase):
 
     EVENT_CHANGED = EVENT_INSTANCE_STATUS_CHANGED
 
@@ -33,8 +34,68 @@ class OZWInstanceStatus(ZWaveBase):
         """Return TimeStamp."""
         return self.data.get("TimeStamp")
 
+    @property
+    def openzwave_version(self) -> str:
+        """Return OpenZWave_Version."""
+        return self.data.get("OpenZWave_Version")
 
-class OZWInstance(ZWaveBase):
+    @property
+    def ozw_deamon_version(self) -> str:
+        """Return OZWDeamon_Version."""
+        return self.data.get("OZWDeamon_Version")
+
+    @property
+    def qt_openzwave_version(self) -> str:
+        """Return QTOpenZWave_Version."""
+        return self.data.get("QTOpenZWave_Version")
+
+    @property
+    def qt_version(self) -> str:
+        """Return QT_Version."""
+        return self.data.get("QT_Version")
+
+    @property
+    def get_controller_node_id(self) -> int:
+        """Return getControllerNodeId."""
+        return self.data.get("getControllerNodeId")
+
+    @property
+    def get_suc_node_id(self) -> int:
+        """Return getSUCNodeId."""
+        return self.data.get("getSUCNodeId")
+
+    @property
+    def is_primary_controller(self) -> bool:
+        """Return isPrimaryController."""
+        return self.data.get("isPrimaryController")
+
+    @property
+    def is_bridge_controller(self) -> bool:
+        """Return isBridgeController."""
+        return self.data.get("isBridgeController")
+
+    @property
+    def has_extended_tx_statistics(self) -> bool:
+        """Return hasExtendedTXStatistics."""
+        return self.data.get("hasExtendedTXStatistics")
+
+    @property
+    def get_controller_library_version(self) -> str:
+        """Return getControllerLibraryVersion."""
+        return self.data.get("getControllerLibraryVersion")
+
+    @property
+    def get_controller_library_type(self) -> str:
+        """Return getControllerLibraryType."""
+        return self.data.get("getControllerLibraryType")
+
+    @property
+    def get_controller_path(self) -> str:
+        """Return getControllerPath."""
+        return self.data.get("getControllerPath")
+
+
+class OZWInstance(base.ZWaveBase):
     DEFAULT_VALUE = None
 
     EVENT_ADDED = EVENT_INSTANCE_ADDED
@@ -44,14 +105,17 @@ class OZWInstance(ZWaveBase):
     def create_collections(self):
         """Create collections that Node supports."""
         return {
-            "node": ItemCollection(OZWNode),
+            "node": base.ItemCollection(OZWNode),
             "status": OZWInstanceStatus,
             "statistics": OZWInstanceStatistics,
-            "command": DiscardMessages,
+            "command": base.DiscardMessages(),
+            "event": base.EventMessages(
+                self.options, EVENT_INSTANCE_EVENT, lambda topic, data: topic[0]
+            ),
         }
 
     def send_command(self, command: str, payload: str = ""):
-        """Send command to the OZW instance"""
+        """Send command to the OZW instance."""
         topic_prefix = self.options.topic_prefix
         full_topic = f"{topic_prefix}{self.id}/command/{command}/"
         self.options.send_message(full_topic, payload)
