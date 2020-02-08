@@ -150,10 +150,36 @@ def test_warn_unhandled(level1, caplog):
 def test_discarder(level1, options, caplog):
     """Test we can discard messages."""
     with patch.object(
-        Level1, "create_collections", lambda _: {"command": base.DiscardMessages},
+        Level1, "create_collections", lambda _: {"command": base.DiscardMessages()},
     ):
         level1 = Level1(options, None, None, None)
         level1.process_message(deque(), {"info": 1})
         level1.process_message(deque(["command"]), {"info": 1})
 
     assert "cannot process message" not in caplog.text
+
+
+def test_events(level1, options, caplog):
+    """Test we can fire events messages."""
+    events = []
+    options.notify = lambda event, data: events.append((event, data))
+
+    with patch.object(
+        Level1,
+        "create_collections",
+        lambda _: {
+            "event": base.EventMessages(
+                options, "super_event", lambda topic, msg: topic[0]
+            )
+        },
+    ):
+        level1 = Level1(options, None, None, None)
+        level1.process_message(deque(), {"info": 1})
+        level1.process_message(
+            deque(["event", "test-event-type"]), {"data": "for-event"}
+        )
+
+    assert len(events) == 1
+    event, data = events[0]
+    assert event == "super_event"
+    assert data == {"event": "test-event-type", "data": {"data": "for-event"}}

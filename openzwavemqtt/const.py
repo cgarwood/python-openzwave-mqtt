@@ -11,6 +11,7 @@ EVENT_COMMAND_CLASS_REMOVED = "command_class_removed"
 EVENT_INSTANCE_ADDED = "instance_added"
 EVENT_INSTANCE_CHANGED = "instance_changed"
 EVENT_INSTANCE_REMOVED = "instance_removed"
+EVENT_INSTANCE_EVENT = "instance_event"
 
 EVENT_INSTANCE_STATISTICS_CHANGED = "instance_statistics_changed"
 EVENT_INSTANCE_STATUS_CHANGED = "instance_status_changed"
