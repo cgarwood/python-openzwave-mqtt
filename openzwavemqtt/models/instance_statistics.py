@@ -7,111 +7,111 @@ class OZWInstanceStatistics(OZWNodeChildBase):
     EVENT_CHANGED = EVENT_INSTANCE_STATISTICS_CHANGED
 
     @property
-    def sof_count(self):
+    def sof_cnt(self) -> int:
         """Return SOFCnt."""
         return self.data.get("SOFCnt")
 
     @property
-    def ack_waiting(self):
+    def ack_waiting(self) -> int:
         """Return ACKWaiting."""
         return self.data.get("ACKWaiting")
 
     @property
-    def read_aborts(self):
+    def read_aborts(self) -> int:
         """Return readAborts."""
         return self.data.get("readAborts")
 
     @property
-    def bad_checksum(self):
+    def bad_checksum(self) -> int:
         """Return badChecksum."""
         return self.data.get("badChecksum")
 
     @property
-    def read_count(self):
+    def read_cnt(self) -> int:
         """Return readCnt."""
         return self.data.get("readCnt")
 
     @property
-    def write_count(self):
+    def write_cnt(self) -> int:
         """Return writeCnt."""
         return self.data.get("writeCnt")
 
     @property
-    def can_count(self):
+    def can_cnt(self) -> int:
         """Return CANCnt."""
         return self.data.get("CANCnt")
 
     @property
-    def nak_count(self):
+    def nak_cnt(self) -> int:
         """Return NAKCnt."""
         return self.data.get("NAKCnt")
 
     @property
-    def ack_count(self):
+    def ack_cnt(self) -> int:
         """Return ACKCnt."""
         return self.data.get("ACKCnt")
 
     @property
-    def oof_count(self):
+    def oof_cnt(self) -> int:
         """Return OOFCnt."""
         return self.data.get("OOFCnt")
 
     @property
-    def dropped(self):
+    def dropped(self) -> int:
         """Return dropped."""
         return self.data.get("dropped")
 
     @property
-    def retries(self):
+    def retries(self) -> int:
         """Return retries."""
         return self.data.get("retries")
 
     @property
-    def callbacks(self):
+    def callbacks(self) -> int:
         """Return callbacks."""
         return self.data.get("callbacks")
 
     @property
-    def badroutes(self):
+    def badroutes(self) -> int:
         """Return badroutes."""
         return self.data.get("badroutes")
 
     @property
-    def no_ack(self):
+    def noack(self) -> int:
         """Return noack."""
         return self.data.get("noack")
 
     @property
-    def net_busy(self):
+    def netbusy(self) -> int:
         """Return netbusy."""
         return self.data.get("netbusy")
 
     @property
-    def not_idle(self):
+    def notidle(self) -> int:
         """Return notidle."""
         return self.data.get("notidle")
 
     @property
-    def tx_verified(self):
+    def txverified(self) -> int:
         """Return txverified."""
         return self.data.get("txverified")
 
     @property
-    def non_delivery(self):
+    def nondelivery(self) -> int:
         """Return nondelivery."""
         return self.data.get("nondelivery")
 
     @property
-    def routed_busy(self):
+    def routedbusy(self) -> int:
         """Return routedbusy."""
         return self.data.get("routedbusy")
 
     @property
-    def broadcast_read_count(self):
-        """Return broadcast_read_count."""
-        return self.data.get("broadcast_read_count")
+    def broadcast_read_cnt(self) -> int:
+        """Return broadcastReadCnt."""
+        return self.data.get("broadcastReadCnt")
 
     @property
-    def broadcast_write_count(self):
-        """Return broadcast_write_count."""
-        return self.data.get("broadcast_write_count")
+    def broadcast_write_cnt(self) -> int:
+        """Return broadcastWriteCnt."""
+        return self.data.get("broadcastWriteCnt")
