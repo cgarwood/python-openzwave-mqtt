@@ -82,7 +82,7 @@ def test_recursive_remove(level1, options):
     level1.process_message(deque(["2", "3"]), {"hello": 1})
 
     options.notify = lambda event, data: events.append(event)
-    level1.process_message(deque(["2"]), base.EMPTY)
+    level1.process_message(deque(["2"]), base.EMPTY_PAYLOAD)
 
     assert events == ["level3_removed", "level2_removed"]
 
