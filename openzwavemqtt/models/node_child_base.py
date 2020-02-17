@@ -1,6 +1,7 @@
-"""Base class with Node specific helpers."""
+"""Python wrapper for OpenZWave's MQTT daemon - Base class with Node specific helpers."""
 
 from typing import cast
+
 from ..base import ZWaveBase
 
 

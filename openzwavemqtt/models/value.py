@@ -1,7 +1,8 @@
-"""Model for Value."""
+"""Python wrapper for OpenZWave's MQTT daemon - Model for the Value."""
 from typing import cast
 
-from ..const import EVENT_VALUE_ADDED, EVENT_VALUE_CHANGED, EVENT_VALUE_REMOVED, LOGGER
+from ..const import (EVENT_VALUE_ADDED, EVENT_VALUE_CHANGED,
+                     EVENT_VALUE_REMOVED, CommandClass, ValueGenre, ValueType)
 from .node_child_base import OZWNodeChildBase
 
 
@@ -38,9 +39,12 @@ class OZWValue(OZWNodeChildBase):
         return self.data.get("Max")
 
     @property
-    def type(self) -> str:
+    def type(self) -> ValueType:
         """Return Type."""
-        return self.data.get("Type")
+        try:
+            return ValueType(self.data.get("Type"))
+        except ValueError:
+            return ValueType.UNKNOWN
 
     @property
     def instance(self) -> int:
@@ -48,9 +52,9 @@ class OZWValue(OZWNodeChildBase):
         return self.data.get("Instance")
 
     @property
-    def command_class(self) -> str:
-        """Return CommandClass."""
-        return self.data.get("CommandClass")
+    def command_class(self) -> CommandClass:
+        """Return CommandClass this value belongs to."""
+        return self.parent.command_class
 
     @property
     def index(self) -> int:
@@ -60,7 +64,10 @@ class OZWValue(OZWNodeChildBase):
     @property
     def genre(self) -> str:
         """Return Genre."""
-        return self.data.get("Genre")
+        try:
+            return ValueGenre(self.data.get("Genre"))
+        except ValueError:
+            return ValueGenre.UNKNOWN
 
     @property
     def help(self) -> str:

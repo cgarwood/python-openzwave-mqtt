@@ -1,14 +1,12 @@
-"""Model for Node Assocations."""
-from ..const import (
-    EVENT_NODE_ASSOCIATION_ADDED,
-    EVENT_NODE_ASSOCIATION_CHANGED,
-    EVENT_NODE_ASSOCIATION_REMOVED,
-)
-
+"""Python wrapper for OpenZWave's MQTT daemon - Model for the Node Assocations level."""
+from ..const import (EVENT_NODE_ASSOCIATION_ADDED,
+                     EVENT_NODE_ASSOCIATION_CHANGED,
+                     EVENT_NODE_ASSOCIATION_REMOVED)
 from .node_child_base import OZWNodeChildBase
 
 
 class OZWNodeAssocation(OZWNodeChildBase):
+    """Model for Node Assocations."""
 
     EVENT_ADDED = EVENT_NODE_ASSOCIATION_ADDED
     EVENT_CHANGED = EVENT_NODE_ASSOCIATION_CHANGED

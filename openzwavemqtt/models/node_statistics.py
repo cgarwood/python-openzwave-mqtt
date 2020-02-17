@@ -1,11 +1,13 @@
-"""Model for Node Statistics."""
+"""Python wrapper for OpenZWave's MQTT daemon - Model for Node Statistics."""
 from typing import List
 
 from ..base import ZWaveBase
-from ..const import EVENT_NODE_ADDED, EVENT_NODE_STATISTICS_CHANGED, EVENT_NODE_REMOVED
+from ..const import (EVENT_NODE_ADDED, EVENT_NODE_REMOVED,
+                     EVENT_NODE_STATISTICS_CHANGED)
 
 
 class OZWNodeStatistics(ZWaveBase):
+    """Model for Node Statistics."""
 
     EVENT_ADDED = EVENT_NODE_ADDED
     EVENT_CHANGED = EVENT_NODE_STATISTICS_CHANGED
