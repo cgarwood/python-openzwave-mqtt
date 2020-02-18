@@ -54,6 +54,33 @@ class ValueType(Enum):
     UNKNOWN = None
 
 
+class ValueIndex(IntEnum):
+    """Enum with all (known) Value indexes."""
+
+    # Alarm
+    ALARM_TYPE = 0
+    ALARM_LEVEL = 1
+    ALARM_ACCESS_CONTROL = 9
+    # BarrierOperator
+    BARRIER_OPERATOR_LABEL = 1
+    # DoorLock
+    DOOR_LOCK_LOCK = 0
+    # Meter
+    METER_POWER = 2
+    METER_RESET = 257
+    # SensorMultilevel
+    SENSOR_MULTILEVEL_TEMPERATURE = 1
+    SENSOR_MULTILEVEL_POWER = 4
+    # Color
+    SWITCH_COLOR_COLOR = 0
+    SWITCH_COLOR_CHANNELS = 2
+    # SwitchMultilevel
+    SWITCH_MULTILEVEL_LEVEL = 0
+    SWITCH_MULTILEVEL_BRIGHT = 1
+    SWITCH_MULTILEVEL_DIM = 2
+    SWITCH_MULTILEVEL_DURATION = 5
+
+
 class CommandClass(IntEnum):
     """Enum with all known CommandClasses."""
 
