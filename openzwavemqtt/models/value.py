@@ -54,7 +54,7 @@ class OZWValue(OZWNodeChildBase):
     @property
     def command_class(self) -> CommandClass:
         """Return CommandClass this value belongs to."""
-        return self.parent.command_class
+        return self.parent.command_class_id
 
     @property
     def index(self) -> int:
