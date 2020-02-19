@@ -1,4 +1,4 @@
-"""Python wrapper for OpenZWave's MQTT daemon - Model for Node Statistics."""
+"""Model for Node Statistics."""
 from typing import List
 
 from ..base import ZWaveBase

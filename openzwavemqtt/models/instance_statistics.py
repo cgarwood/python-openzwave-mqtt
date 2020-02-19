@@ -1,4 +1,4 @@
-"""Python wrapper for OpenZWave's MQTT daemon - Model for the Instance statistics."""
+"""Model for the Instance statistics."""
 from ..const import EVENT_INSTANCE_STATISTICS_CHANGED
 from .node_child_base import OZWNodeChildBase
 

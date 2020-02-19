@@ -1,4 +1,4 @@
-"""Python wrapper for OpenZWave's MQTT daemon - Options for the OZQ MQTT Connection."""
+"""Options for the OZW MQTT Connection."""
 from typing import Callable
 
 

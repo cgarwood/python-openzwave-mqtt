@@ -1,4 +1,4 @@
-"""Python wrapper for OpenZWave's MQTT daemon - All constants and common types."""
+"""All constants and common types."""
 import logging
 from enum import Enum, IntEnum
 

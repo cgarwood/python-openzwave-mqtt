@@ -1,4 +1,4 @@
-"""Python wrapper for OpenZWave's MQTT daemon - Root Manager object."""
+"""Root Manager object."""
 import json
 from collections import deque
 

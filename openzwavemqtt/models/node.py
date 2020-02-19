@@ -1,4 +1,4 @@
-"""Python wrapper for OpenZWave's MQTT daemon - Model for a OZW Node."""
+"""Model for a OZW Node."""
 from typing import TYPE_CHECKING, Iterable, List
 
 from ..base import ItemCollection, ZWaveBase

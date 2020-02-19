@@ -1,4 +1,4 @@
-"""Python wrapper for OpenZWave's MQTT daemon - Base for all models."""
+"""Base for all models."""
 from abc import ABC
 from typing import Callable, Deque, Dict, Optional, Type, Union
 

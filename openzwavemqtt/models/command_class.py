@@ -1,4 +1,4 @@
-"""Python wrapper for OpenZWave's MQTT daemon - Model for the CommandClass."""
+"""Model for the CommandClass."""
 from ..base import ItemCollection
 from ..const import (EVENT_COMMAND_CLASS_ADDED, EVENT_COMMAND_CLASS_CHANGED,
                      EVENT_COMMAND_CLASS_REMOVED, LOGGER, CommandClass)
@@ -21,7 +21,7 @@ class OZWCommandClass(OZWNodeChildBase):
         return self.data.get("Instance")
 
     @property
-    def command_class(self) -> CommandClass:
+    def command_class_id(self) -> CommandClass:
         """Return CommandClassId as CommandClass Enum."""
         try:
             return CommandClass(self.data.get("CommandClassId"))
@@ -32,8 +32,9 @@ class OZWCommandClass(OZWNodeChildBase):
             return CommandClass.UNKNOWN
 
     @property
-    def label(self) -> str:
+    def command_class(self) -> str:
         """Return string/label representation of this CommandClass."""
+        # TODO: This needs changing to a better name once fixed upstream in the daemon
         return self.data.get("CommandClass")
 
     @property

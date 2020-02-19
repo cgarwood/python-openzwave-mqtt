@@ -1,4 +1,4 @@
-"""Python wrapper for OpenZWave's MQTT daemon - Model for the Node Assocations level."""
+"""Model for the Node Assocations level."""
 from ..const import (EVENT_NODE_ASSOCIATION_ADDED,
                      EVENT_NODE_ASSOCIATION_CHANGED,
                      EVENT_NODE_ASSOCIATION_REMOVED)

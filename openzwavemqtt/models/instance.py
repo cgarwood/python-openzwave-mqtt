@@ -1,4 +1,4 @@
-"""Python wrapper for OpenZWave's MQTT daemon - Model for the OZW instance level."""
+"""Model for the OZW instance level."""
 from .. import base
 from ..const import (EVENT_INSTANCE_ADDED, EVENT_INSTANCE_CHANGED,
                      EVENT_INSTANCE_EVENT, EVENT_INSTANCE_REMOVED)

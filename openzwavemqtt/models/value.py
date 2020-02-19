@@ -1,4 +1,4 @@
-"""Python wrapper for OpenZWave's MQTT daemon - Model for the Value."""
+"""Model for the Value."""
 from typing import cast
 
 from ..const import (EVENT_VALUE_ADDED, EVENT_VALUE_CHANGED,
@@ -62,7 +62,7 @@ class OZWValue(OZWNodeChildBase):
         return self.data.get("Index")
 
     @property
-    def genre(self) -> str:
+    def genre(self) -> ValueGenre:
         """Return Genre."""
         try:
             return ValueGenre(self.data.get("Genre"))
