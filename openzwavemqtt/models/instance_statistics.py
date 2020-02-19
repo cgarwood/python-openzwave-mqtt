@@ -1,9 +1,11 @@
-"""Model of OZW instance statistics."""
+"""Model for the Instance statistics."""
 from ..const import EVENT_INSTANCE_STATISTICS_CHANGED
 from .node_child_base import OZWNodeChildBase
 
 
 class OZWInstanceStatistics(OZWNodeChildBase):
+    """Model for OZW Instance statistics."""
+
     EVENT_CHANGED = EVENT_INSTANCE_STATISTICS_CHANGED
 
     @property

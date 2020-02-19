@@ -1,18 +1,22 @@
-from collections import deque
+"""Root Manager object."""
 import json
+from collections import deque
 
-from .base import ZWaveBase, ItemCollection
-from .const import EMPTY
-from .options import OZWOptions
+from .base import ItemCollection, ZWaveBase
+from .const import EMPTY_PAYLOAD
 from .models.instance import OZWInstance
+from .options import OZWOptions
 
 
 class OZWManager(ZWaveBase):
+    """Manager that holds the OZW instances connected to MQTT."""
+
     DIRECT_COLLECTION = "instance"
     DEFAULT_VALUE = None
     EVENT_CHANGED = None
 
     def __init__(self, options: OZWOptions):
+        """Initialize class."""
         super().__init__(options, None, options.topic_prefix, None)
 
     def create_collections(self):
@@ -29,7 +33,7 @@ class OZWManager(ZWaveBase):
         topic_parts = deque(topic_parts_raw)
 
         if message == "":
-            payload = EMPTY
+            payload = EMPTY_PAYLOAD
         else:
             payload = json.loads(message)
 

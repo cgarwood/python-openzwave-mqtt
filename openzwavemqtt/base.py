@@ -1,16 +1,15 @@
+"""Base for all models."""
 from abc import ABC
-from typing import Dict, Deque, Optional, Union, Type, Callable
+from typing import Callable, Deque, Dict, Optional, Type, Union
 
-from .const import EVENT_PLACEHOLDER, EMPTY, LOGGER
+from .const import EMPTY_PAYLOAD, EVENT_PLACEHOLDER, LOGGER
 from .options import OZWOptions
 
 
 class ItemCollection:
     """Initialize an item collection."""
 
-    def __init__(
-        self, item_class: Type["ZWaveBase"],
-    ):
+    def __init__(self, item_class: Type["ZWaveBase"]):
         self.parent: Optional["ZWaveBase"] = None
         self.topic_part: Optional[str] = None
         self.item_class = item_class
@@ -35,7 +34,7 @@ class ItemCollection:
         item = self.collection.get(item_id)
         added = False
 
-        if item is None and message is EMPTY:
+        if item is None and message is EMPTY_PAYLOAD:
             return
 
         if item is None:
@@ -49,7 +48,7 @@ class ItemCollection:
             )
             added = True
 
-        if len(topic) == 0 and message is EMPTY:
+        if len(topic) == 0 and message is EMPTY_PAYLOAD:
             self.remove_and_notify(item_id)
             return
 
@@ -89,7 +88,7 @@ class ZWaveBase(ABC):
 
     # Default value of this object. If untouched, all messages for child objects
     # will be held until information for this object has been received.
-    DEFAULT_VALUE = EMPTY
+    DEFAULT_VALUE = EMPTY_PAYLOAD
 
     # Use in case there is a special plural name of this class.
     PLURAL_NAME = None
@@ -171,9 +170,7 @@ class ZWaveBase(ABC):
         return f"{self.parent.topic}/{self.topic_part}"
 
     @staticmethod
-    def create_collections() -> Dict[
-        str, Union[ItemCollection, Type["ZWaveBase"]],
-    ]:
+    def create_collections() -> Dict[str, Union[ItemCollection, Type["ZWaveBase"]]]:
         """Create collections that this type supports.
 
         Each collection is either ItemCollection or a class derived from ZWaveBase.
@@ -183,7 +180,7 @@ class ZWaveBase(ABC):
     def process_message(self, topic: Deque[str], message: dict):
         """Process a new message."""
         if len(topic) == 0:
-            is_init_msg = self.data is EMPTY
+            is_init_msg = self.data is EMPTY_PAYLOAD
             self.data = message
 
             if not is_init_msg:
@@ -199,7 +196,7 @@ class ZWaveBase(ABC):
             return
 
         # If this object has not been initialized, queue up messages.
-        if self.data is EMPTY:
+        if self.data is EMPTY_PAYLOAD:
             if self.pending_messages is None:
                 self.pending_messages = []
             self.pending_messages.append((topic, message))

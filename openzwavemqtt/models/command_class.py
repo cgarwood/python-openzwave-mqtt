@@ -1,15 +1,13 @@
+"""Model for the CommandClass."""
 from ..base import ItemCollection
-from ..const import (
-    EVENT_COMMAND_CLASS_ADDED,
-    EVENT_COMMAND_CLASS_CHANGED,
-    EVENT_COMMAND_CLASS_REMOVED,
-)
-
-from .value import OZWValue
+from ..const import (EVENT_COMMAND_CLASS_ADDED, EVENT_COMMAND_CLASS_CHANGED,
+                     EVENT_COMMAND_CLASS_REMOVED, LOGGER, CommandClass)
 from .node_child_base import OZWNodeChildBase
+from .value import OZWValue
 
 
 class OZWCommandClass(OZWNodeChildBase):
+    """Model for the OZW CommandClass."""
 
     EVENT_ADDED = EVENT_COMMAND_CLASS_ADDED
     EVENT_CHANGED = EVENT_COMMAND_CLASS_CHANGED
@@ -23,13 +21,20 @@ class OZWCommandClass(OZWNodeChildBase):
         return self.data.get("Instance")
 
     @property
-    def command_class_id(self) -> int:
-        """Return CommandClassId."""
-        return self.data.get("CommandClassId")
+    def command_class_id(self) -> CommandClass:
+        """Return CommandClassId as CommandClass Enum."""
+        try:
+            return CommandClass(self.data.get("CommandClassId"))
+        except ValueError:
+            LOGGER.warning(
+                "Unknown CommandClass found: %s", self.data.get("CommandClassId")
+            )
+            return CommandClass.UNKNOWN
 
     @property
     def command_class(self) -> str:
-        """Return CommandClass."""
+        """Return string/label representation of this CommandClass."""
+        # TODO: This needs changing to a better name once fixed upstream in the daemon
         return self.data.get("CommandClass")
 
     @property

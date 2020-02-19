@@ -1,18 +1,18 @@
-"""Model for Node."""
-from typing import Iterable, List, TYPE_CHECKING
+"""Model for a OZW Node."""
+from typing import TYPE_CHECKING, Iterable, List
 
-from ..base import ZWaveBase, ItemCollection
+from ..base import ItemCollection, ZWaveBase
 from ..const import EVENT_NODE_ADDED, EVENT_NODE_CHANGED, EVENT_NODE_REMOVED
-
-from .node_statistics import OZWNodeStatistics
-from .node_instance import OZWNodeInstance
 from .node_association import OZWNodeAssocation
+from .node_instance import OZWNodeInstance
+from .node_statistics import OZWNodeStatistics
 
 if TYPE_CHECKING:
     from .value import OZWValue
 
 
 class OZWNode(ZWaveBase):
+    """Model for a Z-Wave Node."""
 
     EVENT_ADDED = EVENT_NODE_ADDED
     EVENT_CHANGED = EVENT_NODE_CHANGED
