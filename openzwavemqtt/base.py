@@ -222,6 +222,11 @@ class ZWaveBase(ABC):
             message,
         )
 
+    def __repr__(self):
+        """Return a representation of this object."""
+        iden = f" {self.id}" if self.id else ""
+        return f"<{type(self).__name__}{iden}>"
+
 
 class DiscardMessages:
     """Class that discards all messages sent to it."""

@@ -183,3 +183,13 @@ def test_events(level1, options, caplog):
     event, data = events[0]
     assert event == "super_event"
     assert data == {"event": "test-event-type", "data": {"data": "for-event"}}
+
+
+def test_repr():
+    """Test repr function."""
+
+    class TestNode(base.ZWaveBase):
+        EVENT_CHANGED = "bla"
+
+    inst = TestNode(None, None, "mock-topic-part", "mock-id")
+    assert str(inst) == "<TestNode mock-id>"
