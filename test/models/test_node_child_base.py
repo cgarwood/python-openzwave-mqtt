@@ -18,5 +18,11 @@ def test_node():
     grandchild = MockDescendant(None, child, "mock-grandchild-id", 123)
     assert grandchild.node is node
 
+    assert str(grandchild) == "<MockDescendant 123 (node: 1)>"
+
+    no_node_parent = MockDescendant(None, None, "", "")
+
     with pytest.raises(RuntimeError):
-        MockDescendant(None, None, "", "").node
+        no_node_parent.node
+
+    assert str(no_node_parent) == "<MockDescendant (node: <missing> (bad!))>"

@@ -22,3 +22,14 @@ class OZWNodeChildBase(ZWaveBase):
             return cast(OZWNode, parent)
 
         raise RuntimeError("Object is not a descendant of a Node")
+
+    def __repr__(self):
+        """Return a representation of this object."""
+        iden = f" {self.id}" if self.id else ""
+
+        try:
+            node = self.node.id
+        except RuntimeError:
+            node = "<missing> (bad!)"
+
+        return f"<{type(self).__name__}{iden} (node: {node})>"
