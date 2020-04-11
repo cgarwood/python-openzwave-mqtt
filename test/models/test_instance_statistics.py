@@ -1,5 +1,9 @@
+"""Provide tests for instance statistics."""
+
+
 def test_statistics(mgr):
-    RESPONSE_JSON = {
+    """Test statistics."""
+    response_json = {
         "SOFCnt": 148,
         "ACKWaiting": 0,
         "readAborts": 0,
@@ -25,7 +29,7 @@ def test_statistics(mgr):
     }
 
     mgr.mock_receive_json("OpenZWave/1", {})
-    mgr.mock_receive_json("OpenZWave/1/statistics/", RESPONSE_JSON)
+    mgr.mock_receive_json("OpenZWave/1/statistics/", response_json)
     statistics = mgr.get_instance(1).get_statistics()
 
     assert statistics.sof_cnt == 148

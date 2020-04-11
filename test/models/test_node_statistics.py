@@ -1,5 +1,9 @@
+"""Provide tests for node statistics."""
+
+
 def test_statistics(mgr):
-    RESPONSE_JSON = {
+    """Test statistics."""
+    response_json = {
         "ackChannel": 0,
         "averageRequestRTT": 31,
         "averageResponseRTT": 47,
@@ -37,7 +41,7 @@ def test_statistics(mgr):
 
     mgr.mock_receive_json("OpenZWave/1", {})
     mgr.mock_receive_json("OpenZWave/1/node/2", {})
-    mgr.mock_receive_json("OpenZWave/1/node/2/statistics/", RESPONSE_JSON)
+    mgr.mock_receive_json("OpenZWave/1/node/2/statistics/", response_json)
     statistics = mgr.get_instance(1).get_node(2).get_statistics()
     assert statistics.ack_channel == 0
     assert statistics.average_response_rtt == 47

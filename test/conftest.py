@@ -26,13 +26,13 @@ class MockManager(OZWManager):
         self.receive_message(topic, json.dumps(json_payload))
 
 
-@pytest.fixture
-def options():
+@pytest.fixture(name="options")
+def options_fixture():
     """Fixture for a manager."""
     return MockOptions()
 
 
-@pytest.fixture
-def mgr(options):
+@pytest.fixture(name="mgr")
+def mgr_fixture(options):
     """Fixture for a manager."""
     return MockManager(options)
