@@ -73,3 +73,11 @@ This library is instantiated using messages received from MQTT. To make developm
 python3 -m script.dump_mqtt > dump.csv
 python3 -m script.instance_from_file dump.csv
 ```
+
+## Development
+
+- Install all requirements:
+
+  ```sh
+  pip install -r requirements_dev.txt
+  ```

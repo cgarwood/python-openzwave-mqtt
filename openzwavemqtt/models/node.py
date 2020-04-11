@@ -8,7 +8,7 @@ from .node_instance import OZWNodeInstance
 from .node_statistics import OZWNodeStatistics
 
 if TYPE_CHECKING:
-    from .value import OZWValue
+    from .value import OZWValue  # noqa: F401 pylint: disable=unused-import
 
 
 class OZWNode(ZWaveBase):
