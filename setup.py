@@ -20,6 +20,7 @@ setup(
     long_description_content_type="text/markdown",
     packages=find_packages(exclude=["test.*", "test"]),
     python_requires=">=3.6",
+    install_requires=["typing-extensions"],
     include_package_data=True,
     zip_safe=False,
     classifiers=[
