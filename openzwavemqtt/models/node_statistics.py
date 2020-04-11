@@ -2,8 +2,7 @@
 from typing import List
 
 from ..base import ZWaveBase
-from ..const import (EVENT_NODE_ADDED, EVENT_NODE_REMOVED,
-                     EVENT_NODE_STATISTICS_CHANGED)
+from ..const import EVENT_NODE_ADDED, EVENT_NODE_REMOVED, EVENT_NODE_STATISTICS_CHANGED
 
 
 class OZWNodeStatistics(ZWaveBase):

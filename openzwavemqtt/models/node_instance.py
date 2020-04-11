@@ -1,7 +1,10 @@
 """Model for the Node instance level."""
 from ..base import ItemCollection
-from ..const import (EVENT_NODE_INSTANCE_ADDED, EVENT_NODE_INSTANCE_CHANGED,
-                     EVENT_NODE_INSTANCE_REMOVED)
+from ..const import (
+    EVENT_NODE_INSTANCE_ADDED,
+    EVENT_NODE_INSTANCE_CHANGED,
+    EVENT_NODE_INSTANCE_REMOVED,
+)
 from .command_class import OZWCommandClass
 from .node_child_base import OZWNodeChildBase
 

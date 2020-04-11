@@ -1,7 +1,11 @@
 """Model for the OZW instance level."""
 from .. import base
-from ..const import (EVENT_INSTANCE_ADDED, EVENT_INSTANCE_CHANGED,
-                     EVENT_INSTANCE_EVENT, EVENT_INSTANCE_REMOVED)
+from ..const import (
+    EVENT_INSTANCE_ADDED,
+    EVENT_INSTANCE_CHANGED,
+    EVENT_INSTANCE_EVENT,
+    EVENT_INSTANCE_REMOVED,
+)
 from .instance_statistics import OZWInstanceStatistics
 from .instance_status import OZWInstanceStatus
 from .node import OZWNode
