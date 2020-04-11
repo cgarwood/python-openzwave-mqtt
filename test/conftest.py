@@ -1,3 +1,4 @@
+"""Provide pytest fixtures."""
 import json
 import pytest
 
@@ -8,16 +9,20 @@ class MockOptions(OZWOptions):
     """Class with test options that keeps track of sent messages."""
 
     def __init__(self):
+        """Initialize mock options instance."""
         self.mock_sent = []
         super().__init__(lambda topic, msg: self.mock_sent.append((topic, msg)))
 
 
 class MockManager(OZWManager):
+    """Represent a mock manager."""
+
     def __init__(self, options=None):
+        """Initialize mock manager instance."""
         super().__init__(options or MockOptions())
 
     def mock_receive_json(self, topic, json_payload):
-        """Helper to receive JSON payloads directly."""
+        """Receive JSON payloads directly."""
         self.receive_message(topic, json.dumps(json_payload))
 
 
