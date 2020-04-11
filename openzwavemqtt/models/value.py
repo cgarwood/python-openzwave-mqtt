@@ -1,8 +1,14 @@
 """Model for the Value."""
 from typing import cast
 
-from ..const import (EVENT_VALUE_ADDED, EVENT_VALUE_CHANGED,
-                     EVENT_VALUE_REMOVED, CommandClass, ValueGenre, ValueType)
+from ..const import (
+    EVENT_VALUE_ADDED,
+    EVENT_VALUE_CHANGED,
+    EVENT_VALUE_REMOVED,
+    CommandClass,
+    ValueGenre,
+    ValueType,
+)
 from .node_child_base import OZWNodeChildBase
 
 

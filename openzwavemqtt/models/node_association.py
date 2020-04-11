@@ -1,7 +1,9 @@
 """Model for the Node Assocations level."""
-from ..const import (EVENT_NODE_ASSOCIATION_ADDED,
-                     EVENT_NODE_ASSOCIATION_CHANGED,
-                     EVENT_NODE_ASSOCIATION_REMOVED)
+from ..const import (
+    EVENT_NODE_ASSOCIATION_ADDED,
+    EVENT_NODE_ASSOCIATION_CHANGED,
+    EVENT_NODE_ASSOCIATION_REMOVED,
+)
 from .node_child_base import OZWNodeChildBase
 
 

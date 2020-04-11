@@ -1,7 +1,12 @@
 """Model for the CommandClass."""
 from ..base import ItemCollection
-from ..const import (EVENT_COMMAND_CLASS_ADDED, EVENT_COMMAND_CLASS_CHANGED,
-                     EVENT_COMMAND_CLASS_REMOVED, LOGGER, CommandClass)
+from ..const import (
+    EVENT_COMMAND_CLASS_ADDED,
+    EVENT_COMMAND_CLASS_CHANGED,
+    EVENT_COMMAND_CLASS_REMOVED,
+    LOGGER,
+    CommandClass,
+)
 from .node_child_base import OZWNodeChildBase
 from .value import OZWValue
 
