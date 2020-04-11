@@ -11,7 +11,6 @@ good-names=id,i,j,k,ex,Run,_,fp
 [MESSAGES CONTROL]
 # Reasons disabled:
 # locally-disabled - it spams too much
-# duplicate-code - unavoidable
 # abstract-class-little-used - prevents from setting right foundation
 # unused-argument - generic callbacks and setup methods create a lot of warnings
 # redefined-variable-type - this is Python, we're duck typing!
@@ -25,7 +24,6 @@ disable=
   bad-continuation,
   abstract-class-little-used,
   abstract-method,
-  duplicate-code,
   fixme,
   import-outside-toplevel,
   locally-disabled,
