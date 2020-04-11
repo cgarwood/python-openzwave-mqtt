@@ -22,4 +22,14 @@ setup(
     python_requires=">=3.6",
     include_package_data=True,
     zip_safe=False,
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Developers",
+        "Natural Language :: English",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Topic :: Home Automation",
+    ],
 )
