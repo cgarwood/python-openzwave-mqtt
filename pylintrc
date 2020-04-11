@@ -29,7 +29,6 @@ disable=
   fixme,
   import-outside-toplevel,
   locally-disabled,
-  not-context-manager,
   redefined-variable-type,
   too-few-public-methods,
   too-many-ancestors,
