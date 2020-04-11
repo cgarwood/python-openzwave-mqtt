@@ -21,7 +21,6 @@ disable=
   import-outside-toplevel,
   locally-disabled,
   too-few-public-methods,
-  too-many-arguments,
   too-many-instance-attributes,
   too-many-public-methods,
   unused-argument
