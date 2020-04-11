@@ -11,7 +11,6 @@ good-names=id,i,j,k,ex,Run,_,fp
 [MESSAGES CONTROL]
 # Reasons disabled:
 # locally-disabled - it spams too much
-# unused-argument - generic callbacks and setup methods create a lot of warnings
 # too-many-* - are not enforced for the sake of readability
 # too-few-* - same as too-many-*
 # import-outside-toplevel - TODO
@@ -22,7 +21,6 @@ disable=
   locally-disabled,
   too-few-public-methods,
   too-many-public-methods,
-  unused-argument
 
 [REPORTS]
 score=no

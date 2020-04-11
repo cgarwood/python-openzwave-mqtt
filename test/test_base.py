@@ -186,7 +186,7 @@ def test_discarder(level1, options, caplog):
     assert "cannot process message" not in caplog.text
 
 
-def test_events(level1, options, caplog):
+def test_events(level1, options):
     """Test we can fire events messages."""
     events = []
     options.notify = lambda event, data: events.append((event, data))
