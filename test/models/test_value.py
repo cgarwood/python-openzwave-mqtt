@@ -1,3 +1,4 @@
+"""Provide tests for the node value."""
 from openzwavemqtt.const import (
     EVENT_VALUE_ADDED,
     EVENT_VALUE_CHANGED,
@@ -6,6 +7,7 @@ from openzwavemqtt.const import (
 
 
 def test_value_events(mgr):
+    """Test value events."""
     events = []
 
     # Fill parent data.
