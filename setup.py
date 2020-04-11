@@ -19,6 +19,7 @@ setup(
     long_description=README_FILE.read_text(encoding="utf-8"),
     long_description_content_type="text/markdown",
     packages=find_packages(exclude=["*.tests"]),
+    python_requires=">=3.6",
     include_package_data=True,
     zip_safe=False,
 )
