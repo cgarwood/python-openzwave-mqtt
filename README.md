@@ -87,3 +87,9 @@ python3 -m script.instance_from_file dump.csv
   ```sh
   black ./
   ```
+
+- Use [tox](https://pypi.org/project/tox/) to run tests and linting:
+
+  ```sh
+  tox
+  ```

@@ -62,9 +62,9 @@ class OZWInstance(base.ZWaveBase):
         self.send_command("replacefailednode", {"node": node_id})
 
     def heal_node(self, node_id: int):
-        """Asks a Node to recalculate its neighbors and routes to other devices.​"""
+        """Ask a Node to recalculate its neighbors and routes to other devices."""
         self.send_command("healnetworknode", {"node": node_id})
 
     def cancel_controller_command(self):
-        """Cancels in Controller Commands that are in progress."""
+        """Cancel in Controller Commands that are in progress."""
         self.send_command("cancelcontrollercommand")

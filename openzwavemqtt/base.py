@@ -10,6 +10,7 @@ class ItemCollection:
     """Initialize an item collection."""
 
     def __init__(self, item_class: Type["ZWaveBase"]):
+        """Initialize item collection instance."""
         self.parent: Optional["ZWaveBase"] = None
         self.topic_part: Optional[str] = None
         self.item_class = item_class
