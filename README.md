@@ -81,3 +81,9 @@ python3 -m script.instance_from_file dump.csv
   ```sh
   pip install -r requirements_dev.txt
   ```
+
+- We use [black](https://pypi.org/project/black/) to format the code:
+
+  ```sh
+  black ./
+  ```
