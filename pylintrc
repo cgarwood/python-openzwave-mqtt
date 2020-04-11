@@ -31,6 +31,7 @@ disable=
   abstract-method,
   cyclic-import,
   duplicate-code,
+  fixme,
   global-statement,
   import-outside-toplevel,
   inconsistent-return-statements,
