@@ -234,7 +234,6 @@ class DiscardMessages:
 
     def process_message(self, topic: Deque[str], message: dict):
         """Process incoming message."""
-        pass
 
 
 class EventMessages:
