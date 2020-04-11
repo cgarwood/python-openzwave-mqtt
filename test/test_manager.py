@@ -1,6 +1,3 @@
-from openzwavemqtt import manager
-
-
 def test_receive_message(mgr):
     """Test receive message processing."""
 
