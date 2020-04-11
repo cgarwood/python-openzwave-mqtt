@@ -18,7 +18,7 @@ setup(
     description="Converts MQTT messages from qt-openzwave into Python objects and events",
     long_description=README_FILE.read_text(encoding="utf-8"),
     long_description_content_type="text/markdown",
-    packages=find_packages(exclude=["*.tests"]),
+    packages=find_packages(exclude=["test.*", "test"]),
     python_requires=">=3.6",
     include_package_data=True,
     zip_safe=False,
