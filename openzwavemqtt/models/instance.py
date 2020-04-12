@@ -1,4 +1,6 @@
 """Model for the OZW instance level."""
+from typing import Dict, Optional, Type, Union
+
 from .. import base
 from ..const import (
     EVENT_INSTANCE_ADDED,
@@ -14,13 +16,23 @@ from .node import OZWNode
 class OZWInstance(base.ZWaveBase):
     """Model for the OZW instance level."""
 
-    DEFAULT_VALUE = None
+    DEFAULT_VALUE: Optional[dict] = None
 
     EVENT_ADDED = EVENT_INSTANCE_ADDED
     EVENT_CHANGED = EVENT_INSTANCE_CHANGED
     EVENT_REMOVED = EVENT_INSTANCE_REMOVED
 
-    def create_collections(self):
+    def create_collections(
+        self,
+    ) -> Dict[
+        str,
+        Union[
+            base.ItemCollection,
+            Type[base.ZWaveBase],
+            base.DiscardMessages,
+            base.EventMessages,
+        ],
+    ]:
         """Create collections that Node supports."""
         return {
             "node": base.ItemCollection(OZWNode),
@@ -32,7 +44,7 @@ class OZWInstance(base.ZWaveBase):
             ),
         }
 
-    def send_command(self, command: str, payload: str = ""):
+    def send_command(self, command: str, payload: Union[str, dict] = "") -> None:
         """Send command to the OZW instance."""
         topic_prefix = self.options.topic_prefix
         full_topic = f"{topic_prefix}{self.id}/command/{command}/"
@@ -41,30 +53,30 @@ class OZWInstance(base.ZWaveBase):
     # Shortcut methods to some common used (global) controller commands
     # https://github.com/OpenZWave/qt-openzwave/blob/master/docs/MQTT.md#mqtt-commands
 
-    def add_node(self, secure: bool = False):
+    def add_node(self, secure: bool = False) -> None:
         """Enter inclusion mode on the controller."""
         self.send_command("addnode", {"secure": secure})
 
-    def remove_node(self):
+    def remove_node(self) -> None:
         """Enter exclusion mode on the controller."""
         self.send_command("removenode")
 
-    def refresh_node(self, node_id: int):
+    def refresh_node(self, node_id: int) -> None:
         """Force OZW to re-interview a device."""
         self.send_command("refreshnodeinfo", {"node": node_id})
 
-    def remove_failed_node(self, node_id: int):
+    def remove_failed_node(self, node_id: int) -> None:
         """Remove a failed node from the controller."""
         self.send_command("removefailednode", {"node": node_id})
 
-    def replace_failed_node(self, node_id: int):
+    def replace_failed_node(self, node_id: int) -> None:
         """Replace a failed node from the controller with a new device."""
         self.send_command("replacefailednode", {"node": node_id})
 
-    def heal_node(self, node_id: int):
+    def heal_node(self, node_id: int) -> None:
         """Ask a Node to recalculate its neighbors and routes to other devices."""
         self.send_command("healnetworknode", {"node": node_id})
 
-    def cancel_controller_command(self):
+    def cancel_controller_command(self) -> None:
         """Cancel in Controller Commands that are in progress."""
         self.send_command("cancelcontrollercommand")
