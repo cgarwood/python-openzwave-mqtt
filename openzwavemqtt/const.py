@@ -30,7 +30,7 @@ EVENT_VALUE_CHANGED = "value_changed"
 EVENT_VALUE_REMOVED = "value_removed"
 
 # Default/empty payload on MQTT messages
-EMPTY_PAYLOAD = {}
+EMPTY_PAYLOAD: dict = {}
 
 
 class ValueGenre(Enum):

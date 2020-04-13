@@ -1,6 +1,6 @@
 """Base for all models."""
 from abc import ABC
-from typing import Callable, Deque, Dict, Optional, Type, Union
+from typing import Any, Callable, Deque, Dict, Iterator, Optional, Type, Union
 
 from .const import EMPTY_PAYLOAD, EVENT_PLACEHOLDER, LOGGER
 from .options import OZWOptions
@@ -14,22 +14,22 @@ class ItemCollection:
         self.parent: Optional["ZWaveBase"] = None
         self.topic_part: Optional[str] = None
         self.item_class = item_class
-        self.collection: Dict[str, "ZWaveBase"] = {}
+        self.collection: Dict[int, "ZWaveBase"] = {}
 
         assert item_class.EVENT_ADDED != EVENT_PLACEHOLDER
         assert item_class.EVENT_REMOVED != EVENT_PLACEHOLDER
 
-    def adopt(self, parent: "ZWaveBase", topic_part: Optional[str]):
+    def adopt(self, parent: "ZWaveBase", topic_part: Optional[str]) -> None:
         """Adopt the item collection."""
         assert self.parent is None
         self.parent = parent
         self.topic_part = topic_part
 
-    def get(self, item_id: str):
+    def get(self, item_id: int) -> Optional["ZWaveBase"]:
         """Return item in collection."""
         return self.collection.get(item_id)
 
-    def process_message(self, topic: Deque[str], message: dict):
+    def process_message(self, topic: Deque[str], message: dict) -> None:
         """Process a new message."""
         item_id = int(topic.popleft())
         item = self.collection.get(item_id)
@@ -39,11 +39,12 @@ class ItemCollection:
             return
 
         if item is None:
-            topic_part = item_id
+            topic_part = str(item_id)
 
             if self.topic_part is not None:
                 topic_part = f"{self.topic_part}/{topic_part}"
 
+            assert self.parent is not None
             item = self.collection[item_id] = self.item_class(
                 self.parent.options, self.parent, topic_part, item_id
             )
@@ -57,9 +58,10 @@ class ItemCollection:
 
         # Only notify after we process the message.
         if added:
+            assert self.parent is not None
             self.parent.options.notify(self.item_class.EVENT_ADDED, item)
 
-    def remove_and_notify(self, item_id):
+    def remove_and_notify(self, item_id: int) -> None:
         """Remove item from collection and fire remove events for all child objects."""
         item = self.collection[item_id]
 
@@ -68,13 +70,15 @@ class ItemCollection:
                 continue
 
             for item in list(collection):
+                assert item.id is not None
                 collection.remove_and_notify(item.id)
 
+        assert self.parent is not None
         self.parent.options.notify(
             self.item_class.EVENT_REMOVED, self.collection.pop(item_id)
         )
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator:
         """Return iterator over all items in this collection."""
         return iter(self.collection.values())
 
@@ -85,14 +89,14 @@ class ZWaveBase(ABC):
     # Name the direct collection that lives underneath this object
     # but is not named in the topic. A message to /openzwave/1 will
     # be interpreted as if sent to /openzwave/<DIRECT_COLLECTION>/1
-    DIRECT_COLLECTION = None
+    DIRECT_COLLECTION: Optional[str] = None
 
     # Default value of this object. If untouched, all messages for child objects
     # will be held until information for this object has been received.
-    DEFAULT_VALUE = EMPTY_PAYLOAD
+    DEFAULT_VALUE: Optional[dict] = EMPTY_PAYLOAD
 
     # Use in case there is a special plural name of this class.
-    PLURAL_NAME = None
+    PLURAL_NAME: Optional[str] = None
 
     EVENT_ADDED = EVENT_PLACEHOLDER
     EVENT_CHANGED = EVENT_PLACEHOLDER
@@ -119,9 +123,11 @@ class ZWaveBase(ABC):
         self.id = item_id
 
         # Models that live under this model
-        self.collections: Dict[str, Union[ItemCollection, "ZWaveBase"]] = {}
+        self.collections: Dict[
+            str, Union[ItemCollection, "ZWaveBase", "DiscardMessages", "EventMessages"]
+        ] = {}
 
-        # The data this object olds
+        # The data this object holds
         self.data = self.DEFAULT_VALUE
 
         # Messages for children that are held until data is received
@@ -162,7 +168,7 @@ class ZWaveBase(ABC):
             self.collections[item_type] = collection
 
     @property
-    def topic(self):
+    def topic(self) -> str:
         """Return topic of this object."""
         if self.parent is None:
             # Cut off the trailing slash
@@ -170,15 +176,20 @@ class ZWaveBase(ABC):
 
         return f"{self.parent.topic}/{self.topic_part}"
 
-    @staticmethod
-    def create_collections() -> Dict[str, Union[ItemCollection, Type["ZWaveBase"]]]:
+    def create_collections(
+        self,
+    ) -> Dict[
+        str,
+        Union[ItemCollection, Type["ZWaveBase"], "DiscardMessages", "EventMessages"],
+    ]:
         """Create collections that this type supports.
 
         Each collection is either ItemCollection or a class derived from ZWaveBase.
         """
+        # pylint: disable=no-self-use
         return {}
 
-    def process_message(self, topic: Deque[str], message: dict):
+    def process_message(self, topic: Deque[str], message: dict) -> None:
         """Process a new message."""
         if len(topic) == 0:
             is_init_msg = self.data is EMPTY_PAYLOAD
@@ -215,7 +226,7 @@ class ZWaveBase(ABC):
 
         self.collections[collection_type].process_message(topic, message)
 
-    def _warn_cannot_handle(self, topic: Deque[str], message: dict):
+    def _warn_cannot_handle(self, topic: Deque[str], message: dict) -> None:
         LOGGER.warning(
             "%s cannot process message %s: %s",
             type(self).__name__,
@@ -223,7 +234,7 @@ class ZWaveBase(ABC):
             message,
         )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of this object."""
         iden = f" {self.id}" if self.id else ""
         return f"<{type(self).__name__}{iden}>"
@@ -232,7 +243,7 @@ class ZWaveBase(ABC):
 class DiscardMessages:
     """Class that discards all messages sent to it."""
 
-    def process_message(self, topic: Deque[str], message: dict):
+    def process_message(self, topic: Deque[str], message: dict) -> None:
         """Process incoming message."""
 
 
@@ -250,13 +261,13 @@ class EventMessages:
         self.event = event
         self.type_extractor = type_extractor
 
-    def process_message(self, topic: Deque[str], message: dict):
+    def process_message(self, topic: Deque[str], message: dict) -> None:
         """Process incoming message."""
         event_type = self.type_extractor(topic, message)
         self.options.notify(self.event, {"event": event_type, "data": message})
 
 
-def create_getter(obj):
+def create_getter(obj: Any) -> Callable:
     """Return a function that returns an object.
 
     Workaround for not being able to create lambdas that refer to variables in the
