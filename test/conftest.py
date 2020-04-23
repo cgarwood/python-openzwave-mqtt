@@ -1,8 +1,9 @@
 """Provide pytest fixtures."""
 import json
+
 import pytest
 
-from openzwavemqtt import OZWOptions, OZWManager
+from openzwavemqtt import OZWManager, OZWOptions
 
 
 class MockOptions(OZWOptions):

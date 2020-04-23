@@ -177,7 +177,7 @@ def test_warn_unhandled(level1, caplog):
 def test_discarder(level1, options, caplog):
     """Test we can discard messages."""
     with patch.object(
-        Level1, "create_collections", lambda _: {"command": base.DiscardMessages()},
+        Level1, "create_collections", lambda _: {"command": base.DiscardMessages()}
     ):
         level1 = Level1(options, None, None, None)
         level1.process_message(deque(), {"info": 1})
