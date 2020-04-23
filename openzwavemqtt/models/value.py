@@ -94,17 +94,17 @@ class OZWValue(OZWNodeChildBase):
     def write_only(self) -> bool:
         """Return WriteOnly."""
         return self.data.get("WriteOnly")
-        
+
     @property
     def value_list(self) -> list:
-        """Return List in Values"""
-        if type(self.value) is not str and type(self.value) is dict:
+        """Return List in Values."""
+        if not isinstance(self.value, str) and isinstance(self.value, dict):
             return list(map(lambda x: x["Label"], self.value.get("List")))
         return None
-        
-    @property 
+
+    @property
     def value_selected(self) -> str:
-        """Return Selected Value"""
+        """Return Selected Value."""
         if "Selected" in self.value:
             return self.value.get("Selected")
         return None
@@ -118,7 +118,7 @@ class OZWValue(OZWNodeChildBase):
     def value_polled(self) -> bool:
         """Return ValuePolled."""
         return self.data.get("ValuePolled")
-        
+
     @property
     def change_verified(self) -> bool:
         """Return ChangeVerified."""
