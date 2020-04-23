@@ -62,7 +62,7 @@ async def process_messages(mqtt_client: MQTTClient, mqtt_data: dict):
                     break
 
 
-async def run(event_loop):
+async def run(event_loop, args):
     """Run broker and client and publish values."""
 
     # Parse data into a dict
@@ -98,5 +98,5 @@ if __name__ == "__main__":
     loop = asyncio.get_event_loop()
 
     # Run
-    loop.create_task(run(loop))
+    loop.create_task(run(loop, args))
     loop.run_forever()
