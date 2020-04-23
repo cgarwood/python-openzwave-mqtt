@@ -94,6 +94,20 @@ class OZWValue(OZWNodeChildBase):
     def write_only(self) -> bool:
         """Return WriteOnly."""
         return self.data.get("WriteOnly")
+        
+    @property
+    def value_list(self) -> list:
+        """Return List in Values"""
+        if type(self.value) is not str and type(self.value) is dict:
+            return list(map(lambda x: x["Label"], self.value.get("List")))
+        return None
+        
+    @property 
+    def value_selected(self) -> str:
+        """Return Selected Value"""
+        if "Selected" in self.value:
+            return self.value.get("Selected")
+        return None
 
     @property
     def value_set(self) -> bool:
@@ -104,7 +118,7 @@ class OZWValue(OZWNodeChildBase):
     def value_polled(self) -> bool:
         """Return ValuePolled."""
         return self.data.get("ValuePolled")
-
+        
     @property
     def change_verified(self) -> bool:
         """Return ChangeVerified."""
@@ -136,5 +150,13 @@ class OZWValue(OZWNodeChildBase):
         """Send an updated value to MQTT."""
         instance_id = self.ozw_instance.id
         full_topic = f"{self.options.topic_prefix}{instance_id}/command/setvalue/"
-        payload = {"ValueIDKey": self.value_id_key, "Value": new_value}
+        if self.value_list is None:
+            payload = {"ValueIDKey": self.value_id_key, "Value": new_value}
+        else:
+            value_list = self.data.get("Value").get("List")
+            for value in value_list:
+                if value.get("Label") == new_value:
+                    new_value = value.get("Value")
+                    break
+            payload = {"ValueIDKey": self.value_id_key, "Value": new_value}
         self.options.send_message(full_topic, payload)
