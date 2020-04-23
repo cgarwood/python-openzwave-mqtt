@@ -36,15 +36,7 @@ def get_args():
     return parser.parse_args()
 
 
-async def publish_from_file():
-    """Publish all topics from the provided dump file."""
-    with open(dump_file, "rt") as fp:
-        for line in fp:
-            topic, payload = line.strip().split(",", 1)
-            await mqtt_client.publish(topic, payload.encode(), retain=True)
-
-
-async def process_messages():
+async def process_messages(mqtt_client: MQTTClient, mqtt_data: dict):
     """Keep reading incoming messages from subscribed topics."""
     while True:
         msg = await mqtt_client.deliver_message()
@@ -56,40 +48,55 @@ async def process_messages():
             continue
         data = json.loads(data)
         logging.info("Incoming message on topic %s --> %s", topic, data)
-        if topic.endswith("/setvalue/"):
+        if topic.endswith("command/setvalue/"):
             value = data["Value"]
             if not isinstance(value, (int, float, bool)):
-                logging.warning("setting this value is not supported")
+                logging.warning("setting this value type is not supported!")
                 return
-            # publish value in correct topic
-            with open(dump_file, "rt") as fp:
-                for line in fp:
-                    value_topic, payload = line.strip().split(",", 1)
-                    if value_topic.endswith(f'/value/{data["ValueIDKey"]}/'):
-                        payload = json.loads(payload)
-                        payload["Value"] = value
-                        payload = json.dumps(payload).encode()
-                        await mqtt_client.publish(value_topic, payload, retain=True)
-                        break
+            for value_topic in mqtt_data:
+                if value_topic.endswith(f'/value/{data["ValueIDKey"]}/'):
+                    payload = mqtt_data[value_topic]
+                    payload["Value"] = value
+                    payload = json.dumps(payload).encode()
+                    await mqtt_client.publish(value_topic, payload, retain=True)
+                    break
+
+
+async def run(event_loop):
+    """Run broker and client and publish values."""
+
+    # Parse data into a dict
+    mqtt_data = {}
+    with open(args.filename, "rt") as fp:
+        for line in fp:
+            item_topic, item_payload = line.strip().split(",", 1)
+            mqtt_data[item_topic] = json.loads(item_payload)
+
+    # Run Broker
+    broker = Broker(BROKER_CONFIG)
+    await broker.start()
+
+    # Run Client
+    client = MQTTClient()
+    await client.connect("mqtt://localhost")
+
+    # Publish all topics from the provided dump file
+    for topic, data in mqtt_data.items():
+        payload = json.dumps(data).encode()
+        await client.publish(topic, payload, retain=True)
+
+    # Subscribe to command topic and start listening for commands
+    await client.subscribe([("OpenZWave/1/command/#", QOS_0)])
+    event_loop.create_task(process_messages(client, mqtt_data))
 
 
 if __name__ == "__main__":
 
     args = get_args()
-    dump_file = args.filename
     formatter = "[%(asctime)s] :: %(levelname)s :: %(name)s :: %(message)s"
     logging.basicConfig(level=logging.INFO, format=formatter)
     loop = asyncio.get_event_loop()
 
-    # Run Broker
-    broker = Broker(BROKER_CONFIG)
-    loop.run_until_complete(broker.start())
-
-    # Run Client
-    mqtt_client = MQTTClient()
-    loop.create_task(mqtt_client.connect("mqtt://localhost"))
-    loop.create_task(publish_from_file())
-    loop.create_task(mqtt_client.subscribe([("OpenZWave/1/command/#", QOS_0)]))
-    loop.create_task(process_messages())
-
+    # Run
+    loop.create_task(run(loop))
     loop.run_forever()
