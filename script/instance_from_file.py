@@ -1,15 +1,19 @@
+#!/usr/bin/env python3
+"""Create an instance from a file with dumped mqtt messages."""
 import argparse
 import re
+from typing import Optional, Set, Tuple
 
 import openzwavemqtt
 from openzwavemqtt import base
 
 
 class ExitException(Exception):
-    pass
+    """Represent an exit error."""
 
 
-def get_args():
+def get_args() -> argparse.Namespace:
+    """Get arguments."""
     parser = argparse.ArgumentParser(description="Dump Instance")
     parser.add_argument(
         "filename", type=str, help="File with messages to process.",
@@ -17,7 +21,8 @@ def get_args():
     return parser.parse_args()
 
 
-def load_mgr_from_file(mgr: openzwavemqtt.OZWManager, file_path):
+def load_mgr_from_file(mgr: openzwavemqtt.OZWManager, file_path: str) -> None:
+    """Load manager from file."""
     with open(file_path, "rt") as fp:
         for line in fp:
             topic, payload = line.strip().split(",", 1)
@@ -29,18 +34,22 @@ def load_mgr_from_file(mgr: openzwavemqtt.OZWManager, file_path):
                 )
 
 
-def camelcase_to_snake_case(name):
+def camelcase_to_snake_case(name: str) -> str:
+    """Convert camelCase to snake_case."""
     # Otherwise ZWave -> _z_wave_ in names.
     name = (
         name.replace("ZWave", "Zwave")
         .replace("OpenZwave", "Openzwave")
         .replace("_", "")
     )
-    s1 = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", name)
-    return re.sub("([a-z0-9])([A-Z])", r"\1_\2", s1).lower()
+    s_1 = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", name)
+    return re.sub("([a-z0-9])([A-Z])", r"\1_\2", s_1).lower()
 
 
-def verify_integrity(model: base.ZWaveBase, warned=None):
+def verify_integrity(
+    model: base.ZWaveBase, warned: Optional[Set[Tuple[str, str]]] = None
+) -> None:
+    """Verify the integrity of the loaded data."""
     if warned is None:
         warned = set()
 
@@ -50,7 +59,7 @@ def verify_integrity(model: base.ZWaveBase, warned=None):
     if model.pending_messages is not None:
         print(f"{obj_name} has pending messages!")
 
-    if model.data != model.DEFAULT_VALUE:
+    if model.data is not None and model.data != model.DEFAULT_VALUE:
         for key, value in model.data.items():
             prop_name = camelcase_to_snake_case(key)
 
@@ -81,13 +90,14 @@ def verify_integrity(model: base.ZWaveBase, warned=None):
             continue
 
         if isinstance(model_or_collection, base.ItemCollection):
-            for model in model_or_collection.collection.values():
-                verify_integrity(model, warned)
+            for model_ in model_or_collection.collection.values():
+                verify_integrity(model_, warned)
 
 
-def main():
+def main() -> None:
+    """Run main entrypoint."""
     args = get_args()
-    mgr = openzwavemqtt.OZWManager(openzwavemqtt.OZWOptions(None))
+    mgr = openzwavemqtt.OZWManager(openzwavemqtt.OZWOptions(print))
     load_mgr_from_file(mgr, args.filename)
     verify_integrity(mgr)
 
