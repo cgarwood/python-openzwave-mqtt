@@ -1,6 +1,7 @@
 -r requirements_lint.txt
 -r requirements_test.txt
 git+git://github.com/beerfactory/hbmqtt
+paho-mqtt==1.5.0
 tox==3.14.6
 
 -e .
