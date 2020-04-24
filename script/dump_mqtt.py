@@ -1,6 +1,9 @@
+#!/usr/bin/env python3
+"""Dump mqtt output."""
 import argparse
 import logging
 from threading import Timer
+from typing import Any
 
 try:
     import paho.mqtt.client as mqtt
@@ -8,7 +11,8 @@ except ImportError:
     mqtt = None
 
 
-def get_args():
+def get_args() -> argparse.Namespace:
+    """Get arguments."""
     parser = argparse.ArgumentParser(description="Dump Instance")
     parser.add_argument(
         "--host", type=str, default="localhost", help="Host of the MQTT server."
@@ -19,12 +23,16 @@ def get_args():
     return parser.parse_args()
 
 
-def main():
+def main() -> None:
+    """Run main entrypoint."""
     args = get_args()
     mqttc = mqtt.Client()
     mqttc.enable_logger(logging.getLogger("dump_instance"))
 
-    def print_message(_clinet, _userdata, msg):
+    def print_message(
+        _client: mqtt.Client, _userdata: Any, msg: mqtt.MQTTMessage
+    ) -> None:
+        """Print message."""
         payload = msg.payload.decode().replace("\n", "")
         print(f"{msg.topic},{payload}")
 
