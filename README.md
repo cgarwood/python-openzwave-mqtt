@@ -1,8 +1,18 @@
+# python-openzwave-mqtt
+
 Python library for the OpenZWave MQTT implementation.
 
-Consumes MQTT output from https://github.com/OpenZWave/qt-openzwave
+Consumes MQTT output from [https://github.com/OpenZWave/qt-openzwave](https://github.com/OpenZWave/qt-openzwave)
 
 For Home Assistant integration, see the custom component [homeassistant-zwave_mqtt](https://github.com/cgarwood/homeassistant-zwave_mqtt).
+
+## Install
+
+- Python 3.7+ is required. We support the two latest Python 3 versions released at any one time.
+
+```sh
+pip install python-openzwave-mqtt
+```
 
 ## Structure
 
@@ -69,7 +79,7 @@ This means that `Node` has the following automatic functions created:
 
 This library is instantiated using messages received from MQTT. To make development easier, we have created two helper scripts. One that will dump all MQTT messages and one that will read messages from a text file and instantiate an `OZWManager` with all the data. This can be used to develop, test or reproduce bugs.
 
-```
+```sh
 python3 -m script.dump_mqtt > dump.csv
 python3 -m script.instance_from_file dump.csv
 ```
