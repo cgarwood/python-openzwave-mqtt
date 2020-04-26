@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Emulate MQTT Broker with OZW Daemon instance from MQTT dump."""
 
 # Experimental ! For debugging purposes
@@ -29,14 +30,14 @@ BROKER_CONFIG = {
 }
 
 
-def get_args():
+def get_args() -> argparse.Namespace:
     """Get arguments."""
     parser = argparse.ArgumentParser(description="OZW Emulator")
     parser.add_argument("filename", type=str, help="File with dump from mqtt.")
     return parser.parse_args()
 
 
-async def process_messages(mqtt_client: MQTTClient, mqtt_data: dict):
+async def process_messages(mqtt_client: MQTTClient, mqtt_data: dict) -> None:
     """Keep reading incoming messages from subscribed topics."""
     while True:
         msg = await mqtt_client.deliver_message()
@@ -62,7 +63,7 @@ async def process_messages(mqtt_client: MQTTClient, mqtt_data: dict):
                     break
 
 
-async def run(event_loop, args):
+async def emulate(args: argparse.Namespace) -> None:
     """Run broker and client and publish values."""
 
     # Parse data into a dict
@@ -87,16 +88,25 @@ async def run(event_loop, args):
 
     # Subscribe to command topic and start listening for commands
     await client.subscribe([("OpenZWave/1/command/#", QOS_0)])
-    event_loop.create_task(process_messages(client, mqtt_data))
+    try:
+        await process_messages(client, mqtt_data)
+    except asyncio.CancelledError:
+        await client.disconnect()
+        broker.shutdown()
 
 
-if __name__ == "__main__":
-
+def main() -> None:
+    """Run main entrypoint."""
     args = get_args()
     formatter = "[%(asctime)s] :: %(levelname)s :: %(name)s :: %(message)s"
     logging.basicConfig(level=logging.INFO, format=formatter)
-    loop = asyncio.get_event_loop()
 
     # Run
-    loop.create_task(run(loop, args))
-    loop.run_forever()
+    try:
+        asyncio.run(emulate(args))
+    except KeyboardInterrupt:
+        pass
+
+
+if __name__ == "__main__":
+    main()
