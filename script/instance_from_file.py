@@ -15,9 +15,7 @@ class ExitException(Exception):
 def get_args() -> argparse.Namespace:
     """Get arguments."""
     parser = argparse.ArgumentParser(description="Dump Instance")
-    parser.add_argument(
-        "filename", type=str, help="File with messages to process.",
-    )
+    parser.add_argument("filename", type=str, help="File with messages to process.")
     return parser.parse_args()
 
 
