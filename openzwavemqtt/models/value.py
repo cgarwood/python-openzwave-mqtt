@@ -67,7 +67,8 @@ class OZWValue(OZWNodeChildBase):
     def index(self) -> ValueIndex:
         """Return Index."""
         try:
-            # TODO: we can make this prettier by returning the ValueIndex belonging to this specific CC
+            # TODO: we can make this prettier by returning the
+            # ValueIndex belonging to this specific CC
             # Now it will return the first value mathing this int value
             # Nothing breaks but it isn't very pretty
             return ValueIndex(self.data.get("Index"))
