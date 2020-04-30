@@ -8,6 +8,7 @@ from ..const import (
     CommandClass,
     ValueGenre,
     ValueType,
+    ValueIndex,
 )
 from .node_child_base import OZWNodeChildBase
 
@@ -63,9 +64,15 @@ class OZWValue(OZWNodeChildBase):
         return self.parent.command_class_id
 
     @property
-    def index(self) -> int:
+    def index(self) -> ValueIndex:
         """Return Index."""
-        return self.data.get("Index")
+        try:
+            # TODO: we can make this prettier by returning the ValueIndex belonging to this specific CC
+            # Now it will return the first value mathing this int value
+            # Nothing breaks but it isn't very pretty
+            return ValueIndex(self.data.get("Index"))
+        except ValueError:
+            return ValueIndex.UNKNOWN
 
     @property
     def genre(self) -> ValueGenre:
