@@ -51,11 +51,9 @@ async def process_messages(mqtt_client: MQTTClient, mqtt_data: dict) -> None:
         logging.info("Incoming message on topic %s --> %s", topic, data)
         if topic.endswith("command/setvalue/"):
             new_value = data["Value"]
-            
             for value_topic in mqtt_data:
                 if value_topic.endswith(f'/value/{data["ValueIDKey"]}/'):
                     payload = mqtt_data[value_topic]
-
                     if isinstance(payload["Value"], dict):
                         payload["Value"]["Selected_id"] = new_value
                     elif isinstance(payload["Value"], (int, float, bool, str)):
