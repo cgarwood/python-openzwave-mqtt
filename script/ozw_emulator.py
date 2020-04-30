@@ -50,14 +50,19 @@ async def process_messages(mqtt_client: MQTTClient, mqtt_data: dict) -> None:
         data = json.loads(data)
         logging.info("Incoming message on topic %s --> %s", topic, data)
         if topic.endswith("command/setvalue/"):
-            value = data["Value"]
-            if not isinstance(value, (int, float, bool)):
-                logging.warning("setting this value type is not supported!")
-                return
+            new_value = data["Value"]
+            
             for value_topic in mqtt_data:
                 if value_topic.endswith(f'/value/{data["ValueIDKey"]}/'):
                     payload = mqtt_data[value_topic]
-                    payload["Value"] = value
+
+                    if isinstance(payload["Value"], dict):
+                        payload["Value"]["Selected_id"] = new_value
+                    elif isinstance(payload["Value"], (int, float, bool, str)):
+                        payload["Value"] = new_value
+                    else:
+                        logging.warning("setting this value type is not supported!")
+                        return
                     payload = json.dumps(payload).encode()
                     await mqtt_client.publish(value_topic, payload, retain=True)
                     break
