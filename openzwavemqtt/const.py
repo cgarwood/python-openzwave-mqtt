@@ -33,6 +33,34 @@ EVENT_VALUE_REMOVED = "value_removed"
 EMPTY_PAYLOAD: dict = {}
 
 
+class OpenZWaveStatus(Enum):
+    """Enum with all Status strings for the OZW Daemon."""
+
+    # https://github.com/OpenZWave/qt-openzwave/blob/master/docs/MQTT.md#mqtt-client-status
+
+    OFFLINE = "Offline"
+    STARTING = "starting"
+    STARTED = "started"
+    STOPPED = "stopped"
+    READY = "Ready"
+    DRIVER_READY = "driverReady"
+    DRIVER_FAILED = "driverFailed"
+    DRIVER_RESET = "driverReset"
+    DRIVER_REMOVED = "driverRemoved"
+    DRIVER_ALL_NODES_QUERIED_SOME_DEAD = "driverAllNodesQueriedSomeDead"
+    DRIVER_ALL_NODES_QUERIED = "driverAllNodesQueried"
+    DRIVER_AWAKE_NODES_QUERIED_SOME_DEAD = "driverAwakeNodesQueried"
+    UNKNOWN = None
+
+
+# Tuple with all states indicating OZW is ready
+OZW_READY_STATES = (
+    OpenZWaveStatus.DRIVER_AWAKE_NODES_QUERIED_SOME_DEAD,
+    OpenZWaveStatus.DRIVER_ALL_NODES_QUERIED_SOME_DEAD,
+    OpenZWaveStatus.DRIVER_ALL_NODES_QUERIED,
+)
+
+
 class ValueGenre(Enum):
     """Enum with all diferent Value genres."""
 
