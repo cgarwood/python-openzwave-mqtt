@@ -317,6 +317,7 @@ class CommandClass(IntEnum):
 
 # DeviceTypes Generic/Specific
 
+SPECIFIC_TYPE_NOT_USED = 0  # Available in all Generic types
 GENERIC_TYPE_AV_CONTROL_POINT = 3
 SPECIFIC_TYPE_DOORBELL = 18
 SPECIFIC_TYPE_SATELLITE_RECEIVER = 4
