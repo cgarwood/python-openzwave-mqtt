@@ -38,7 +38,11 @@ def main() -> None:
 
     mqttc.on_message = print_message
 
-    mqttc.connect(args.host, args.port, 60)
+    try:
+        mqttc.connect(args.host, args.port, 60)
+    except ConnectionRefusedError:
+        print(f"Failed to connect to {args.host}:{args.port}")
+        return
     mqttc.subscribe("OpenZWave/#", 0)
 
     # Give it two seconds to receive all messages before we disconnect.
