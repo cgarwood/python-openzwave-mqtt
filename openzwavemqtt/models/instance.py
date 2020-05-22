@@ -44,8 +44,10 @@ class OZWInstance(base.ZWaveBase):
             ),
         }
 
-    def send_command(self, command: str, payload: Union[str, dict] = "") -> None:
+    def send_command(self, command: str, payload: Optional[dict] = None) -> None:
         """Send command to the OZW instance."""
+        if payload is None:
+            payload = {}
         topic_prefix = self.options.topic_prefix
         full_topic = f"{topic_prefix}{self.id}/command/{command}/"
         self.options.send_message(full_topic, payload)
