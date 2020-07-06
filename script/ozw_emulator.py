@@ -37,6 +37,7 @@ def get_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+# pylint: disable=too-many-nested-blocks
 async def process_messages(mqtt_client: MQTTClient, mqtt_data: dict) -> None:
     """Keep reading incoming messages from subscribed topics."""
     while True:
@@ -52,18 +53,24 @@ async def process_messages(mqtt_client: MQTTClient, mqtt_data: dict) -> None:
         if topic.endswith("command/setvalue/"):
             new_value = data["Value"]
             for value_topic in mqtt_data:
-                if value_topic.endswith(f'/value/{data["ValueIDKey"]}/'):
-                    payload = mqtt_data[value_topic]
-                    if isinstance(payload["Value"], dict):
-                        payload["Value"]["Selected_id"] = new_value
-                    elif isinstance(payload["Value"], (int, float, bool, str)):
-                        payload["Value"] = new_value
-                    else:
-                        logging.warning("setting this value type is not supported!")
-                        return
-                    payload = json.dumps(payload).encode()
-                    await mqtt_client.publish(value_topic, payload, retain=True)
-                    break
+                if not value_topic.endswith(f'/value/{data["ValueIDKey"]}/'):
+                    continue
+                payload = mqtt_data[value_topic]
+                if isinstance(payload["Value"], dict):
+                    payload["Value"]["Selected_id"] = new_value
+                    # also update label
+                    for item in payload["Value"]["List"]:
+                        if item["Value"] == new_value:
+                            payload["Value"]["Selected"] = item["Label"]
+                            break
+                elif isinstance(payload["Value"], (int, float, bool, str)):
+                    payload["Value"] = new_value
+                else:
+                    logging.warning("setting this value type is not supported!")
+                    return
+                payload = json.dumps(payload).encode()
+                await mqtt_client.publish(value_topic, payload, retain=True)
+                break
 
 
 async def emulate(args: argparse.Namespace) -> None:
