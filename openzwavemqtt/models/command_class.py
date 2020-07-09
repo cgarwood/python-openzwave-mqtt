@@ -6,7 +6,7 @@ from ..const import (
     EVENT_COMMAND_CLASS_REMOVED,
     LOGGER,
     CommandClass,
-    ValueIndex
+    ValueIndex,
 )
 from .node_child_base import OZWNodeChildBase
 from .value import OZWValue
