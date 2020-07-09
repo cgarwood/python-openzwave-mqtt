@@ -33,7 +33,7 @@ class OZWNodeInstance(OZWNodeChildBase):
         return {"commandclass": ItemCollection(OZWCommandClass)}
 
     def get_command_class(self, command_class_id: CommandClass) -> bool:
-        """Helper method to get a specific CommandClass on this NodeInstance."""
+        """Return a specific CommandClass on this NodeInstance (if exists)."""
         # pylint: disable=no-member
         for command_class in self.commandclasses():
             if command_class.command_class_id == command_class_id:
@@ -41,18 +41,18 @@ class OZWNodeInstance(OZWNodeChildBase):
         return None
 
     def has_command_class(self, command_class_id: CommandClass) -> bool:
-        """Helper method to determine if the node has the given CommandClass."""
+        """Determine if the node has the given CommandClass."""
         return self.get_command_class(command_class_id) is not None
 
     def get_value(
         self, command_class_id: CommandClass, value_index: ValueIndex
     ) -> bool:
-        """Helper method to get a specific OZWValue on this node."""
+        """Return a specific OZWValue on this node (if exists)."""
         command_class = self.get_command_class(command_class_id)
         return command_class.get_value(value_index) if command_class else None
 
     def has_value(
         self, command_class_id: CommandClass, value_index: ValueIndex
     ) -> bool:
-        """Helper method to determine if this NodeInstance has the given OZWValue."""
+        """Determine if this NodeInstance has the given OZWValue."""
         return self.get_value(command_class_id, value_index) is not None
