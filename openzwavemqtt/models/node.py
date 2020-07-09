@@ -241,7 +241,7 @@ class OZWNode(ZWaveBase):
     def has_command_class(
         self, command_class_id: CommandClass, instance_id=None
     ) -> bool:
-        """Helper method to determine if the node has the given CommandClass."""
+        """Determine if the node has the given CommandClass."""
         return self.get_command_class(command_class_id, instance_id) is not None
 
     def get_value(
