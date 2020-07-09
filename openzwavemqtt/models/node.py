@@ -2,7 +2,13 @@
 from typing import TYPE_CHECKING, Iterable, List
 
 from ..base import ItemCollection, ZWaveBase
-from ..const import EVENT_NODE_ADDED, EVENT_NODE_CHANGED, EVENT_NODE_REMOVED
+from ..const import (
+    EVENT_NODE_ADDED,
+    EVENT_NODE_CHANGED,
+    EVENT_NODE_REMOVED,
+    CommandClass,
+    ValueIndex,
+)
 from .node_association import OZWNodeAssocation
 from .node_instance import OZWNodeInstance
 from .node_statistics import OZWNodeStatistics
@@ -220,3 +226,31 @@ class OZWNode(ZWaveBase):
             "association": ItemCollection(OZWNodeAssocation),
             "statistics": OZWNodeStatistics,
         }
+
+    def get_command_class(
+        self, command_class_id: CommandClass, instance_id=None
+    ) -> bool:
+        """Helper method to get a specific CommandClass on this node."""
+        # pylint: disable=no-member
+        for instance in self.instances():
+            if not (instance_id is None or instance.instance == instance_id):
+                continue
+            return instance.get_command_class(command_class_id)
+        return None
+
+    def has_command_class(
+        self, command_class_id: CommandClass, instance_id=None
+    ) -> bool:
+        """Helper method to determine if the node has the given CommandClass."""
+        return self.get_command_class(command_class_id, instance_id) is not None
+
+    def get_value(
+        self, command_class_id: CommandClass, value_index: ValueIndex, instance_id=None
+    ) -> bool:
+        """Helper method to get a specific OZWValue on this node."""
+        command_class = self.get_command_class(command_class_id, instance_id)
+        return command_class.get_value(value_index) if command_class else None
+
+    def has_value(self, command_class_id: CommandClass, instance_id=None) -> bool:
+        """Helper method to determine if the node has the given CommandClass."""
+        return self.get_command_class(command_class_id, instance_id) is not None

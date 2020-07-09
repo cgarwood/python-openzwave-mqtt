@@ -6,6 +6,7 @@ from ..const import (
     EVENT_COMMAND_CLASS_REMOVED,
     LOGGER,
     CommandClass,
+    ValueIndex
 )
 from .node_child_base import OZWNodeChildBase
 from .value import OZWValue
@@ -50,3 +51,15 @@ class OZWCommandClass(OZWNodeChildBase):
     def create_collections(self):
         """Create collections that Node supports."""
         return {"value": ItemCollection(OZWValue)}
+
+    def get_value(self, value_index: ValueIndex) -> bool:
+        """Helper method to get a specific OZWValue on this CommandClass."""
+        # pylint: disable=no-member
+        for value in self.values():
+            if value.index == value_index:
+                return value
+        return None
+
+    def has_value(self, value_index: ValueIndex) -> bool:
+        """Helper method to determine if the CommandClass has the given ValueIndex."""
+        return self.get_value(value_index) is not None
