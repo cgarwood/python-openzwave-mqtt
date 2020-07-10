@@ -93,7 +93,10 @@ async def emulate(args: argparse.Namespace) -> None:
 
     # Publish all topics from the provided dump file
     for topic, data in mqtt_data.items():
-        payload = json.dumps(data).encode()
+        # prettify json messages and clear base64 image data
+        if "MetaData" in data and "ProductPicBase64" in data["MetaData"]:
+            data["MetaData"]["ProductPicBase64"] = ""
+        payload = json.dumps(data, indent=4).encode()
         await client.publish(topic, payload, retain=True)
 
     # Subscribe to command topic and start listening for commands
