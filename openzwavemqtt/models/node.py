@@ -1,5 +1,5 @@
 """Model for a OZW Node."""
-from typing import TYPE_CHECKING, Iterable, List
+from typing import Iterable, List, Optional
 
 from ..base import ItemCollection, ZWaveBase
 from ..const import (
@@ -9,12 +9,11 @@ from ..const import (
     CommandClass,
     ValueIndex,
 )
+from .command_class import OZWCommandClass
 from .node_association import OZWNodeAssocation
 from .node_instance import OZWNodeInstance
 from .node_statistics import OZWNodeStatistics
-
-if TYPE_CHECKING:
-    from .value import OZWValue  # noqa: F401 pylint: disable=unused-import
+from .value import OZWValue
 
 
 class OZWNode(ZWaveBase):
@@ -228,29 +227,34 @@ class OZWNode(ZWaveBase):
         }
 
     def get_command_class(
-        self, command_class_id: CommandClass, instance_id=None
-    ) -> bool:
+        self, command_class_id: CommandClass, instance_id: Optional[int] = None
+    ) -> Optional[OZWCommandClass]:
         """Return a specific CommandClass on this node (if exists)."""
         # pylint: disable=no-member
         for instance in self.instances():
-            if not (instance_id is None or instance.instance == instance_id):
+            if instance_id is not None and instance.instance != instance_id:
                 continue
             return instance.get_command_class(command_class_id)
         return None
 
     def has_command_class(
-        self, command_class_id: CommandClass, instance_id=None
+        self, command_class_id: CommandClass, instance_id: Optional[int] = None
     ) -> bool:
         """Determine if the node has the given CommandClass."""
         return self.get_command_class(command_class_id, instance_id) is not None
 
     def get_value(
-        self, command_class_id: CommandClass, value_index: ValueIndex, instance_id=None
-    ) -> bool:
+        self,
+        command_class_id: CommandClass,
+        value_index: ValueIndex,
+        instance_id: Optional[int] = None,
+    ) -> Optional[OZWValue]:
         """Return a specific OZWValue on this node (if exists)."""
         command_class = self.get_command_class(command_class_id, instance_id)
         return command_class.get_value(value_index) if command_class else None
 
-    def has_value(self, command_class_id: CommandClass, instance_id=None) -> bool:
+    def has_value(
+        self, command_class_id: CommandClass, instance_id: Optional[int] = None
+    ) -> bool:
         """Determine if the node has the given CommandClass."""
         return self.get_command_class(command_class_id, instance_id) is not None

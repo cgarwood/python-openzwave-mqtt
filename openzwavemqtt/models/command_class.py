@@ -1,4 +1,6 @@
 """Model for the CommandClass."""
+from typing import Optional
+
 from ..base import ItemCollection
 from ..const import (
     EVENT_COMMAND_CLASS_ADDED,
@@ -52,7 +54,7 @@ class OZWCommandClass(OZWNodeChildBase):
         """Create collections that Node supports."""
         return {"value": ItemCollection(OZWValue)}
 
-    def get_value(self, value_index: ValueIndex) -> bool:
+    def get_value(self, value_index: ValueIndex) -> Optional[OZWValue]:
         """Return a specific OZWValue on this CommandClass (if exists)."""
         # pylint: disable=no-member
         for value in self.values():
