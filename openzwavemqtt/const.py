@@ -187,6 +187,8 @@ class ValueIndex(IntEnum):
     # Color
     SWITCH_COLOR_COLOR = 0
     SWITCH_COLOR_CHANNELS = 2
+    SWITCH_COLOR_CT_WARM = 81
+    SWITCH_COLOR_CT_COLD = 82
     # SwitchMultilevel
     SWITCH_MULTILEVEL_LEVEL = 0
     SWITCH_MULTILEVEL_BRIGHT = 1
