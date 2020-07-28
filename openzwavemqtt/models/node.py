@@ -259,5 +259,5 @@ class OZWNode(ZWaveBase):
         value_index: ValueIndex,
         instance_id: Optional[int] = None,
     ) -> bool:
-        """Determine if the node has the given CommandClass."""
+        """Determine if the node has the given Value."""
         return self.get_value(command_class_id, value_index, instance_id) is not None
