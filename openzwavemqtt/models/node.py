@@ -251,7 +251,7 @@ class OZWNode(ZWaveBase):
     ) -> Optional[OZWValue]:
         """Return a specific OZWValue on this node (if exists)."""
         command_class = self.get_command_class(command_class_id, instance_id)
-        return command_class.get_value(value_index) if command_class else None
+        return command_class.get_value_by_index(value_index) if command_class else None
 
     def has_value(
         self, command_class_id: CommandClass, instance_id: Optional[int] = None

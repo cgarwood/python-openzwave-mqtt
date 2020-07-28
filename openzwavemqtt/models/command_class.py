@@ -54,7 +54,7 @@ class OZWCommandClass(OZWNodeChildBase):
         """Create collections that Node supports."""
         return {"value": ItemCollection(OZWValue)}
 
-    def get_value(self, value_index: ValueIndex) -> Optional[OZWValue]:
+    def get_value_by_index(self, value_index: ValueIndex) -> Optional[OZWValue]:
         """Return a specific OZWValue on this CommandClass (if exists)."""
         # pylint: disable=no-member
         for value in self.values():
@@ -64,4 +64,4 @@ class OZWCommandClass(OZWNodeChildBase):
 
     def has_value(self, value_index: ValueIndex) -> bool:
         """Determine if the CommandClass has the given ValueIndex."""
-        return self.get_value(value_index) is not None
+        return self.get_value_by_index(value_index) is not None
