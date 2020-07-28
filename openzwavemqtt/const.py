@@ -215,6 +215,10 @@ class ValueIndex(IntEnum):
     NOTIFICATION_IRRIGATION = 17
     NOTIFICATION_GAS = 18
     UNKNOWN = 999
+    # Version
+    VERSION_LIBRARY = 0
+    VERSION_PROTOCOL = 1
+    VERSION_APPLICATION = 2
 
 
 class CommandClass(IntEnum):
