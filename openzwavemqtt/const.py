@@ -78,6 +78,7 @@ class ValueType(Enum):
     STRING = "String"
     DECIMAL = "Decimal"
     BYTE = "Byte"
+    SHORT = "Short"
     INT = "Int"
     BUTTON = "Button"
     UNKNOWN = None
