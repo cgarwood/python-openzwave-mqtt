@@ -23,9 +23,10 @@ class OZWOptions:
 
     def listen(
         self, event: str, listener: Callable[[Union[dict, "ZWaveBase"]], None]
-    ) -> None:
+    ) -> Callable[[], None]:
         """Attach listener for events."""
         self.listeners.setdefault(event, []).append(listener)
+        return lambda: self.listeners[event].remove(listener)
 
     def notify(self, event: str, data: Union[dict, "ZWaveBase"]) -> None:
         """Notify listeners of a new event."""
