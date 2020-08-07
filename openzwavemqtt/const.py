@@ -95,6 +95,7 @@ class ValueIndex(IntEnum):
     BARRIER_OPERATOR_LABEL = 1
     # DoorLock
     DOOR_LOCK_LOCK = 0
+    CLEAR_USER_CODE = 256
     # Meter
     METER_POWER = 2
     METER_RESET = 257
