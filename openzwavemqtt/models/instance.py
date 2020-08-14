@@ -83,6 +83,6 @@ class OZWInstance(base.ZWaveBase):
         """Cancel in Controller Commands that are in progress."""
         self.send_command("cancelcontrollercommand")
 
-    def has_node_failed(self, node_id: int) -> None:
+    def check_node_failed(self, node_id: int) -> None:
         """Force OZW to test communication with a node."""
         self.send_command("hasnodefailed", {"node": node_id})
