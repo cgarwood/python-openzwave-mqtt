@@ -95,3 +95,7 @@ class OZWInstance(base.ZWaveBase):
         """Refresh dynamic and static values for a node."""
         self.send_command("requestnodestate", {"node": node_id})
 
+    def refresh_dynamic_values(self, node_id: int) -> None:
+        """Refresh dynamic values for a node."""
+        self.send_command("requestnodedynamic", {"node": node_id})
+
