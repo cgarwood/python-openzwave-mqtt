@@ -86,3 +86,15 @@ class OZWInstance(base.ZWaveBase):
     def check_node_failed(self, node_id: int) -> None:
         """Force OZW to test communication with a node."""
         self.send_command("hasnodefailed", {"node": node_id})
+
+    def refresh_value(self, value_id: int) -> None:
+        """Refresh a specific value."""
+        self.send_command("refreshvalue", {"ValueIDKey": value_id})
+
+    def refresh_values(self, node_id: int) -> None:
+        """Refresh dynamic and static values for a node."""
+        self.send_command("requestnodestate", {"node": node_id})
+
+    def refresh_dynamic_values(self, node_id: int) -> None:
+        """Refresh dynamic values for a node."""
+        self.send_command("requestnodedynamic", {"node": node_id})
