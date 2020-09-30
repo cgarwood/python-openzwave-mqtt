@@ -4,6 +4,15 @@ from enum import Enum, IntEnum
 
 LOGGER = logging.getLogger("openzwavemqtt")
 
+# Attribute names for utility functions
+ATTR_PARAMETER = "parameter"
+ATTR_VALUE = "value"
+ATTR_LABEL = "label"
+ATTR_MAX = "max"
+ATTR_MIN = "min"
+ATTR_OPTIONS = "options"
+ATTR_TYPE = "type"
+
 # OZW Events
 EVENT_PLACEHOLDER = "missing"
 EVENT_COMMAND_CLASS_ADDED = "command_class_added"
