@@ -45,7 +45,7 @@ def set_config_parameter(node, parameter, new_value):
                 value.send_value(payload)
                 return payload
 
-            raise TypeError("Configuration parameter value must be true or false",)
+            raise TypeError("Configuration parameter value must be true or false")
 
         raise TypeError(
             (
@@ -85,8 +85,47 @@ def set_config_parameter(node, parameter, new_value):
             )
         )
 
+    # Bitset value is passed in as dict
+    if value.type == ValueType.BITSET:
+        try:
+            if not isinstance(new_value, dict) or not any(
+                [int(val) not in (0, 1) for val in new_value.values()]
+            ):
+                raise TypeError(
+                    (
+                        "Configuration parameter value must be in the form of a "
+                        "dict with keys being the label or position of a "
+                        "particular bit and values being 0 or 1"
+                    )
+                )
+        except ValueError:
+            raise TypeError(
+                (
+                    "Configuration parameter value must be in the form of a "
+                    "dict with keys being the label or position of a "
+                    "particular bit and values being 0 or 1"
+                )
+            )
+
+        # Check that all keys in dictionary are a valid position or label
+        if not any(
+            [
+                any(
+                    [
+                        key not in (int(bit["Position"]), bit["Label"])
+                        for bit in value.value
+                    ],
+                )
+                for key in new_value.keys()
+            ]
+        ):
+            raise KeyError("Configuration parameter value has an invalid key")
+
+        value.send_value(new_value)
+        return value
+
     # Int, Byte, Short are always passed as int, Decimal should be float
-    if value.type in (ValueType.INT, ValueType.BYTE, ValueType.SHORT,):
+    if value.type in (ValueType.INT, ValueType.BYTE, ValueType.SHORT):
         try:
             new_value = int(new_value)
         except ValueError:
@@ -120,12 +159,19 @@ def get_config_parameters(node):
 
     for value in node.values():
         value_to_return = {}
-        # BUTTON types aren't supported yet, and STRING and UNKNOWN
-        # are not valid config parameter types
+        # BUTTON types aren't supported yet, and STRING, RAW, SCHEDULE,
+        # and UNKNOWN are not valid config parameter types
         if (
             value.read_only
             or value.genre != ValueGenre.CONFIG
-            or value.type in (ValueType.BUTTON, ValueType.STRING, ValueType.UNKNOWN)
+            or value.type
+            in (
+                ValueType.BUTTON,
+                ValueType.STRING,
+                ValueType.RAW,
+                ValueType.SCHEDULE,
+                ValueType.UNKNOWN,
+            )
         ):
             continue
 
@@ -142,7 +188,12 @@ def get_config_parameters(node):
             value_to_return[ATTR_VALUE] = value.value["Selected"]
             value_to_return[ATTR_OPTIONS] = value.value["List"]
 
-        elif value.type in (ValueType.INT, ValueType.BYTE, ValueType.SHORT,):
+        elif value.type == ValueType.BITSET:
+            value_to_return[ATTR_VALUE] = {
+                bit["Label"]: int(bit["Value"]) for bit in value.value
+            }
+
+        elif value.type in (ValueType.INT, ValueType.BYTE, ValueType.SHORT):
             value_to_return[ATTR_VALUE] = int(value.value)
             value_to_return[ATTR_MAX] = value.max
             value_to_return[ATTR_MIN] = value.min
