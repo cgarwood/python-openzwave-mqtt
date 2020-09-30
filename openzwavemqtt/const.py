@@ -6,6 +6,7 @@ LOGGER = logging.getLogger("openzwavemqtt")
 
 # Attribute names for utility functions
 ATTR_PARAMETER = "parameter"
+ATTR_POSITION = "position"
 ATTR_VALUE = "value"
 ATTR_LABEL = "label"
 ATTR_MAX = "max"

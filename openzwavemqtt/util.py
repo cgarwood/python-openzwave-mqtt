@@ -7,6 +7,7 @@ from .const import (
 	ATTR_MIN,
 	ATTR_OPTIONS,
 	ATTR_PARAMETER,
+	ATTR_POSITION,
 	ATTR_TYPE,
 	ATTR_VALUE,
 	CommandClass,
@@ -195,9 +196,14 @@ def get_config_parameters(node: OZWNode) -> List[Dict[str, Any]]:
             value_to_return[ATTR_OPTIONS] = value.value["List"]
 
         elif value.type == ValueType.BITSET:
-            value_to_return[ATTR_VALUE] = {
-                bit["Label"]: int(bit["Value"]) for bit in value.value
-            }
+            value_to_return[ATTR_VALUE] = [
+                {
+                    ATTR_LABEL: bit["Label"],
+                    ATTR_POSITION: int(bit["Position"]),
+                    ATTR_VALUE: int(bit["Value"]),
+                }
+                for bit in value.value
+            ]
 
         elif value.type in (ValueType.INT, ValueType.BYTE, ValueType.SHORT):
             value_to_return[ATTR_VALUE] = int(value.value)
