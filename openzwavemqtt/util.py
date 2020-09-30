@@ -1,19 +1,25 @@
 """Utility functions and classes for OpenZWave."""
+from typing import Any, Dict, List
+
 from .const import (
-    CommandClass,
-    ValueGenre,
-    ValueType,
-    ATTR_LABEL,
-    ATTR_MAX,
-    ATTR_MIN,
-    ATTR_OPTIONS,
-    ATTR_PARAMETER,
-    ATTR_TYPE,
-    ATTR_VALUE,
+	ATTR_LABEL,
+	ATTR_MAX,
+	ATTR_MIN,
+	ATTR_OPTIONS,
+	ATTR_PARAMETER,
+	ATTR_TYPE,
+	ATTR_VALUE,
+	CommandClass,
+	ValueGenre,
+	ValueType,
 )
+from .manager import OZWManager
+from .models.node import OZWNode
 
 
-def get_node_from_manager(manager, instance_id, node_id):
+def get_node_from_manager(
+    manager: OZWManager, instance_id: int, node_id: int
+) -> OZWNode:
     """Get OZWNode from OZWManager."""
     instance = manager.get_instance(instance_id)
     if not instance:
@@ -26,7 +32,7 @@ def get_node_from_manager(manager, instance_id, node_id):
     return node
 
 
-def set_config_parameter(node, parameter, new_value):
+def set_config_parameter(node: OZWNode, parameter: int, new_value: Any) -> Any:
     """Set config parameter to a node."""
     value = node.get_value(CommandClass.CONFIGURATION, parameter)
     if not value:
@@ -153,7 +159,7 @@ def set_config_parameter(node, parameter, new_value):
     )
 
 
-def get_config_parameters(node):
+def get_config_parameters(node: OZWNode) -> List[Dict[str, Any]]:
     """Get config parameter from a node."""
     values = []
 
