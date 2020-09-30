@@ -13,60 +13,46 @@ from .const import (
 )
 
 
-class OZWValidationResponse:
-    """Class to hold response for validating an action."""
+def get_node_from_manager(manager, instance_id, node_id):
+    """Get OZWNode from OZWManager."""
+    instance = manager.get_instance(instance_id)
+    if not instance:
+        raise KeyError(f"OZW Instance {instance_id} not found")
 
-    def __init__(self, success, *args, payload=None, err_msg=None):
-        """Initialize OZWValidationResponse."""
-        self.success = success
-        self.payload = payload
-        self.err_msg = err_msg
-        self.err_args = args
+    node = instance.get_node(node_id)
+    if not node:
+        raise KeyError(f"OZW Node {node_id} not found")
 
-    @classmethod
-    def process_fail(cls, err_msg, *args):
-        """Process an invalid request."""
-        return cls(False, err_msg=err_msg, *args)
-
-    @classmethod
-    def process_fail_on_type(cls, value, new_value):
-        """Process an invalid request that fails type validation."""
-        return cls.process_fail(
-            "Configuration parameter type {} does not match the value type {}",
-            value.type,
-            type(new_value),
-        )
-
-    @classmethod
-    def process_success(cls, payload):
-        """Process a valid request."""
-        return cls(True, payload=payload)
+    return node
 
 
 def set_config_parameter(node, parameter, new_value):
     """Set config parameter to a node."""
     value = node.get_value(CommandClass.CONFIGURATION, parameter)
     if not value:
-        return OZWValidationResponse.process_fail(
-            "Configuration parameter {} for OZW Node Instance not found", parameter,
+        raise KeyError(
+            f"Configuration parameter {parameter} for OZW Node Instance not found"
         )
 
     # Bool can be passed in as string or bool
     if value.type == ValueType.BOOL:
         if isinstance(new_value, bool):
             value.send_value(new_value)
-            return OZWValidationResponse.process_success(new_value)
+            return new_value
         if isinstance(new_value, str):
             if new_value.lower() in ("true", "false"):
                 payload = new_value.lower() == "true"
                 value.send_value(payload)
-                return OZWValidationResponse.process_success(payload)
+                return payload
 
-            return OZWValidationResponse.process_fail(
-                "Configuration parameter value must be true or false",
+            raise TypeError("Configuration parameter value must be true or false",)
+
+        raise TypeError(
+            (
+                f"Configuration parameter type {value.type} does not match "
+                f"the value type {type(new_value)}"
             )
-
-        return OZWValidationResponse.process_fail_on_type(value, new_value)
+        )
 
     # List value can be passed in as string or int
     if value.type == ValueType.LIST:
@@ -75,7 +61,12 @@ def set_config_parameter(node, parameter, new_value):
         except ValueError:
             pass
         if not isinstance(new_value, str) and not isinstance(new_value, int):
-            return OZWValidationResponse.process_fail_on_type(value, new_value)
+            raise TypeError(
+                (
+                    f"Configuration parameter type {value.type} does not match "
+                    f"the value type {type(new_value)}"
+                )
+            )
 
         for option in value.value["List"]:
             if new_value not in (option["Label"], option["Value"]):
@@ -85,10 +76,13 @@ def set_config_parameter(node, parameter, new_value):
             except ValueError:
                 payload = option["Value"]
             value.send_value(payload)
-            return OZWValidationResponse.process_success(payload)
+            return payload
 
-        return OZWValidationResponse.process_fail(
-            "Invalid value {} for parameter {}", new_value, parameter,
+        raise TypeError(
+            (
+                f"Configuration parameter type {value.type} does not match "
+                f"the value type {type(new_value)}"
+            )
         )
 
     # Int, Byte, Short are always passed as int, Decimal should be float
@@ -96,23 +90,27 @@ def set_config_parameter(node, parameter, new_value):
         try:
             new_value = int(new_value)
         except ValueError:
-            return OZWValidationResponse.process_fail_on_type(value, new_value)
+            raise TypeError(
+                (
+                    f"Configuration parameter type {value.type} does not match "
+                    f"the value type {type(new_value)}"
+                )
+            )
         if (value.max and new_value > value.max) or (
             value.min and new_value < value.min
         ):
-            return OZWValidationResponse.process_fail(
-                "Value {} out of range for parameter {} (Min: {} Max: {})",
-                new_value,
-                parameter,
-                value.min,
-                value.max,
+            raise ValueError(
+                (
+                    f"Value {new_value} out of range for parameter {parameter}"
+                    f" (Range: {value.min}-{value.max})",
+                )
             )
         value.send_value(new_value)
-        return OZWValidationResponse.process_success(new_value)
+        return new_value
 
     # This will catch BUTTON, STRING, and UNKNOWN ValueTypes
-    return OZWValidationResponse.process_fail(
-        "Value type of {} for parameter {} not supported", value.type, parameter,
+    raise TypeError(
+        f"Value type of {value.type} for parameter {parameter} not supported"
     )
 
 
@@ -151,4 +149,4 @@ def get_config_parameters(node):
 
         values.append(value_to_return)
 
-    return OZWValidationResponse.process_success(values)
+    return values
