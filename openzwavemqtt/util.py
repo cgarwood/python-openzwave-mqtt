@@ -116,15 +116,11 @@ def set_config_parameter(node: OZWNode, parameter: int, new_value: Any) -> Any:
 
         # Check that all keys in dictionary are a valid position or label
         if not any(
-            [
-                any(
-                    [
-                        key not in (int(bit["Position"]), bit["Label"])
-                        for bit in value.value
-                    ],
-                )
-                for key in new_value.keys()
-            ]
+            any(
+                key not in (int(bit["Position"]), bit["Label"])
+                for bit in value.value
+            )
+            for key in new_value.keys()
         ):
             raise KeyError("Configuration parameter value has an invalid key")
 
