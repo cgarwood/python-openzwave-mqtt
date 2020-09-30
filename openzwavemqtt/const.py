@@ -67,6 +67,7 @@ class ValueGenre(Enum):
     USER = "User"
     SYSTEM = "System"
     BASIC = "Basic"
+    CONFIG = "Config"
     UNKNOWN = None
 
 
@@ -80,7 +81,10 @@ class ValueType(Enum):
     BYTE = "Byte"
     SHORT = "Short"
     INT = "Int"
-    BUTTON = "Button"
+    BITSET = "BitSet"
+    RAW = "Raw"
+    BUTTON = "Button"  # Currently not working in OZW
+    SCHEDULE = "Schedule"  # Currently unsupported by OZW
     UNKNOWN = None
 
 
