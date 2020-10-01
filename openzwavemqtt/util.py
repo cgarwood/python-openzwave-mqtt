@@ -276,6 +276,6 @@ def clear_usercode(node: OZWNode, code_slot: int) -> None:
     if not value:
         raise WrongTypeError("Entity is not capable of clearing user codes")
 
-    value.send_value(code_slot)
+    value.send_value(code_slot)  # type: ignore
     # Sending twice because the first time it doesn't take
-    value.send_value(code_slot)
+    value.send_value(code_slot)  # type: ignore
