@@ -113,6 +113,7 @@ class ValueIndex(IntEnum):
     # DoorLock
     DOOR_LOCK_LOCK = 0
     CLEAR_USER_CODE = 256
+    NUM_USER_CODES = 257
     # Meter
     METER_POWER = 2
     METER_RESET = 257
