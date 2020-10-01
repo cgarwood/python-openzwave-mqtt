@@ -65,7 +65,7 @@ def _set_list_config_parameter(value: OZWValue, new_value: Union[int, str]) -> i
     except ValueError:
         pass
 
-    if isinstance(new_value, str) or isinstance(new_value, int):
+    if isinstance(new_value, (int, str)):
         for option in value.value["List"]:  # type: ignore
             if new_value not in (option["Label"], option["Value"]):
                 continue
