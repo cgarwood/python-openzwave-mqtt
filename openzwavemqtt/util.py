@@ -269,7 +269,7 @@ def set_usercode(node: OZWNode, code_slot: int, usercode: str) -> None:
     value.send_value(usercode)  # type: ignore
 
 
-def clear_usercode(node, code_slot):
+def clear_usercode(node: OZWNode, code_slot: int) -> None:
     """Clear usercode in slot X on the lock."""
     value = node.get_value(CommandClass.USER_CODE, ValueIndex.CLEAR_USER_CODE)
 
