@@ -42,7 +42,7 @@ def _set_bool_config_parameter(value: OZWValue, new_value: Union[bool, str]) -> 
         return new_value
 
     if isinstance(new_value, str):
-        new_value = new_value.lower()  # type: ignore
+        new_value = new_value.lower()
         if new_value in ("true", "false"):
             payload = new_value == "true"
             value.send_value(payload)  # type: ignore
@@ -61,7 +61,7 @@ def _set_bool_config_parameter(value: OZWValue, new_value: Union[bool, str]) -> 
 def _set_list_config_parameter(value: OZWValue, new_value: Union[int, str]) -> int:
     """Set a ValueType.LIST config parameter."""
     try:
-        new_value = int(new_value)  # type: ignore
+        new_value = int(new_value)
     except ValueError:
         pass
 
@@ -124,7 +124,7 @@ def _set_bitset_config_parameter(
 def _set_int_config_parameter(parameter: int, value: OZWValue, new_value: int) -> int:
     """Set a ValueType.BITSET config parameter."""
     try:
-        new_value = int(new_value)  # type: ignore
+        new_value = int(new_value)
     except ValueError:
         raise WrongTypeError(
             (
@@ -223,7 +223,7 @@ def get_config_parameters(node: OZWNode) -> List[Dict[str, Any]]:
             ]
 
         elif value.type in (ValueType.INT, ValueType.BYTE, ValueType.SHORT):
-            value_to_return[ATTR_VALUE] = int(value.value)
+            value_to_return[ATTR_VALUE] = int(value.value)  # type: ignore
             value_to_return[ATTR_MAX] = value.max
             value_to_return[ATTR_MIN] = value.min
 
