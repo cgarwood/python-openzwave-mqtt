@@ -153,8 +153,8 @@ def _set_int_config_parameter(parameter: int, value: OZWValue, new_value: int) -
 def set_config_parameter(
     node: OZWNode,
     parameter: int,
-    new_value: Union[int, bool, Dict[str, Union[str, int]]],
-) -> Union[int, bool, Dict[str, Union[str, int]]]:
+    new_value: Union[int, str, bool, Dict[Union[int, str], int]],
+) -> Union[int, str, bool, Dict[Union[int, str], int]]:
     """Set config parameter to a node."""
     value = node.get_value(CommandClass.CONFIGURATION, parameter)
     if not value:
