@@ -1,5 +1,5 @@
 """Utility functions and classes for OpenZWave."""
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union
 
 from .const import (
     ATTR_LABEL,
@@ -34,7 +34,11 @@ def get_node_from_manager(
     return node  # type: ignore
 
 
-def set_config_parameter(node: OZWNode, parameter: int, new_value: Any) -> Any:
+def set_config_parameter(
+    node: OZWNode,
+    parameter: int,
+    new_value: Union[int, bool, Dict[str, Union[str, int]]],
+) -> Union[int, bool, Dict[str, Union[str, int]]]:
     """Set config parameter to a node."""
     value = node.get_value(CommandClass.CONFIGURATION, parameter)
     if not value:
@@ -47,6 +51,7 @@ def set_config_parameter(node: OZWNode, parameter: int, new_value: Any) -> Any:
         if isinstance(new_value, bool):
             value.send_value(new_value)  # type: ignore
             return new_value
+
         if isinstance(new_value, str):
             if new_value.lower() in ("true", "false"):
                 payload = new_value.lower() == "true"
@@ -68,6 +73,7 @@ def set_config_parameter(node: OZWNode, parameter: int, new_value: Any) -> Any:
             new_value = int(new_value)
         except ValueError:
             pass
+
         if not isinstance(new_value, str) and not isinstance(new_value, int):
             raise WrongTypeError(
                 (
@@ -123,7 +129,7 @@ def set_config_parameter(node: OZWNode, parameter: int, new_value: Any) -> Any:
             raise NotFoundError("Configuration parameter value has an invalid key")
 
         value.send_value(new_value)  # type: ignore
-        return value
+        return new_value
 
     # Int, Byte, Short are always passed as int, Decimal should be float
     if value.type in (ValueType.INT, ValueType.BYTE, ValueType.SHORT):
