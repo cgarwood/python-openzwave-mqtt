@@ -113,7 +113,7 @@ def _set_bitset_config_parameter(
         any(
             key not in (int(bit["Position"]), bit["Label"]) for bit in value.value  # type: ignore
         )
-        for key in new_value.keys()
+        for key in new_value
     ):
         raise NotFoundError("Configuration parameter value has an invalid key")
 
