@@ -1,5 +1,5 @@
 """Utility functions and classes for OpenZWave."""
-from typing import Any, Dict, List, Union
+from typing import cast, Any, Dict, List, Union
 
 from .const import (
     ATTR_LABEL,
@@ -25,11 +25,11 @@ def get_node_from_manager(
     manager: OZWManager, instance_id: int, node_id: int
 ) -> OZWNode:
     """Get OZWNode from OZWManager."""
-    instance: OZWInstance = manager.get_instance(instance_id)
+    instance = manager.get_instance(instance_id)  # type: ignore
     if not instance:
         raise NotFoundError(f"OZW Instance {instance_id} not found")
 
-    node: OZWNode = instance.get_node(node_id)
+    node = cast(OZWNode, instance.get_node(node_id))  # type: ignore
     if not node:
         raise NotFoundError(f"OZW Node {node_id} not found")
 
