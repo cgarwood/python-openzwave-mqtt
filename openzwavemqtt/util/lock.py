@@ -9,7 +9,7 @@ from ..const import (
     ValueGenre,
     ValueIndex,
 )
-from ..exceptions import InvalidValueError, NotFoundError, NotSupportedError, WrongTypeError
+from ..exceptions import InvalidValueError, NotFoundError, NotSupportedError
 from ..models.node import OZWNode
 
 
