@@ -28,7 +28,7 @@ def get_node_from_manager(
     if not instance:
         raise NotFoundError(f"OZW Instance {instance_id} not found")
 
-    node = cast(OZWNode, instance.get_node(node_id))  # type: ignore
+    node = cast(OZWNode, instance.get_node(node_id))
     if not node:
         raise NotFoundError(f"OZW Node {node_id} not found")
 
