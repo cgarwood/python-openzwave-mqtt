@@ -1,4 +1,5 @@
 """Utility functions and classes for OpenZWave."""
+from openzwavemqtt.models.instance import OZWInstance
 from typing import Any, Dict, List, Union
 
 from .const import (
@@ -24,15 +25,15 @@ def get_node_from_manager(
     manager: OZWManager, instance_id: int, node_id: int
 ) -> OZWNode:
     """Get OZWNode from OZWManager."""
-    instance = manager.get_instance(instance_id)  # type: ignore
+    instance: OZWInstance = manager.get_instance(instance_id)
     if not instance:
         raise NotFoundError(f"OZW Instance {instance_id} not found")
 
-    node = instance.get_node(node_id)
+    node: OZWNode = instance.get_node(node_id)
     if not node:
         raise NotFoundError(f"OZW Node {node_id} not found")
 
-    return node  # type: ignore
+    return node
 
 
 def _set_bool_config_parameter(value: OZWValue, new_value: Union[bool, str]) -> bool:
