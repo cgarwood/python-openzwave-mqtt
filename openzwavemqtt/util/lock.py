@@ -9,7 +9,7 @@ from ..const import (
     ValueGenre,
     ValueIndex,
 )
-from ..exceptions import InvalidValueError, NotFoundError, WrongTypeError
+from ..exceptions import InvalidValueError, NotFoundError, NotSupportedError, WrongTypeError
 from ..models.node import OZWNode
 
 
@@ -18,7 +18,7 @@ def get_code_slots(node: OZWNode) -> List[Dict[str, Union[int, bool, str]]]:
     command_class = node.get_command_class(CommandClass.USER_CODE)
 
     if not command_class:
-        raise WrongTypeError("Node doesn't have code slots")
+        raise NotSupportedError("Node doesn't have code slots")
 
     return [
         {
@@ -49,7 +49,7 @@ def clear_usercode(node: OZWNode, code_slot: int) -> None:
     value = node.get_value(CommandClass.USER_CODE, ValueIndex.CLEAR_USER_CODE)
 
     if not value:
-        raise WrongTypeError("Node is not capable of clearing user codes")
+        raise NotSupportedError("Node is not capable of clearing user codes")
 
     value.send_value(code_slot)  # type: ignore
     # Sending twice because the first time it doesn't take
