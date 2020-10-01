@@ -1,5 +1,5 @@
 """Utility functions and classes for OpenZWave."""
-from typing import cast, Any, Dict, List, Union
+from typing import cast, Dict, List, Union
 
 from .const import (
     ATTR_CODE_SLOT,
@@ -181,7 +181,9 @@ def set_config_parameter(
     )
 
 
-def get_config_parameters(node: OZWNode) -> List[Dict[str, Any]]:
+def get_config_parameters(
+    node: OZWNode,
+) -> List[Dict[str, Union[int, str, bool, Dict[Union[int, str], int]]]]:
     """Get config parameter from a node."""
     values = []
 
