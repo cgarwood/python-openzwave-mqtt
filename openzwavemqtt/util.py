@@ -1,5 +1,4 @@
 """Utility functions and classes for OpenZWave."""
-from openzwavemqtt.models.instance import OZWInstance
 from typing import Any, Dict, List, Union
 
 from .const import (
@@ -17,6 +16,7 @@ from .const import (
 )
 from .exceptions import InvalidValueError, NotFoundError, WrongTypeError
 from .manager import OZWManager
+from .models.instance import OZWInstance
 from .models.node import OZWNode
 from .models.value import OZWValue
 
