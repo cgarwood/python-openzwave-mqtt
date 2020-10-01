@@ -14,6 +14,7 @@ from .const import (
     ValueGenre,
     ValueType,
 )
+from .exceptions import InvalidValueError, NotFoundError, WrongTypeError
 from .manager import OZWManager
 from .models.node import OZWNode
 
@@ -24,11 +25,11 @@ def get_node_from_manager(
     """Get OZWNode from OZWManager."""
     instance = manager.get_instance(instance_id)
     if not instance:
-        raise KeyError(f"OZW Instance {instance_id} not found")
+        raise NotFoundError(f"OZW Instance {instance_id} not found")
 
     node = instance.get_node(node_id)
     if not node:
-        raise KeyError(f"OZW Node {node_id} not found")
+        raise NotFoundError(f"OZW Node {node_id} not found")
 
     return node
 
@@ -37,7 +38,7 @@ def set_config_parameter(node: OZWNode, parameter: int, new_value: Any) -> Any:
     """Set config parameter to a node."""
     value = node.get_value(CommandClass.CONFIGURATION, parameter)
     if not value:
-        raise KeyError(
+        raise NotFoundError(
             f"Configuration parameter {parameter} for OZW Node Instance not found"
         )
 
@@ -52,9 +53,9 @@ def set_config_parameter(node: OZWNode, parameter: int, new_value: Any) -> Any:
                 value.send_value(payload)
                 return payload
 
-            raise TypeError("Configuration parameter value must be true or false")
+            raise WrongTypeError("Configuration parameter value must be true or false")
 
-        raise TypeError(
+        raise WrongTypeError(
             (
                 f"Configuration parameter type {value.type} does not match "
                 f"the value type {type(new_value)}"
@@ -68,7 +69,7 @@ def set_config_parameter(node: OZWNode, parameter: int, new_value: Any) -> Any:
         except ValueError:
             pass
         if not isinstance(new_value, str) and not isinstance(new_value, int):
-            raise TypeError(
+            raise WrongTypeError(
                 (
                     f"Configuration parameter type {value.type} does not match "
                     f"the value type {type(new_value)}"
@@ -85,7 +86,7 @@ def set_config_parameter(node: OZWNode, parameter: int, new_value: Any) -> Any:
             value.send_value(payload)
             return payload
 
-        raise TypeError(
+        raise WrongTypeError(
             (
                 f"Configuration parameter type {value.type} does not match "
                 f"the value type {type(new_value)}"
@@ -98,7 +99,7 @@ def set_config_parameter(node: OZWNode, parameter: int, new_value: Any) -> Any:
             if not isinstance(new_value, dict) or not any(
                 [int(val) not in (0, 1) for val in new_value.values()]
             ):
-                raise TypeError(
+                raise WrongTypeError(
                     (
                         "Configuration parameter value must be in the form of a "
                         "dict with keys being the label or position of a "
@@ -106,7 +107,7 @@ def set_config_parameter(node: OZWNode, parameter: int, new_value: Any) -> Any:
                     )
                 )
         except ValueError:
-            raise TypeError(
+            raise WrongTypeError(
                 (
                     "Configuration parameter value must be in the form of a "
                     "dict with keys being the label or position of a "
@@ -119,7 +120,7 @@ def set_config_parameter(node: OZWNode, parameter: int, new_value: Any) -> Any:
             any(key not in (int(bit["Position"]), bit["Label"]) for bit in value.value)
             for key in new_value.keys()
         ):
-            raise KeyError("Configuration parameter value has an invalid key")
+            raise NotFoundError("Configuration parameter value has an invalid key")
 
         value.send_value(new_value)
         return value
@@ -129,7 +130,7 @@ def set_config_parameter(node: OZWNode, parameter: int, new_value: Any) -> Any:
         try:
             new_value = int(new_value)
         except ValueError:
-            raise TypeError(
+            raise WrongTypeError(
                 (
                     f"Configuration parameter type {value.type} does not match "
                     f"the value type {type(new_value)}"
@@ -138,7 +139,7 @@ def set_config_parameter(node: OZWNode, parameter: int, new_value: Any) -> Any:
         if (value.max and new_value > value.max) or (
             value.min and new_value < value.min
         ):
-            raise ValueError(
+            raise InvalidValueError(
                 (
                     f"Value {new_value} out of range for parameter {parameter}"
                     f" (Range: {value.min}-{value.max})",
@@ -148,7 +149,7 @@ def set_config_parameter(node: OZWNode, parameter: int, new_value: Any) -> Any:
         return new_value
 
     # This will catch BUTTON, STRING, and UNKNOWN ValueTypes
-    raise TypeError(
+    raise WrongTypeError(
         f"Value type of {value.type} for parameter {parameter} not supported"
     )
 
