@@ -2,9 +2,12 @@
 from typing import cast, Any, Dict, List, Union
 
 from .const import (
+    ATTR_CODE_SLOT,
+    ATTR_IN_USE,
     ATTR_LABEL,
     ATTR_MAX,
     ATTR_MIN,
+    ATTR_NAME,
     ATTR_OPTIONS,
     ATTR_PARAMETER,
     ATTR_POSITION,
@@ -12,6 +15,7 @@ from .const import (
     ATTR_VALUE,
     CommandClass,
     ValueGenre,
+    ValueIndex,
     ValueType,
 )
 from .exceptions import InvalidValueError, NotFoundError, WrongTypeError
@@ -230,3 +234,46 @@ def get_config_parameters(node: OZWNode) -> List[Dict[str, Any]]:
         values.append(value_to_return)
 
     return values
+
+
+def get_code_slots(node: OZWNode) -> List[Dict[str, Union[int, bool, str]]]:
+    """Get all code slots on the lock and whether or not they are used."""
+    command_class = node.get_command_class(CommandClass.USER_CODE)
+
+    if not command_class:
+        raise NotFoundError("Entity doesn't have any user codes available to configure")
+
+    return [
+        {
+            ATTR_CODE_SLOT: value.index.value,
+            ATTR_NAME: value.label,
+            ATTR_IN_USE: value.value_set,
+        }
+        for value in command_class.values()  # type: ignore
+        if value.genre == ValueGenre.USER
+    ]
+
+
+def set_usercode(node: OZWNode, code_slot: int, usercode: str) -> None:
+    """Set the usercode to index X on the lock."""
+    value = node.get_value(CommandClass.USER_CODE, code_slot)
+
+    if not value:
+        raise NotFoundError(f"Code slot {code_slot} not found")
+
+    if len(str(usercode)) < 4:
+        raise InvalidValueError("User code must be at least 4 digits")
+
+    value.send_value(usercode)  # type: ignore
+
+
+def clear_usercode(node, code_slot):
+    """Clear usercode in slot X on the lock."""
+    value = node.get_value(CommandClass.USER_CODE, ValueIndex.CLEAR_USER_CODE)
+
+    if not value:
+        raise WrongTypeError("Entity is not capable of clearing user codes")
+
+    value.send_value(code_slot)
+    # Sending twice because the first time it doesn't take
+    value.send_value(code_slot)
