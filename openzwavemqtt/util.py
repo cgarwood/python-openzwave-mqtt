@@ -65,23 +65,16 @@ def _set_list_config_parameter(value: OZWValue, new_value: Union[int, str]) -> i
     except ValueError:
         pass
 
-    if not isinstance(new_value, str) and not isinstance(new_value, int):
-        raise WrongTypeError(
-            (
-                f"Configuration parameter type {value.type} does not match "
-                f"the value type {type(new_value)}"
-            )
-        )
-
-    for option in value.value["List"]:  # type: ignore
-        if new_value not in (option["Label"], option["Value"]):
-            continue
-        try:
-            payload = int(option["Value"])
-        except ValueError:
-            payload = option["Value"]
-        value.send_value(payload)  # type: ignore
-        return payload
+    if isinstance(new_value, str) or isinstance(new_value, int):
+        for option in value.value["List"]:  # type: ignore
+            if new_value not in (option["Label"], option["Value"]):
+                continue
+            try:
+                payload = int(option["Value"])
+            except ValueError:
+                payload = option["Value"]
+            value.send_value(payload)  # type: ignore
+            return payload
 
     raise WrongTypeError(
         (
@@ -96,7 +89,7 @@ def _set_bitset_config_parameter(
 ) -> Dict[Union[int, str], int]:
     """Set a ValueType.BITSET config parameter."""
     try:
-        if not isinstance(new_value, dict) or not any(
+        if isinstance(new_value, dict) and any(
             [int(val) not in (0, 1) for val in new_value.values()]
         ):
             raise WrongTypeError(
@@ -116,7 +109,7 @@ def _set_bitset_config_parameter(
         )
 
     # Check that all keys in dictionary are a valid position or label
-    if not any(
+    if any(
         any(
             key not in (int(bit["Position"]), bit["Label"]) for bit in value.value  # type: ignore
         )
