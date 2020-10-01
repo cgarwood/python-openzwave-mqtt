@@ -83,8 +83,8 @@ class ValueType(Enum):
     INT = "Int"
     BITSET = "BitSet"
     RAW = "Raw"
-    BUTTON = "Button"  # Currently not working in OZW
-    SCHEDULE = "Schedule"  # Currently unsupported by OZW
+    BUTTON = "Button"
+    SCHEDULE = "Schedule"
     UNKNOWN = None
 
 
