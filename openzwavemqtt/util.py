@@ -1,4 +1,5 @@
 """Utility functions and classes for OpenZWave."""
+from openzwavemqtt.models.value import OZWValue
 from typing import Any, Dict, List, Union
 
 from .const import (
@@ -34,6 +35,121 @@ def get_node_from_manager(
     return node  # type: ignore
 
 
+def _set_bool_config_parameter(value: OZWValue, new_value: Union[bool, str]) -> bool:
+    """Set a ValueType.BOOL config parameter."""
+    if isinstance(new_value, bool):
+        value.send_value(new_value)  # type: ignore
+        return new_value
+
+    if isinstance(new_value, str):
+        new_value = new_value.lower()  # type: ignore
+        if new_value in ("true", "false"):
+            payload = new_value == "true"
+            value.send_value(payload)  # type: ignore
+            return payload
+
+        raise WrongTypeError("Configuration parameter value must be true or false")
+
+    raise WrongTypeError(
+        (
+            f"Configuration parameter type {value.type} does not match "
+            f"the value type {type(new_value)}"
+        )
+    )
+
+
+def _set_list_config_parameter(value: OZWValue, new_value: Union[int, str]) -> int:
+    """Set a ValueType.LIST config parameter."""
+    try:
+        new_value = int(new_value)  # type: ignore
+    except ValueError:
+        pass
+
+    if not isinstance(new_value, str) and not isinstance(new_value, int):
+        raise WrongTypeError(
+            (
+                f"Configuration parameter type {value.type} does not match "
+                f"the value type {type(new_value)}"
+            )
+        )
+
+    for option in value.value["List"]:  # type: ignore
+        if new_value not in (option["Label"], option["Value"]):
+            continue
+        try:
+            payload = int(option["Value"])
+        except ValueError:
+            payload = option["Value"]
+        value.send_value(payload)  # type: ignore
+        return payload
+
+    raise WrongTypeError(
+        (
+            f"Configuration parameter type {value.type} does not match "
+            f"the value type {type(new_value)}"
+        )
+    )
+
+
+def _set_bitset_config_parameter(
+    value: OZWValue, new_value: Dict[Union[int, str], int]
+) -> Dict[Union[int, str], int]:
+    """Set a ValueType.BITSET config parameter."""
+    try:
+        if not isinstance(new_value, dict) or not any(
+            [int(val) not in (0, 1) for val in new_value.values()]
+        ):
+            raise WrongTypeError(
+                (
+                    "Configuration parameter value must be in the form of a "
+                    "dict with keys being the label or position of a "
+                    "particular bit and values being 0 or 1"
+                )
+            )
+    except ValueError:
+        raise WrongTypeError(
+            (
+                "Configuration parameter value must be in the form of a "
+                "dict with keys being the label or position of a "
+                "particular bit and values being 0 or 1"
+            )
+        )
+
+    # Check that all keys in dictionary are a valid position or label
+    if not any(
+        any(
+            key not in (int(bit["Position"]), bit["Label"]) for bit in value.value  # type: ignore
+        )
+        for key in new_value.keys()
+    ):
+        raise NotFoundError("Configuration parameter value has an invalid key")
+
+    value.send_value(new_value)  # type: ignore
+    return new_value
+
+
+def _set_int_config_parameter(parameter: int, value: OZWValue, new_value: int) -> int:
+    """Set a ValueType.BITSET config parameter."""
+    try:
+        new_value = int(new_value)  # type: ignore
+    except ValueError:
+        raise WrongTypeError(
+            (
+                f"Configuration parameter type {value.type} does not match "
+                f"the value type {type(new_value)}"
+            )
+        )
+    if (value.max and new_value > value.max) or (value.min and new_value < value.min):
+        raise InvalidValueError(
+            (
+                f"Value {new_value} out of range for parameter {parameter}"
+                f" (Range: {value.min}-{value.max})",
+            )
+        )
+    value.send_value(new_value)  # type: ignore
+    return new_value
+
+
 def set_config_parameter(
     node: OZWNode,
     parameter: int,
@@ -48,111 +164,19 @@ def set_config_parameter(
 
     # Bool can be passed in as string or bool
     if value.type == ValueType.BOOL:
-        if isinstance(new_value, bool):
-            value.send_value(new_value)  # type: ignore
-            return new_value
-
-        if isinstance(new_value, str):
-            if new_value.lower() in ("true", "false"):
-                payload = new_value.lower() == "true"
-                value.send_value(payload)  # type: ignore
-                return payload
-
-            raise WrongTypeError("Configuration parameter value must be true or false")
-
-        raise WrongTypeError(
-            (
-                f"Configuration parameter type {value.type} does not match "
-                f"the value type {type(new_value)}"
-            )
-        )
+        return _set_bool_config_parameter(value, new_value)  # type: ignore
 
     # List value can be passed in as string or int
     if value.type == ValueType.LIST:
-        try:
-            new_value = int(new_value)
-        except ValueError:
-            pass
-
-        if not isinstance(new_value, str) and not isinstance(new_value, int):
-            raise WrongTypeError(
-                (
-                    f"Configuration parameter type {value.type} does not match "
-                    f"the value type {type(new_value)}"
-                )
-            )
-
-        for option in value.value["List"]:  # type: ignore
-            if new_value not in (option["Label"], option["Value"]):
-                continue
-            try:
-                payload = int(option["Value"])
-            except ValueError:
-                payload = option["Value"]
-            value.send_value(payload)  # type: ignore
-            return payload
-
-        raise WrongTypeError(
-            (
-                f"Configuration parameter type {value.type} does not match "
-                f"the value type {type(new_value)}"
-            )
-        )
+        return _set_list_config_parameter(value, new_value)  # type: ignore
 
     # Bitset value is passed in as dict
     if value.type == ValueType.BITSET:
-        try:
-            if not isinstance(new_value, dict) or not any(
-                [int(val) not in (0, 1) for val in new_value.values()]
-            ):
-                raise WrongTypeError(
-                    (
-                        "Configuration parameter value must be in the form of a "
-                        "dict with keys being the label or position of a "
-                        "particular bit and values being 0 or 1"
-                    )
-                )
-        except ValueError:
-            raise WrongTypeError(
-                (
-                    "Configuration parameter value must be in the form of a "
-                    "dict with keys being the label or position of a "
-                    "particular bit and values being 0 or 1"
-                )
-            )
-
-        # Check that all keys in dictionary are a valid position or label
-        if not any(
-            any(key not in (int(bit["Position"]), bit["Label"]) for bit in value.value)  # type: ignore
-            for key in new_value.keys()
-        ):
-            raise NotFoundError("Configuration parameter value has an invalid key")
-
-        value.send_value(new_value)  # type: ignore
-        return new_value
+        return _set_bitset_config_parameter(value, new_value)  # type: ignore
 
     # Int, Byte, Short are always passed as int, Decimal should be float
     if value.type in (ValueType.INT, ValueType.BYTE, ValueType.SHORT):
-        try:
-            new_value = int(new_value)
-        except ValueError:
-            raise WrongTypeError(
-                (
-                    f"Configuration parameter type {value.type} does not match "
-                    f"the value type {type(new_value)}"
-                )
-            )
-        if (value.max and new_value > value.max) or (
-            value.min and new_value < value.min
-        ):
-            raise InvalidValueError(
-                (
-                    f"Value {new_value} out of range for parameter {parameter}"
-                    f" (Range: {value.min}-{value.max})",
-                )
-            )
-        value.send_value(new_value)  # type: ignore
-        return new_value
+        return _set_int_config_parameter(parameter, value, new_value)  # type: ignore
 
     # This will catch BUTTON, STRING, and UNKNOWN ValueTypes
     raise WrongTypeError(
