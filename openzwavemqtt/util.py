@@ -23,7 +23,7 @@ def get_node_from_manager(
     manager: OZWManager, instance_id: int, node_id: int
 ) -> OZWNode:
     """Get OZWNode from OZWManager."""
-    instance = manager.get_instance(instance_id)
+    instance = manager.get_instance(instance_id)  # type: ignore
     if not instance:
         raise NotFoundError(f"OZW Instance {instance_id} not found")
 
@@ -31,7 +31,7 @@ def get_node_from_manager(
     if not node:
         raise NotFoundError(f"OZW Node {node_id} not found")
 
-    return node
+    return node  # type: ignore
 
 
 def set_config_parameter(node: OZWNode, parameter: int, new_value: Any) -> Any:
@@ -45,12 +45,12 @@ def set_config_parameter(node: OZWNode, parameter: int, new_value: Any) -> Any:
     # Bool can be passed in as string or bool
     if value.type == ValueType.BOOL:
         if isinstance(new_value, bool):
-            value.send_value(new_value)
+            value.send_value(new_value)  # type: ignore
             return new_value
         if isinstance(new_value, str):
             if new_value.lower() in ("true", "false"):
                 payload = new_value.lower() == "true"
-                value.send_value(payload)
+                value.send_value(payload)  # type: ignore
                 return payload
 
             raise WrongTypeError("Configuration parameter value must be true or false")
@@ -76,14 +76,14 @@ def set_config_parameter(node: OZWNode, parameter: int, new_value: Any) -> Any:
                 )
             )
 
-        for option in value.value["List"]:
+        for option in value.value["List"]:  # type: ignore
             if new_value not in (option["Label"], option["Value"]):
                 continue
             try:
                 payload = int(option["Value"])
             except ValueError:
                 payload = option["Value"]
-            value.send_value(payload)
+            value.send_value(payload)  # type: ignore
             return payload
 
         raise WrongTypeError(
@@ -117,12 +117,12 @@ def set_config_parameter(node: OZWNode, parameter: int, new_value: Any) -> Any:
 
         # Check that all keys in dictionary are a valid position or label
         if not any(
-            any(key not in (int(bit["Position"]), bit["Label"]) for bit in value.value)
+            any(key not in (int(bit["Position"]), bit["Label"]) for bit in value.value)  # type: ignore
             for key in new_value.keys()
         ):
             raise NotFoundError("Configuration parameter value has an invalid key")
 
-        value.send_value(new_value)
+        value.send_value(new_value)  # type: ignore
         return value
 
     # Int, Byte, Short are always passed as int, Decimal should be float
@@ -145,7 +145,7 @@ def set_config_parameter(node: OZWNode, parameter: int, new_value: Any) -> Any:
                     f" (Range: {value.min}-{value.max})",
                 )
             )
-        value.send_value(new_value)
+        value.send_value(new_value)  # type: ignore
         return new_value
 
     # This will catch BUTTON, STRING, and UNKNOWN ValueTypes
@@ -186,17 +186,17 @@ def get_config_parameters(node: OZWNode) -> List[Dict[str, Any]]:
             value_to_return[ATTR_VALUE] = value.value
 
         elif value.type == ValueType.LIST:
-            value_to_return[ATTR_VALUE] = value.value["Selected"]
-            value_to_return[ATTR_OPTIONS] = value.value["List"]
+            value_to_return[ATTR_VALUE] = value.value["Selected"]  # type: ignore
+            value_to_return[ATTR_OPTIONS] = value.value["List"]  # type: ignore
 
         elif value.type == ValueType.BITSET:
             value_to_return[ATTR_VALUE] = [
                 {
-                    ATTR_LABEL: bit["Label"],
-                    ATTR_POSITION: int(bit["Position"]),
-                    ATTR_VALUE: int(bit["Value"]),
+                    ATTR_LABEL: bit["Label"],  # type: ignore
+                    ATTR_POSITION: int(bit["Position"]),  # type: ignore
+                    ATTR_VALUE: int(bit["Value"]),  # type: ignore
                 }
-                for bit in value.value
+                for bit in value.value  # type: ignore
             ]
 
         elif value.type in (ValueType.INT, ValueType.BYTE, ValueType.SHORT):
