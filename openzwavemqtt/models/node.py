@@ -1,5 +1,5 @@
 """Model for a OZW Node."""
-from typing import Iterable, List, Optional
+from typing import Iterable, List, Optional, Union
 
 from ..base import ItemCollection, ZWaveBase
 from ..const import (
@@ -246,7 +246,7 @@ class OZWNode(ZWaveBase):
     def get_value(
         self,
         command_class_id: CommandClass,
-        value_index: ValueIndex,
+        value_index: Union[ValueIndex, int],
         instance_id: Optional[int] = None,
     ) -> Optional[OZWValue]:
         """Return a specific OZWValue on this node (if exists)."""
@@ -256,7 +256,7 @@ class OZWNode(ZWaveBase):
     def has_value(
         self,
         command_class_id: CommandClass,
-        value_index: ValueIndex,
+        value_index: Union[ValueIndex, int],
         instance_id: Optional[int] = None,
     ) -> bool:
         """Determine if the node has the given Value."""
