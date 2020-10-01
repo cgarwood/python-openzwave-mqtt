@@ -18,7 +18,7 @@ def get_code_slots(node: OZWNode) -> List[Dict[str, Union[int, bool, str]]]:
     command_class = node.get_command_class(CommandClass.USER_CODE)
 
     if not command_class:
-        raise NotFoundError("Node doesn't have any user codes available to configure")
+        raise WrongTypeError("Node doesn't have code slots")
 
     return [
         {
