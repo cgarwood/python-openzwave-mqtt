@@ -129,7 +129,9 @@ def _set_bitset_config_parameter(
         is None
         for new_bit in new_value
     ):
-        raise NotFoundError("Configuration parameter value has an invalid key")
+        raise NotFoundError(
+            "Configuration parameter value has an invalid bit position or label"
+        )
 
     value.send_value(new_value)  # type: ignore
     return new_value
