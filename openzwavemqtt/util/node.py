@@ -104,7 +104,7 @@ def _set_bitset_config_parameter(
             (
                 "Configuration parameter value must be in the form of a "
                 f"list of dicts with the {ATTR_VALUE} key and either the "
-                f"{ATTR_POSITION} or {ATTR_LABEL} keys defined. {ATTR_VALUE} "
+                f"{ATTR_POSITION} or {ATTR_LABEL} key defined. {ATTR_VALUE} "
                 f"should be a bool, {ATTR_POSITION} should be an int, and "
                 f"{ATTR_LABEL} should be a string."
             )
