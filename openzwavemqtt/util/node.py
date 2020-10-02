@@ -91,6 +91,7 @@ def _set_bitset_config_parameter(
     if not isinstance(new_value, list) or any(
         [
             ATTR_VALUE not in bit
+            or (ATTR_POSITION in bit and ATTR_LABEL in bit)
             or (ATTR_POSITION not in bit and ATTR_LABEL not in bit)
             or (ATTR_POSITION in bit and not isinstance(bit[ATTR_POSITION], int))
             or (ATTR_LABEL in bit and not isinstance(bit[ATTR_LABEL], str))
