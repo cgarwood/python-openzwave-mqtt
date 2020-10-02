@@ -1,7 +1,7 @@
-"""Utility functions and classes for OpenZWave."""
-from typing import cast, Any, Dict, List, Union
+"""Utility functions for OpenZWave nodes."""
+from typing import cast, Dict, List, Union
 
-from .const import (
+from ..const import (
     ATTR_LABEL,
     ATTR_MAX,
     ATTR_MIN,
@@ -14,10 +14,10 @@ from .const import (
     ValueGenre,
     ValueType,
 )
-from .exceptions import InvalidValueError, NotFoundError, WrongTypeError
-from .manager import OZWManager
-from .models.node import OZWNode
-from .models.value import OZWValue
+from ..exceptions import InvalidValueError, NotFoundError, WrongTypeError
+from ..manager import OZWManager
+from ..models.node import OZWNode
+from ..models.value import OZWValue
 
 
 def get_node_from_manager(
@@ -177,7 +177,9 @@ def set_config_parameter(
     )
 
 
-def get_config_parameters(node: OZWNode) -> List[Dict[str, Any]]:
+def get_config_parameters(
+    node: OZWNode,
+) -> List[Dict[str, Union[int, str, bool, Dict[Union[int, str], int]]]]:
     """Get config parameter from a node."""
     values = []
 
