@@ -85,26 +85,17 @@ def _set_list_config_parameter(value: OZWValue, new_value: Union[int, str]) -> i
 
 
 def _set_bitset_config_parameter(
-    value: OZWValue, new_value: Dict[Union[int, str], int]
-) -> Dict[Union[int, str], int]:
+    value: OZWValue, new_value: Dict[Union[int, str], bool]
+) -> Dict[Union[int, str], bool]:
     """Set a ValueType.BITSET config parameter."""
-    try:
-        if isinstance(new_value, dict) and any(
-            [int(val) not in (0, 1) for val in new_value.values()]
-        ):
-            raise WrongTypeError(
-                (
-                    "Configuration parameter value must be in the form of a "
-                    "dict with keys being the label or position of a "
-                    "particular bit and values being 0 or 1"
-                )
-            )
-    except ValueError:
+    if not isinstance(new_value, dict) or any(
+        [not isinstance(val, bool) for val in new_value.values()]
+    ):
         raise WrongTypeError(
             (
                 "Configuration parameter value must be in the form of a "
                 "dict with keys being the label or position of a "
-                "particular bit and values being 0 or 1"
+                "particular bit and values being a boolean"
             )
         )
 
@@ -146,8 +137,8 @@ def _set_int_config_parameter(parameter: int, value: OZWValue, new_value: int) -
 def set_config_parameter(
     node: OZWNode,
     parameter: int,
-    new_value: Union[int, str, bool, Dict[Union[int, str], int]],
-) -> Union[int, str, bool, Dict[Union[int, str], int]]:
+    new_value: Union[int, str, bool, Dict[Union[int, str], bool]],
+) -> Union[int, str, bool, Dict[Union[int, str], bool]]:
     """Set config parameter to a node."""
     value = node.get_value(CommandClass.CONFIGURATION, parameter)
     if not value:
@@ -179,7 +170,7 @@ def set_config_parameter(
 
 def get_config_parameters(
     node: OZWNode,
-) -> List[Dict[str, Union[int, str, bool, Dict[Union[int, str], int]]]]:
+) -> List[Dict[str, Union[int, str, bool, Dict[Union[int, str], bool]]]]:
     """Get config parameter from a node."""
     values = []
 
