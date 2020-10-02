@@ -92,15 +92,13 @@ def _set_bitset_config_parameter(
     # ATTR_POSITION is an int and ATTR_LABEL is a str. Check that ATTR_VALUE is
     # provided and is bool.
     if not isinstance(new_value, list) or any(
-        [
-            (ATTR_POSITION in bit and ATTR_LABEL in bit)
-            or (ATTR_POSITION not in bit and ATTR_LABEL not in bit)
-            or (ATTR_POSITION in bit and not isinstance(bit[ATTR_POSITION], int))
-            or (ATTR_LABEL in bit and not isinstance(bit[ATTR_LABEL], str))
-            or ATTR_VALUE not in bit
-            or not isinstance(bit[ATTR_VALUE], bool)
-            for bit in new_value
-        ]
+        (ATTR_POSITION in bit and ATTR_LABEL in bit)
+        or (ATTR_POSITION not in bit and ATTR_LABEL not in bit)
+        or (ATTR_POSITION in bit and not isinstance(bit[ATTR_POSITION], int))
+        or (ATTR_LABEL in bit and not isinstance(bit[ATTR_LABEL], str))
+        or ATTR_VALUE not in bit
+        or not isinstance(bit[ATTR_VALUE], bool)
+        for bit in new_value
     ):
         raise WrongTypeError(
             (
@@ -115,11 +113,11 @@ def _set_bitset_config_parameter(
     # Check that all keys in dictionary are a valid position or label
     if any(
         next(
-            [
+            (
                 (ATTR_POSITION in new_bit and new_bit[ATTR_POSITION] == int(bit["Position"]))  # type: ignore
                 or (ATTR_LABEL in new_bit and new_bit[ATTR_LABEL] == int(bit["Label"]))  # type: ignore
                 for bit in value.value  # type: ignore
-            ],
+            ),
             None,
         )
         is None
