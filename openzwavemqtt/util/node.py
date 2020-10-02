@@ -88,6 +88,8 @@ def _set_bitset_config_parameter(
     value: OZWValue, new_value: List[Dict[str, Union[int, str, bool]]]
 ) -> List[Dict[str, Union[int, str, bool]]]:
     """Set a ValueType.BITSET config parameter."""
+    # Check that ATTR_VALUE is provided and is bool, check that exactly one of ATTR_POSITION
+    # and ATTR_LABEL is provided, and that ATTR_POSITION is an int and ATTR_LABEL is a str
     if not isinstance(new_value, list) or any(
         [
             ATTR_VALUE not in bit
