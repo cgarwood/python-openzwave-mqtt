@@ -85,26 +85,41 @@ def _set_list_config_parameter(value: OZWValue, new_value: Union[int, str]) -> i
 
 
 def _set_bitset_config_parameter(
-    value: OZWValue, new_value: Dict[Union[int, str], bool]
-) -> Dict[Union[int, str], bool]:
+    value: OZWValue, new_value: List[Dict[str, Union[int, str, bool]]]
+) -> List[Dict[str, Union[int, str, bool]]]:
     """Set a ValueType.BITSET config parameter."""
-    if not isinstance(new_value, dict) or any(
-        [not isinstance(val, bool) for val in new_value.values()]
+    if not isinstance(new_value, list) or any(
+        [
+            ATTR_VALUE not in bit
+            or (ATTR_POSITION not in bit and ATTR_LABEL not in bit)
+            or (ATTR_POSITION in bit and not isinstance(bit[ATTR_POSITION], int))
+            or (ATTR_LABEL in bit and not isinstance(bit[ATTR_LABEL], str))
+            or not isinstance(bit[ATTR_VALUE], bool)
+            for bit in new_value
+        ]
     ):
         raise WrongTypeError(
             (
                 "Configuration parameter value must be in the form of a "
-                "dict with keys being the label or position of a "
-                "particular bit and values being a boolean"
+                f"list of dicts with the {ATTR_VALUE} key and either the "
+                f"{ATTR_POSITION} or {ATTR_LABEL} keys defined. {ATTR_VALUE} "
+                f"should be a bool, {ATTR_POSITION} should be an int, and "
+                f"{ATTR_LABEL} should be a string."
             )
         )
 
     # Check that all keys in dictionary are a valid position or label
     if any(
-        any(
-            key not in (int(bit["Position"]), bit["Label"]) for bit in value.value  # type: ignore
+        next(
+            [
+                (ATTR_POSITION in new_bit and new_bit[ATTR_POSITION] == int(bit["Position"]))  # type: ignore
+                or (ATTR_LABEL in new_bit and new_bit[ATTR_LABEL] == int(bit["Label"]))  # type: ignore
+                for bit in value.value  # type: ignore
+            ],
+            None,
         )
-        for key in new_value
+        is None
+        for new_bit in new_value
     ):
         raise NotFoundError("Configuration parameter value has an invalid key")
 
@@ -137,8 +152,8 @@ def _set_int_config_parameter(parameter: int, value: OZWValue, new_value: int) -
 def set_config_parameter(
     node: OZWNode,
     parameter: int,
-    new_value: Union[int, str, bool, Dict[Union[int, str], bool]],
-) -> Union[int, str, bool, Dict[Union[int, str], bool]]:
+    new_value: Union[int, str, bool, List[Dict[str, Union[int, str, bool]]]],
+) -> Union[int, str, bool, List[Dict[str, Union[int, str, bool]]]]:
     """Set config parameter to a node."""
     value = node.get_value(CommandClass.CONFIGURATION, parameter)
     if not value:
@@ -170,7 +185,7 @@ def set_config_parameter(
 
 def get_config_parameters(
     node: OZWNode,
-) -> List[Dict[str, Union[int, str, bool, List[Dict[[str, Union[int, str, bool]]]]]]]:
+) -> List[Dict[str, Union[int, str, bool, List[Dict[str, Union[int, str, bool]]]]]]:
     """Get config parameter from a node."""
     values = []
 
