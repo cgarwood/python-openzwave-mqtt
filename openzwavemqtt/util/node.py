@@ -170,7 +170,7 @@ def set_config_parameter(
 
 def get_config_parameters(
     node: OZWNode,
-) -> List[Dict[str, Union[int, str, bool, Dict[Union[int, str], bool]]]]:
+) -> List[Dict[str, Union[int, str, bool, List[Dict[[str, Union[int, str, bool]]]]]]]:
     """Get config parameter from a node."""
     values = []
 
@@ -210,7 +210,7 @@ def get_config_parameters(
                 {
                     ATTR_LABEL: bit["Label"],  # type: ignore
                     ATTR_POSITION: int(bit["Position"]),  # type: ignore
-                    ATTR_VALUE: int(bit["Value"]),  # type: ignore
+                    ATTR_VALUE: bool(bit["Value"]),  # type: ignore
                 }
                 for bit in value.value  # type: ignore
             ]
