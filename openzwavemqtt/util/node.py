@@ -114,8 +114,14 @@ def _set_bitset_config_parameter(
     if any(
         next(
             (
-                (ATTR_POSITION in new_bit and new_bit[ATTR_POSITION] == int(bit["Position"]))  # type: ignore
-                or (ATTR_LABEL in new_bit and new_bit[ATTR_LABEL] == int(bit["Label"]))  # type: ignore
+                (
+                    ATTR_POSITION in new_bit
+                    and new_bit[ATTR_POSITION] == int(bit["Position"])  # type: ignore
+                )
+                or (
+                    ATTR_LABEL in new_bit
+                    and new_bit[ATTR_LABEL] == int(bit["Label"])  # type: ignore
+                )
                 for bit in value.value  # type: ignore
             ),
             None,
