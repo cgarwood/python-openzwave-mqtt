@@ -1,6 +1,7 @@
 """Tests for node util submodule."""
-import pytest
 from unittest.mock import Mock
+
+import pytest
 
 from openzwavemqtt.const import ATTR_LABEL, ATTR_POSITION, ATTR_VALUE, ValueType
 from openzwavemqtt.exceptions import InvalidValueError, NotFoundError, WrongTypeError

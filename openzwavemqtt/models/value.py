@@ -36,12 +36,12 @@ class OZWValue(OZWNodeChildBase):
         return self.data.get("Units")
 
     @property
-    def min(self) -> int:
+    def min(self) -> Optional[int]:
         """Return Min."""
         return self.data.get("Min")
 
     @property
-    def max(self) -> int:
+    def max(self) -> Optional[int]:
         """Return Max."""
         return self.data.get("Max")
 
