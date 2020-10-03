@@ -24,7 +24,7 @@ class OZWCommandClass(OZWNodeChildBase):
     PLURAL_NAME = "commandclasses"
 
     @property
-    def instance(self) -> int:
+    def instance(self) -> Optional[int]:
         """Return Instance."""
         return self.data.get("Instance")
 
@@ -40,13 +40,13 @@ class OZWCommandClass(OZWNodeChildBase):
             return CommandClass.UNKNOWN
 
     @property
-    def command_class(self) -> str:
+    def command_class(self) -> Optional[str]:
         """Return string/label representation of this CommandClass."""
         # TODO: This needs changing to a better name once fixed upstream in the daemon
         return self.data.get("CommandClass")
 
     @property
-    def time_stamp(self) -> int:
+    def time_stamp(self) -> Optional[int]:
         """Return TimeStamp."""
         return self.data.get("TimeStamp")
 
@@ -62,6 +62,6 @@ class OZWCommandClass(OZWNodeChildBase):
                 return value
         return None
 
-    def has_value(self, value_index: ValueIndex) -> bool:
+    def has_value(self, value_index: ValueIndex) -> Optional[bool]:
         """Determine if the CommandClass has the given ValueIndex."""
         return self.get_value_by_index(value_index) is not None

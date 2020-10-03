@@ -21,27 +21,27 @@ class OZWValue(OZWNodeChildBase):
     EVENT_REMOVED = EVENT_VALUE_REMOVED
 
     @property
-    def label(self) -> str:
+    def label(self) -> Optional[str]:
         """Return Label."""
         return self.data.get("Label")
 
     @property
-    def value(self) -> Optional[Union[int, Dict[str, Any], List[Dict[str, Any]]]]:
+    def value(self) -> Optional[Union[bool, int, Dict[str, Any], List[Dict[str, Any]]]]:
         """Return Value."""
         return self.data.get("Value")
 
     @property
-    def units(self) -> str:
+    def units(self) -> Optional[str]:
         """Return Units."""
         return self.data.get("Units")
 
     @property
-    def min(self) -> int:
+    def min(self) -> Optional[int]:
         """Return Min."""
         return self.data.get("Min")
 
     @property
-    def max(self) -> int:
+    def max(self) -> Optional[int]:
         """Return Max."""
         return self.data.get("Max")
 
@@ -54,7 +54,7 @@ class OZWValue(OZWNodeChildBase):
             return ValueType.UNKNOWN
 
     @property
-    def instance(self) -> int:
+    def instance(self) -> Optional[int]:
         """Return Instance."""
         return self.data.get("Instance")
 
@@ -84,47 +84,47 @@ class OZWValue(OZWNodeChildBase):
             return ValueGenre.UNKNOWN
 
     @property
-    def help(self) -> str:
+    def help(self) -> Optional[str]:
         """Return Help."""
         return self.data.get("Help")
 
     @property
-    def value_id_key(self) -> int:
+    def value_id_key(self) -> Optional[int]:
         """Return ValueIDKey."""
         return self.data.get("ValueIDKey")
 
     @property
-    def read_only(self) -> bool:
+    def read_only(self) -> Optional[bool]:
         """Return ReadOnly."""
         return self.data.get("ReadOnly")
 
     @property
-    def write_only(self) -> bool:
+    def write_only(self) -> Optional[bool]:
         """Return WriteOnly."""
         return self.data.get("WriteOnly")
 
     @property
-    def value_set(self) -> bool:
+    def value_set(self) -> Optional[bool]:
         """Return ValueSet."""
         return self.data.get("ValueSet")
 
     @property
-    def value_polled(self) -> bool:
+    def value_polled(self) -> Optional[bool]:
         """Return ValuePolled."""
         return self.data.get("ValuePolled")
 
     @property
-    def change_verified(self) -> bool:
+    def change_verified(self) -> Optional[bool]:
         """Return ChangeVerified."""
         return self.data.get("ChangeVerified")
 
     @property
-    def event(self) -> str:
+    def event(self) -> Optional[str]:
         """Return Event."""
         return self.data.get("Event")
 
     @property
-    def time_stamp(self) -> int:
+    def time_stamp(self) -> Optional[int]:
         """Return TimeStamp."""
         return self.data.get("TimeStamp")
 

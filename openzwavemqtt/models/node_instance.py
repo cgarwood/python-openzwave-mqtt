@@ -22,12 +22,12 @@ class OZWNodeInstance(OZWNodeChildBase):
     EVENT_REMOVED = EVENT_NODE_INSTANCE_REMOVED
 
     @property
-    def instance(self) -> int:
+    def instance(self) -> Optional[int]:
         """Return Instance."""
         return self.data.get("Instance")
 
     @property
-    def time_stamp(self) -> int:
+    def time_stamp(self) -> Optional[int]:
         """Return TimeStamp."""
         return self.data.get("TimeStamp")
 
@@ -45,7 +45,7 @@ class OZWNodeInstance(OZWNodeChildBase):
                 return command_class
         return None
 
-    def has_command_class(self, command_class_id: CommandClass) -> bool:
+    def has_command_class(self, command_class_id: CommandClass) -> Optional[bool]:
         """Determine if the node has the given CommandClass."""
         return self.get_command_class(command_class_id) is not None
 

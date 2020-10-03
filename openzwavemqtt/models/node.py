@@ -24,187 +24,187 @@ class OZWNode(ZWaveBase):
     EVENT_REMOVED = EVENT_NODE_REMOVED
 
     @property
-    def node_id(self) -> int:
+    def node_id(self) -> Optional[int]:
         """Return NodeID."""
         return self.data.get("NodeID")
 
     @property
-    def node_query_stage(self) -> str:
+    def node_query_stage(self) -> Optional[str]:
         """Return NodeQueryStage."""
         return self.data.get("NodeQueryStage")
 
     @property
-    def is_listening(self) -> bool:
+    def is_listening(self) -> Optional[bool]:
         """Return isListening."""
         return self.data.get("isListening")
 
     @property
-    def is_flirs(self) -> bool:
+    def is_flirs(self) -> Optional[bool]:
         """Return isFlirs."""
         return self.data.get("isFlirs")
 
     @property
-    def is_beaming(self) -> bool:
+    def is_beaming(self) -> Optional[bool]:
         """Return isBeaming."""
         return self.data.get("isBeaming")
 
     @property
-    def is_routing(self) -> bool:
+    def is_routing(self) -> Optional[bool]:
         """Return isRouting."""
         return self.data.get("isRouting")
 
     @property
-    def is_securityv1(self) -> bool:
+    def is_securityv1(self) -> Optional[bool]:
         """Return isSecurityv1."""
         return self.data.get("isSecurityv1")
 
     @property
-    def is_zwave_plus(self) -> bool:
+    def is_zwave_plus(self) -> Optional[bool]:
         """Return isZWavePlus."""
         return self.data.get("isZWavePlus")
 
     @property
-    def is_nif_recieved(self) -> bool:
+    def is_nif_recieved(self) -> Optional[bool]:
         """Return isNIFRecieved."""
         return self.data.get("isNIFRecieved")
 
     @property
-    def is_awake(self) -> bool:
+    def is_awake(self) -> Optional[bool]:
         """Return isAwake."""
         return self.data.get("isAwake")
 
     @property
-    def is_failed(self) -> bool:
+    def is_failed(self) -> Optional[bool]:
         """Return isFailed."""
         return self.data.get("isFailed")
 
     @property
-    def meta_data(self) -> dict:
+    def meta_data(self) -> Optional[dict]:
         """Return MetaData."""
         return self.data.get("MetaData")
 
     @property
-    def event(self) -> str:
+    def event(self) -> Optional[str]:
         """Return Event."""
         return self.data.get("Event")
 
     @property
-    def time_stamp(self) -> int:
+    def time_stamp(self) -> Optional[int]:
         """Return TimeStamp."""
         return self.data.get("TimeStamp")
 
     @property
-    def node_manufacturer_name(self) -> str:
+    def node_manufacturer_name(self) -> Optional[str]:
         """Return NodeManufacturerName."""
         return self.data.get("NodeManufacturerName")
 
     @property
-    def node_product_name(self) -> str:
+    def node_product_name(self) -> Optional[str]:
         """Return NodeProductName."""
         return self.data.get("NodeProductName")
 
     @property
-    def node_basic_string(self) -> str:
+    def node_basic_string(self) -> Optional[str]:
         """Return NodeBasicString."""
         return self.data.get("NodeBasicString")
 
     @property
-    def node_basic(self) -> int:
+    def node_basic(self) -> Optional[int]:
         """Return NodeBasic."""
         return self.data.get("NodeBasic")
 
     @property
-    def node_generic_string(self) -> str:
+    def node_generic_string(self) -> Optional[str]:
         """Return NodeGenericString."""
         return self.data.get("NodeGenericString")
 
     @property
-    def node_generic(self) -> int:
+    def node_generic(self) -> Optional[int]:
         """Return NodeGeneric."""
         return self.data.get("NodeGeneric")
 
     @property
-    def node_specific_string(self) -> int:
+    def node_specific_string(self) -> Optional[int]:
         """Return NodeSpecificString."""
         return self.data.get("NodeSpecificString")
 
     @property
-    def node_specific(self) -> int:
+    def node_specific(self) -> Optional[int]:
         """Return NodeSpecific."""
         return self.data.get("NodeSpecific")
 
     @property
-    def node_manufacturer_id(self) -> str:
+    def node_manufacturer_id(self) -> Optional[str]:
         """Return NodeManufacturerID."""
         return self.data.get("NodeManufacturerID")
 
     @property
-    def node_product_type(self) -> str:
+    def node_product_type(self) -> Optional[str]:
         """Return NodeProductType."""
         return self.data.get("NodeProductType")
 
     @property
-    def node_product_id(self) -> str:
+    def node_product_id(self) -> Optional[str]:
         """Return NodeProductID."""
         return self.data.get("NodeProductID")
 
     @property
-    def node_baud_rate(self) -> int:
+    def node_baud_rate(self) -> Optional[int]:
         """Return NodeBaudRate."""
         return self.data.get("NodeBaudRate")
 
     @property
-    def node_version(self) -> int:
+    def node_version(self) -> Optional[int]:
         """Return NodeVersion."""
         return self.data.get("NodeVersion")
 
     @property
-    def node_groups(self) -> int:
+    def node_groups(self) -> Optional[int]:
         """Return NodeGroups."""
         return self.data.get("NodeGroups")
 
     @property
-    def node_name(self) -> str:
+    def node_name(self) -> Optional[str]:
         """Return NodeName."""
         return self.data.get("NodeName")
 
     @property
-    def node_location(self) -> str:
+    def node_location(self) -> Optional[str]:
         """Return NodeLocation."""
         return self.data.get("NodeLocation")
 
     @property
-    def node_device_type_string(self) -> str:
+    def node_device_type_string(self) -> Optional[str]:
         """Return NodeDeviceTypeString."""
         return self.data.get("NodeDeviceTypeString")
 
     @property
-    def node_device_type(self) -> int:
+    def node_device_type(self) -> Optional[int]:
         """Return NodeDeviceType."""
         return self.data.get("NodeDeviceType")
 
     @property
-    def node_role(self) -> int:
+    def node_role(self) -> Optional[int]:
         """Return NodeRole."""
         return self.data.get("NodeRole")
 
     @property
-    def node_role_string(self) -> str:
+    def node_role_string(self) -> Optional[str]:
         """Return NodeRoleString."""
         return self.data.get("NodeRoleString")
 
     @property
-    def node_plus_type(self) -> int:
+    def node_plus_type(self) -> Optional[int]:
         """Return NodePlusType."""
         return self.data.get("NodePlusType")
 
     @property
-    def node_plus_type_string(self) -> str:
+    def node_plus_type_string(self) -> Optional[str]:
         """Return NodePlusTypeString."""
         return self.data.get("NodePlusTypeString")
 
     @property
-    def neighbors(self) -> List[int]:
+    def neighbors(self) -> Optional[List[int]]:
         """Return Neighbors."""
         return self.data.get("Neighbors")
 
