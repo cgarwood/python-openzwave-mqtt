@@ -1,9 +1,9 @@
 """Tests for node util submodule."""
+import pytest
+
 from openzwavemqtt.const import ATTR_LABEL, ATTR_POSITION, ATTR_VALUE, ValueType
 from openzwavemqtt.exceptions import InvalidValueError, NotFoundError, WrongTypeError
 from openzwavemqtt.models.value import OZWValue
-import pytest
-
 from openzwavemqtt.util.node import (
     _set_bitset_config_parameter,
     _set_bool_config_parameter,
