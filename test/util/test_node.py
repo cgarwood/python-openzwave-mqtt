@@ -1,11 +1,11 @@
 """Tests for node util submodule."""
-from openzwavemqtt.models.node import OZWNode
 from unittest.mock import Mock, patch
 
 import pytest
 
 from openzwavemqtt.const import ATTR_LABEL, ATTR_POSITION, ATTR_VALUE, ValueType
 from openzwavemqtt.exceptions import InvalidValueError, NotFoundError, WrongTypeError
+from openzwavemqtt.models.node import OZWNode
 from openzwavemqtt.models.value import OZWValue
 from openzwavemqtt.util.node import set_config_parameter
 
