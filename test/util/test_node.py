@@ -52,7 +52,7 @@ def test_set_bitset_config_parameter():
     mock_value = Mock(spec=OZWValue)
     mock_value.type = ValueType.BOOL
     mock_value.value = [{"Position": 1, "Label": "test", "Value": False}]
-    
+
     with pytest.raises(WrongTypeError):
         _set_bitset_config_parameter(
             mock_value, [{ATTR_POSITION: 1, ATTR_LABEL: "test", ATTR_VALUE: True}]
