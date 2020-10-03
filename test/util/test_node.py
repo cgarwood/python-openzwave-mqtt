@@ -29,7 +29,7 @@ def mock_get_value_fixture(mock_value):
         yield
 
 
-def test_set_bool_config_parameter(node, mock_value, mock_get_value):
+def test_set_bool_config_parameter(node, mock_value, mock_get_value):  # pylint: disable=W0613
     """Test setting a ValueType.BOOL config parameter."""
     mock_value.type = ValueType.BOOL
 
@@ -45,7 +45,7 @@ def test_set_bool_config_parameter(node, mock_value, mock_get_value):
         set_config_parameter(node, 1, 95)
 
 
-def test_set_list_config_parameter(node, mock_value, mock_get_value):
+def test_set_list_config_parameter(node, mock_value, mock_get_value):  # pylint: disable=W0613
     """Test setting a ValueType.LIST config parameter."""
     mock_value.type = ValueType.LIST
     mock_value.value = {"List": [{"Label": "test", "Value": 0}]}
@@ -64,7 +64,7 @@ def test_set_list_config_parameter(node, mock_value, mock_get_value):
     assert set_config_parameter(node, 1, "test") == "test"
 
 
-def test_set_bitset_config_parameter(node, mock_value, mock_get_value):
+def test_set_bitset_config_parameter(node, mock_value, mock_get_value):  # pylint: disable=W0613
     """Test setting a ValueType.BITSET config parameter."""
     mock_value.type = ValueType.BITSET
     mock_value.value = [{"Position": 1, "Label": "test", "Value": False}]
@@ -105,7 +105,7 @@ def test_set_bitset_config_parameter(node, mock_value, mock_get_value):
     ]
 
 
-def test_set_int_config_parameter(node, mock_value, mock_get_value):
+def test_set_int_config_parameter(node, mock_value, mock_get_value):  # pylint: disable=W0613
     """Test setting a ValueType.INT config parameter."""
     mock_value.type = ValueType.INT
     mock_value.value = 1
@@ -125,7 +125,7 @@ def test_set_int_config_parameter(node, mock_value, mock_get_value):
     assert set_config_parameter(node, 1, "1") == 1
 
 
-def test_invalid_config_parameter_types(node, mock_value, mock_get_value):
+def test_invalid_config_parameter_types(node, mock_value, mock_get_value):  # pylint: disable=W0613
     """Test invalid config parameter types."""
     for value_type in (
         ValueType.DECIMAL,
