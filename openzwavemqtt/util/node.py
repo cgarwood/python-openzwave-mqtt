@@ -76,6 +76,8 @@ def _set_list_config_parameter(value: OZWValue, new_value: Union[int, str]) -> i
             value.send_value(payload)  # type: ignore
             return payload
 
+        raise NotFoundError(f"New value is not a valid option ({value.value['List']})")  # type: ignore
+
     raise WrongTypeError(
         (
             f"Configuration parameter type {value.type} does not match "

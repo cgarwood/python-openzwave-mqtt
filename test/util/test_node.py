@@ -70,6 +70,9 @@ def test_set_list_config_parameter():
     _set_list_config_parameter(mock_value, 0)
     _set_list_config_parameter(mock_value, "test")
 
+    with pytest.raises(NotFoundError):
+        _set_list_config_parameter(mock_value, 1)
+
     with pytest.raises(WrongTypeError):
         _set_list_config_parameter(mock_value, ["test"])
 
