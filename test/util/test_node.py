@@ -117,3 +117,31 @@ def test_set_int_config_parameter(options):
 
         assert set_config_parameter(node, 1, 1) == 1
         assert set_config_parameter(node, 1, "1") == 1
+
+
+def test_invalid_config_parameter_types(options):
+    """Test invalid config parameter types."""
+    mock_value = Mock(spec=OZWValue)
+
+    node = OZWNode(options, None, "test", None)
+
+    for value_type in (
+        ValueType.DECIMAL,
+        ValueType.RAW,
+        ValueType.SCHEDULE,
+        ValueType.UNKNOWN,
+    ):
+        mock_value.type = value_type
+        with patch(
+            "openzwavemqtt.util.node.OZWNode.get_value", return_value=mock_value
+        ):
+            with pytest.raises(WrongTypeError):
+                set_config_parameter(node, 1, True)
+
+
+def test_config_parameter_not_found(options):
+    """Test config parameter can't be found."""
+    node = OZWNode(options, None, "test", None)
+    with patch("openzwavemqtt.util.node.OZWNode.get_value", return_value=None):
+        with pytest.raises(NotFoundError):
+            set_config_parameter(node, 1, True)
