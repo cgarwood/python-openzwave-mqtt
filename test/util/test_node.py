@@ -49,6 +49,7 @@ def test_set_list_config_parameter(node, mock_value, mock_get_value):
     """Test setting a ValueType.LIST config parameter."""
     mock_value.type = ValueType.LIST
     mock_value.value = {"List": [{"Label": "test", "Value": 0}]}
+
     assert set_config_parameter(node, 1, "0") == 0
     assert set_config_parameter(node, 1, 0) == 0
     assert set_config_parameter(node, 1, "test") == 0
