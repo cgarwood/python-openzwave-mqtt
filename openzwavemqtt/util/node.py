@@ -62,7 +62,7 @@ def _set_list_config_parameter(value: OZWValue, new_value: Union[int, str]) -> i
     """Set a ValueType.LIST config parameter."""
     try:
         new_value = int(new_value)
-    except ValueError:
+    except (TypeError, ValueError):
         pass
 
     if isinstance(new_value, (int, str)):
@@ -76,6 +76,10 @@ def _set_list_config_parameter(value: OZWValue, new_value: Union[int, str]) -> i
             value.send_value(payload)  # type: ignore
             return payload
 
+        raise NotFoundError(
+            f"New value is not a valid option ({value.value['List']})"  # type: ignore
+        )
+
     raise WrongTypeError(
         (
             f"Configuration parameter type {value.type} does not match "
@@ -85,44 +89,56 @@ def _set_list_config_parameter(value: OZWValue, new_value: Union[int, str]) -> i
 
 
 def _set_bitset_config_parameter(
-    value: OZWValue, new_value: Dict[Union[int, str], int]
-) -> Dict[Union[int, str], int]:
+    value: OZWValue, new_value: List[Dict[str, Union[int, str, bool]]]
+) -> List[Dict[str, Union[int, str, bool]]]:
     """Set a ValueType.BITSET config parameter."""
-    try:
-        if isinstance(new_value, dict) and any(
-            [int(val) not in (0, 1) for val in new_value.values()]
-        ):
-            raise WrongTypeError(
-                (
-                    "Configuration parameter value must be in the form of a "
-                    "dict with keys being the label or position of a "
-                    "particular bit and values being 0 or 1"
-                )
-            )
-    except ValueError:
+    # Check that exactly one of ATTR_POSITION and ATTR_LABEL is provided, and that
+    # ATTR_POSITION is an int and ATTR_LABEL is a str. Check that ATTR_VALUE is
+    # provided and is bool.
+    if not isinstance(new_value, list) or any(
+        (ATTR_POSITION in bit and ATTR_LABEL in bit)
+        or (ATTR_POSITION not in bit and ATTR_LABEL not in bit)
+        or (ATTR_POSITION in bit and not isinstance(bit[ATTR_POSITION], int))
+        or (ATTR_LABEL in bit and not isinstance(bit[ATTR_LABEL], str))
+        or ATTR_VALUE not in bit
+        or not isinstance(bit[ATTR_VALUE], bool)
+        for bit in new_value
+    ):
         raise WrongTypeError(
             (
                 "Configuration parameter value must be in the form of a "
-                "dict with keys being the label or position of a "
-                "particular bit and values being 0 or 1"
+                f"list of dicts with the {ATTR_VALUE} key and either the "
+                f"{ATTR_POSITION} or {ATTR_LABEL} key defined. {ATTR_VALUE} "
+                f"should be a bool, {ATTR_POSITION} should be an int, and "
+                f"{ATTR_LABEL} should be a string."
             )
         )
 
     # Check that all keys in dictionary are a valid position or label
     if any(
-        any(
-            key not in (int(bit["Position"]), bit["Label"]) for bit in value.value  # type: ignore
+        not any(
+            bool(
+                ATTR_POSITION in new_bit
+                and new_bit[ATTR_POSITION] == int(bit["Position"])  # type: ignore
+            )
+            or (
+                ATTR_LABEL in new_bit
+                and new_bit[ATTR_LABEL] == bit["Label"]  # type: ignore
+            )
+            for bit in value.value  # type: ignore
         )
-        for key in new_value
+        for new_bit in new_value
     ):
-        raise NotFoundError("Configuration parameter value has an invalid key")
+        raise NotFoundError(
+            "Configuration parameter value has an invalid bit position or label"
+        )
 
     value.send_value(new_value)  # type: ignore
     return new_value
 
 
-def _set_int_config_parameter(parameter: int, value: OZWValue, new_value: int) -> int:
-    """Set a ValueType.BITSET config parameter."""
+def _set_int_config_parameter(value: OZWValue, new_value: int) -> int:
+    """Set a ValueType.INT config parameter."""
     try:
         new_value = int(new_value)
     except ValueError:
@@ -132,12 +148,12 @@ def _set_int_config_parameter(parameter: int, value: OZWValue, new_value: int) -
                 f"the value type {type(new_value)}"
             )
         )
-    if (value.max and new_value > value.max) or (value.min and new_value < value.min):
+
+    if (value.max is not None and new_value > value.max) or (
+        value.min is not None and new_value < value.min
+    ):
         raise InvalidValueError(
-            (
-                f"Value {new_value} out of range for parameter {parameter}"
-                f" (Range: {value.min}-{value.max})",
-            )
+            f"Value {new_value} out of range of parameter (Range: {value.min}-{value.max})"
         )
     value.send_value(new_value)  # type: ignore
     return new_value
@@ -146,8 +162,8 @@ def _set_int_config_parameter(parameter: int, value: OZWValue, new_value: int) -
 def set_config_parameter(
     node: OZWNode,
     parameter: int,
-    new_value: Union[int, str, bool, Dict[Union[int, str], int]],
-) -> Union[int, str, bool, Dict[Union[int, str], int]]:
+    new_value: Union[int, str, bool, List[Dict[str, Union[int, str, bool]]]],
+) -> Union[int, str, bool, List[Dict[str, Union[int, str, bool]]]]:
     """Set config parameter to a node."""
     value = node.get_value(CommandClass.CONFIGURATION, parameter)
     if not value:
@@ -169,7 +185,7 @@ def set_config_parameter(
 
     # Int, Byte, Short are always passed as int, Decimal should be float
     if value.type in (ValueType.INT, ValueType.BYTE, ValueType.SHORT):
-        return _set_int_config_parameter(parameter, value, new_value)  # type: ignore
+        return _set_int_config_parameter(value, new_value)  # type: ignore
 
     # This will catch BUTTON, STRING, and UNKNOWN ValueTypes
     raise WrongTypeError(
@@ -179,7 +195,7 @@ def set_config_parameter(
 
 def get_config_parameters(
     node: OZWNode,
-) -> List[Dict[str, Union[int, str, bool, Dict[Union[int, str], int]]]]:
+) -> List[Dict[str, Union[int, str, bool, List[Dict[str, Union[int, str, bool]]]]]]:
     """Get config parameter from a node."""
     values = []
 
@@ -219,7 +235,7 @@ def get_config_parameters(
                 {
                     ATTR_LABEL: bit["Label"],  # type: ignore
                     ATTR_POSITION: int(bit["Position"]),  # type: ignore
-                    ATTR_VALUE: int(bit["Value"]),  # type: ignore
+                    ATTR_VALUE: bool(bit["Value"]),  # type: ignore
                 }
                 for bit in value.value  # type: ignore
             ]
