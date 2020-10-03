@@ -49,6 +49,10 @@ def test_set_list_config_parameter(options):
         with pytest.raises(WrongTypeError):
             set_config_parameter(node, 1, ["test"])
 
+    mock_value.value = {"List": [{"Label": "test", "Value": "test"}]}
+    with patch("openzwavemqtt.util.node.OZWNode.get_value", return_value=mock_value):
+        assert set_config_parameter(node, 1, "test") == "test"
+
 
 def test_set_bitset_config_parameter(options):
     """Test setting a ValueType.BITSET config parameter."""
