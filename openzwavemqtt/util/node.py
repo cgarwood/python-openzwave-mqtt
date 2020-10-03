@@ -62,7 +62,7 @@ def _set_list_config_parameter(value: OZWValue, new_value: Union[int, str]) -> i
     """Set a ValueType.LIST config parameter."""
     try:
         new_value = int(new_value)
-    except ValueError:
+    except (TypeError, ValueError):
         pass
 
     if isinstance(new_value, (int, str)):
@@ -112,21 +112,17 @@ def _set_bitset_config_parameter(
 
     # Check that all keys in dictionary are a valid position or label
     if any(
-        next(
-            (
-                (
-                    ATTR_POSITION in new_bit
-                    and new_bit[ATTR_POSITION] == int(bit["Position"])  # type: ignore
-                )
-                or (
-                    ATTR_LABEL in new_bit
-                    and new_bit[ATTR_LABEL] == int(bit["Label"])  # type: ignore
-                )
-                for bit in value.value  # type: ignore
-            ),
-            None,
+        not any(
+            bool(
+                ATTR_POSITION in new_bit
+                and new_bit[ATTR_POSITION] == int(bit["Position"])  # type: ignore
+            )
+            or (
+                ATTR_LABEL in new_bit
+                and new_bit[ATTR_LABEL] == bit["Label"]  # type: ignore
+            )
+            for bit in value.value  # type: ignore
         )
-        is None
         for new_bit in new_value
     ):
         raise NotFoundError(
@@ -137,8 +133,8 @@ def _set_bitset_config_parameter(
     return new_value
 
 
-def _set_int_config_parameter(parameter: int, value: OZWValue, new_value: int) -> int:
-    """Set a ValueType.BITSET config parameter."""
+def _set_int_config_parameter(value: OZWValue, new_value: int) -> int:
+    """Set a ValueType.INT config parameter."""
     try:
         new_value = int(new_value)
     except ValueError:
@@ -148,12 +144,12 @@ def _set_int_config_parameter(parameter: int, value: OZWValue, new_value: int) -
                 f"the value type {type(new_value)}"
             )
         )
-    if (value.max and new_value > value.max) or (value.min and new_value < value.min):
+
+    if (value.max is not None and new_value > value.max) or (
+        value.min is not None and new_value < value.min
+    ):
         raise InvalidValueError(
-            (
-                f"Value {new_value} out of range for parameter {parameter}"
-                f" (Range: {value.min}-{value.max})",
-            )
+            f"Value {new_value} out of range of parameter (Range: {value.min}-{value.max})"
         )
     value.send_value(new_value)  # type: ignore
     return new_value
@@ -185,7 +181,7 @@ def set_config_parameter(
 
     # Int, Byte, Short are always passed as int, Decimal should be float
     if value.type in (ValueType.INT, ValueType.BYTE, ValueType.SHORT):
-        return _set_int_config_parameter(parameter, value, new_value)  # type: ignore
+        return _set_int_config_parameter(value, new_value)  # type: ignore
 
     # This will catch BUTTON, STRING, and UNKNOWN ValueTypes
     raise WrongTypeError(
