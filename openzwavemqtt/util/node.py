@@ -10,6 +10,7 @@ from ..const import (
     ATTR_POSITION,
     ATTR_TYPE,
     ATTR_VALUE,
+    ATTR_HELP,
     CommandClass,
     ValueGenre,
     ValueType,
@@ -221,6 +222,7 @@ def get_config_parameters(
             ATTR_LABEL: value.label,
             ATTR_TYPE: value.type.value,
             ATTR_PARAMETER: value.index.value,
+            ATTR_HELP: value.help,
         }
 
         if value.type == ValueType.BOOL:

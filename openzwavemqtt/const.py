@@ -16,6 +16,7 @@ ATTR_PARAMETER = "parameter"
 ATTR_POSITION = "position"
 ATTR_TYPE = "type"
 ATTR_VALUE = "value"
+ATTR_HELP = "help"
 
 # OZW Events
 EVENT_PLACEHOLDER = "missing"
