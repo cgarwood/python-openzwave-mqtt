@@ -64,7 +64,7 @@ class OZWValue(OZWNodeChildBase):
         return self.parent.command_class_id
 
     @property
-    def index(self) -> ValueIndex:
+    def index(self) -> Union[ValueIndex, int]:
         """Return Index."""
         try:
             # TODO: we can make this prettier by returning the
@@ -73,7 +73,7 @@ class OZWValue(OZWNodeChildBase):
             # Nothing breaks but it isn't very pretty
             return ValueIndex(self.data.get("Index"))
         except ValueError:
-            return ValueIndex.UNKNOWN
+            return int(self.data.get("Index"))
 
     @property
     def genre(self) -> ValueGenre:

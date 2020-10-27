@@ -14,6 +14,7 @@ from ..const import (
     CommandClass,
     ValueGenre,
     ValueType,
+    ValueIndex,
 )
 from ..exceptions import InvalidValueError, NotFoundError, WrongTypeError
 from ..manager import OZWManager
@@ -218,10 +219,15 @@ def get_config_parameters(
         ):
             continue
 
+        if isinstance(value.index, ValueIndex):
+            parameter = value.index.value
+        else:
+            parameter = value.index
+
         value_to_return = {
             ATTR_LABEL: value.label,
             ATTR_TYPE: value.type.value,
-            ATTR_PARAMETER: value.index.value,
+            ATTR_PARAMETER: parameter,
             ATTR_HELP: value.help,
         }
 
