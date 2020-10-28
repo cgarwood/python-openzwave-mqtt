@@ -65,7 +65,7 @@ class OZWValue(OZWNodeChildBase):
     @property
     def index(self) -> int:
         """Return Index."""
-        return self.data.get("Index")
+        return self.data["Index"]
 
     @property
     def genre(self) -> ValueGenre:
