@@ -8,7 +8,6 @@ from ..const import (
     CommandClass,
     ValueGenre,
     ValueType,
-    ValueIndex,
 )
 from .node_child_base import OZWNodeChildBase
 

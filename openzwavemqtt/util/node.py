@@ -14,7 +14,6 @@ from ..const import (
     CommandClass,
     ValueGenre,
     ValueType,
-    ValueIndex,
 )
 from ..exceptions import InvalidValueError, NotFoundError, WrongTypeError
 from ..manager import OZWManager
