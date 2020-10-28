@@ -219,15 +219,10 @@ def get_config_parameters(
         ):
             continue
 
-        if isinstance(value.index, ValueIndex):
-            parameter = value.index.value
-        else:
-            parameter = value.index
-
         value_to_return = {
             ATTR_LABEL: value.label,
             ATTR_TYPE: value.type.value,
-            ATTR_PARAMETER: parameter,
+            ATTR_PARAMETER: value.index,
             ATTR_HELP: value.help,
         }
 

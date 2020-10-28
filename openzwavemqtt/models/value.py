@@ -64,16 +64,9 @@ class OZWValue(OZWNodeChildBase):
         return self.parent.command_class_id
 
     @property
-    def index(self) -> Union[ValueIndex, int]:
+    def index(self) -> int:
         """Return Index."""
-        try:
-            # TODO: we can make this prettier by returning the
-            # ValueIndex belonging to this specific CC
-            # Now it will return the first value matching this int value
-            # Nothing breaks but it isn't very pretty
-            return ValueIndex(self.data.get("Index"))
-        except ValueError:
-            return int(self.data.get("Index"))
+        return self.data.get("Index")
 
     @property
     def genre(self) -> ValueGenre:
