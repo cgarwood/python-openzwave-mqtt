@@ -250,3 +250,18 @@ def get_config_parameters(
         values.append(value_to_return)
 
     return values
+
+
+def button_press(value: OZWValue):
+    """Simulate button press and release."""
+    valid = value.value_id_key
+
+    if not valid:
+        raise NotFoundError(f"ValueIDKey {value} not found")
+
+    if value.type == ValueType.BUTTON:
+        value.send_value(True)  # Press button
+        value.send_value(False)  # Release button
+
+    # Only accept BUTTON types
+    raise WrongTypeError(f"Value type of {value.type} for button_press")
