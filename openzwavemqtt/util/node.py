@@ -221,7 +221,7 @@ def get_config_parameters(
         value_to_return = {
             ATTR_LABEL: value.label,
             ATTR_TYPE: value.type.value,
-            ATTR_PARAMETER: value.index.value,
+            ATTR_PARAMETER: value.index,
             ATTR_HELP: value.help,
         }
 
