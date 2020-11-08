@@ -22,7 +22,7 @@ def get_code_slots(node: OZWNode) -> List[Dict[str, Union[int, bool, str]]]:
 
     return [
         {
-            ATTR_CODE_SLOT: value.index.value,
+            ATTR_CODE_SLOT: value.index,
             ATTR_NAME: value.label,
             ATTR_IN_USE: value.value_set,
         }
