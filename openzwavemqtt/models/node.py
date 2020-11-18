@@ -10,7 +10,7 @@ from ..const import (
     ValueIndex,
 )
 from .command_class import OZWCommandClass
-from .node_association import OZWNodeAssocation
+from .node_association import OZWNodeAssociation
 from .node_instance import OZWNodeInstance
 from .node_statistics import OZWNodeStatistics
 from .value import OZWValue
@@ -222,7 +222,7 @@ class OZWNode(ZWaveBase):
         """Create collections that Node supports."""
         return {
             "instance": ItemCollection(OZWNodeInstance),
-            "association": ItemCollection(OZWNodeAssocation),
+            "association": ItemCollection(OZWNodeAssociation),
             "statistics": OZWNodeStatistics,
         }
 
