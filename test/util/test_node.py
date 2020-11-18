@@ -134,7 +134,9 @@ def test_set_int_config_parameter(
 
 
 def test_invalid_config_parameter_types(
-    node, mock_value, mock_get_value,  # pylint: disable=unused-argument
+    node,
+    mock_value,
+    mock_get_value,  # pylint: disable=unused-argument
 ):
     """Test invalid config parameter types."""
     for value_type in (
