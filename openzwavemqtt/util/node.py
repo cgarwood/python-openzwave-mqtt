@@ -142,13 +142,13 @@ def _set_int_config_parameter(value: OZWValue, new_value: int) -> int:
     """Set a ValueType.INT config parameter."""
     try:
         new_value = int(new_value)
-    except ValueError:
+    except ValueError as err:
         raise WrongTypeError(
             (
                 f"Configuration parameter type {value.type} does not match "
                 f"the value type {type(new_value)}"
             )
-        )
+        ) from err
 
     if (value.max is not None and new_value > value.max) or (
         value.min is not None and new_value < value.min

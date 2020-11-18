@@ -26,10 +26,10 @@ def load_mgr_from_file(mgr: openzwavemqtt.OZWManager, file_path: str) -> None:
             topic, payload = line.strip().split(",", 1)
             try:
                 mgr.receive_message(topic, payload)
-            except ValueError:
+            except ValueError as err:
                 raise ExitException(
                     f"Unable to process message on topic {topic} as JSON: {payload}"
-                )
+                ) from err
 
 
 def camelcase_to_snake_case(name: str) -> str:
