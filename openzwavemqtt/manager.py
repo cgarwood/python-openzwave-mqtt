@@ -39,7 +39,7 @@ class OZWManager(ZWaveBase):
         topic_parts_raw = topic[len(self.options.topic_prefix) :].split("/")
         instance_id = self.options.instance_id
 
-        if instance_id is not None and topic_parts_raw[0] != instance_id:
+        if instance_id is not None and topic_parts_raw[0] != str(instance_id):
             return
 
         if topic_parts_raw[-1] == "":

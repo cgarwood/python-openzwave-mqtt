@@ -20,7 +20,7 @@ def test_receive_message(mgr):
     assert messages == 1
 
     # Assert that we can filter messages with incorrect instance id.
-    mgr.options.instance_id = "1"
+    mgr.options.instance_id = 1
     mgr.receive_message("OpenZWave/2/node/2/value/3/", '{"mock":"payload"}')
 
     assert messages == 1

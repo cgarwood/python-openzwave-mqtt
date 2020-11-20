@@ -12,7 +12,7 @@ class OZWOptions:
         self,
         send_message: Callable[[str, Union[str, dict]], None],
         topic_prefix: str = "OpenZWave/",
-        instance_id: Optional[str] = None,
+        instance_id: Optional[int] = None,
     ):
         """Initialize class."""
         self.send_message = send_message
