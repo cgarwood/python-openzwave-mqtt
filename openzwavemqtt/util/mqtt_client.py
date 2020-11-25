@@ -2,10 +2,12 @@
 import asyncio
 import json
 import logging
+import uuid
 from contextlib import AsyncExitStack
 from typing import Any, Callable, Dict, Optional, Set, Union
 
 from asyncio_mqtt import Client as AsyncioClient, MqttError
+import paho.mqtt.client as mqtt
 from paho.mqtt.properties import Properties
 from paho.mqtt.subscribeoptions import SubscribeOptions
 
@@ -30,6 +32,8 @@ class MQTTClient:
         self.managers: Dict[int, OZWManager] = {}
         self.host = host
         self.port = port
+        if "client_id" not in client_options:
+            client_options["client_id"] = mqtt.base62(uuid.uuid4().int, padding=22)
         self.client_options = client_options
         self.asyncio_client: AsyncioClient = None
         self.create_client()
