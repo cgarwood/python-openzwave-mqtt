@@ -14,6 +14,7 @@ from paho.mqtt.subscribeoptions import SubscribeOptions
 from openzwavemqtt import OZWManager, OZWOptions
 from openzwavemqtt.const import LOGGER
 
+PAHO_MQTT_LOGGER = logging.getLogger("paho.mqtt.client")
 TOPIC_OPENZWAVE = "OpenZWave"
 
 
@@ -34,6 +35,8 @@ class MQTTClient:
         self.port = port
         if "client_id" not in client_options:
             client_options["client_id"] = mqtt.base62(uuid.uuid4().int, padding=22)
+        if "logger" not in client_options:
+            client_options["logger"] = PAHO_MQTT_LOGGER
         self.client_options = client_options
         self.asyncio_client: AsyncioClient = None
         self.create_client()
@@ -203,7 +206,10 @@ class MQTTClient:
             # Stop the client if there are no managers left.
             assert self.client_task is not None
             self.client_task.cancel()
-            await self.client_task
+            try:
+                await self.client_task
+            except asyncio.CancelledError:
+                pass
 
 
 async def handle_messages(messages: Any, callback: Callable[[str, str], None]) -> None:
