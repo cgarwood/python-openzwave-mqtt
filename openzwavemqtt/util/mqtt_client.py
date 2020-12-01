@@ -30,7 +30,6 @@ class MQTTClient:
         **client_options: Any,
     ) -> None:
         """Set up client."""
-        self.manager: Optional[OZWManager] = None
         self.host = host
         self.port = port
         if "client_id" not in client_options:
@@ -121,10 +120,6 @@ class MQTTClient:
 
         await self.asyncio_client.unsubscribe(topic, **params)
 
-    def add_manager(self, manager: OZWManager) -> None:
-        """Add an OZW manager."""
-        self.manager = manager
-
     def send_message(self, topic: str, payload: Union[str, dict]) -> None:
         """Send a message from the manager options."""
         to_publish = (topic, json.dumps(payload))
@@ -136,13 +131,13 @@ class MQTTClient:
             to_publish: tuple = await self.publish_queue.get()
             await self.publish(*to_publish)
 
-    async def start_client(self) -> None:
-        """Start the client."""
+    async def start_client(self, manager: OZWManager) -> None:
+        """Start the client with the manager."""
         self.client_task = asyncio.current_task()
         # Reconnect automatically until the client is stopped.
         while True:
             try:
-                await self.subscribe_managers()
+                await self.subscribe_manager(manager)
             except MqttError as err:
                 self.reconnect_interval = min(self.reconnect_interval * 2, 900)
                 LOGGER.error(
@@ -153,7 +148,7 @@ class MQTTClient:
                 await asyncio.sleep(self.reconnect_interval)
                 self.create_client()  # reset connect/reconnect futures
 
-    async def subscribe_managers(self) -> None:
+    async def subscribe_manager(self, manager: OZWManager) -> None:
         """Connect and subscribe to manager topics."""
         async with AsyncExitStack() as stack:
             # Keep track of the asyncio tasks that we create, so that
@@ -174,27 +169,26 @@ class MQTTClient:
                 self.asyncio_client.unfiltered_messages()
             )
 
-            assert self.manager is not None
             messages_task = asyncio.create_task(
-                handle_messages(messages, self.manager.receive_message)
+                handle_messages(messages, manager.receive_message)
             )
             tasks.add(messages_task)
 
             # Note that we subscribe *after* starting the message loggers.
             # Otherwise, we may miss retained messages.
-            topic = f"{self.manager.options.topic_prefix}#"
+            topic = f"{manager.options.topic_prefix}#"
             await self.subscribe(topic)
 
             # Wait for everything to complete (or fail due to, e.g., network errors).
             # Make sure we await new tasks added while awaiting the first tasks.
             await asyncio.gather(*tasks)
 
-    async def remove_manager(self) -> None:
-        """Remove a manager."""
-        if self.manager is None or self.client_task is None:
+    async def unsubscribe_manager(self, manager: OZWManager) -> None:
+        """Unsubscribe a manager."""
+        if self.client_task is None:
             return
 
-        topic = f"{self.manager.options.topic_prefix}#"
+        topic = f"{manager.options.topic_prefix}#"
         await self.unsubscribe(topic)
         self.client_task.cancel()
         try:
@@ -232,9 +226,8 @@ async def run_client() -> None:
         send_message=client.send_message, topic_prefix=f"{TOPIC_OPENZWAVE}/"
     )
     manager = OZWManager(options)
-    client.add_manager(manager)
 
-    await client.start_client()
+    await client.start_client(manager)
 
 
 def main() -> None:
