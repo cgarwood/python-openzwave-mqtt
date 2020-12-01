@@ -36,6 +36,7 @@ class MQTTClient:
             client_options["client_id"] = mqtt.base62(uuid.uuid4().int, padding=22)
         if "logger" not in client_options:
             client_options["logger"] = PAHO_MQTT_LOGGER
+        client_options["clean_session"] = True
         self.client_options = client_options
         self.asyncio_client: AsyncioClient = None
         self.create_client()
@@ -178,17 +179,8 @@ class MQTTClient:
             topic = f"{manager.options.topic_prefix}#"
             await self.subscribe(topic)
 
-            # Unsubscribe the manager when exiting the context manager
-            # but before closing the client.
-            stack.push_async_callback(self._unsubscribe_manager, manager)
-
             # Wait for everything to complete (or fail due to, e.g., network errors).
             await asyncio.gather(*tasks)
-
-    async def _unsubscribe_manager(self, manager: OZWManager) -> None:
-        """Unsubscribe a manager."""
-        topic = f"{manager.options.topic_prefix}#"
-        await self.unsubscribe(topic)
 
 
 async def handle_messages(messages: Any, callback: Callable[[str, str], None]) -> None:
