@@ -22,7 +22,9 @@ setup(
     python_requires=">=3.7",
     include_package_data=True,
     zip_safe=False,
-    install_requires=["asyncio-mqtt"],
+    extras_require={
+        "mqtt-client": ["asyncio-mqtt"],
+    },
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
