@@ -138,7 +138,7 @@ class MQTTClient:
         # Reconnect automatically until the client is stopped.
         while True:
             try:
-                await self.subscribe_manager(manager)
+                await self._subscribe_manager(manager)
             except MqttError as err:
                 self.reconnect_interval = min(self.reconnect_interval * 2, 900)
                 LOGGER.error(
@@ -149,7 +149,7 @@ class MQTTClient:
                 await asyncio.sleep(self.reconnect_interval)
                 self.create_client()  # reset connect/reconnect futures
 
-    async def subscribe_manager(self, manager: OZWManager) -> None:
+    async def _subscribe_manager(self, manager: OZWManager) -> None:
         """Connect and subscribe to manager topics."""
         async with AsyncExitStack() as stack:
             # Keep track of the asyncio tasks that we create, so that
