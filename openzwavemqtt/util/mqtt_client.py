@@ -130,6 +130,7 @@ class MQTTClient:
         while True:
             to_publish: tuple = await self.publish_queue.get()
             await self.publish(*to_publish)
+            self.publish_queue.task_done()
 
     async def start_client(self, manager: OZWManager) -> None:
         """Start the client with the manager."""
