@@ -154,7 +154,6 @@ class MQTTClient:
             # Keep track of the asyncio tasks that we create, so that
             # we can cancel them on exit.
             tasks: Set[asyncio.Task] = set()
-            stack.push_async_callback(cancel_tasks, tasks)
 
             # Connect to the MQTT broker.
             await stack.enter_async_context(self.asyncio_client)
@@ -191,18 +190,6 @@ async def handle_messages(messages: Any, callback: Callable[[str, str], None]) -
         payload = message.payload.decode()
         LOGGER.debug("Received message topic: %s, payload: %s", message.topic, payload)
         callback(message.topic, payload)
-
-
-async def cancel_tasks(tasks: Set[asyncio.Task]) -> None:
-    """Cancel tasks."""
-    for task in tasks:
-        if task.done():
-            continue
-        task.cancel()
-        try:
-            await task
-        except asyncio.CancelledError:
-            pass
 
 
 async def run_client() -> None:
