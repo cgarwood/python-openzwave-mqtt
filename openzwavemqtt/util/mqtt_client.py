@@ -21,8 +21,6 @@ TOPIC_OPENZWAVE = "OpenZWave"
 class MQTTClient:
     """Represent an MQTT client."""
 
-    # pylint: disable=too-many-instance-attributes
-
     def __init__(
         self,
         host: str,
