@@ -40,7 +40,6 @@ class MQTTClient:
         self.asyncio_client: AsyncioClient = None
         self.create_client()
         self.reconnect_interval = 1
-        self.client_task: Optional[asyncio.Task] = None
         self.publish_queue: asyncio.Queue = asyncio.Queue()
 
     def create_client(self) -> None:
@@ -134,7 +133,6 @@ class MQTTClient:
 
     async def start_client(self, manager: OZWManager) -> None:
         """Start the client with the manager."""
-        self.client_task = asyncio.current_task()
         # Reconnect automatically until the client is stopped.
         while True:
             try:
