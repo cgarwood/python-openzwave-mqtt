@@ -180,21 +180,17 @@ class MQTTClient:
             topic = f"{manager.options.topic_prefix}#"
             await self.subscribe(topic)
 
+            # Unsubscribe the manager when exiting the context manager
+            # but before closing the client.
+            stack.push_async_callback(self._unsubscribe_manager, manager)
+
             # Wait for everything to complete (or fail due to, e.g., network errors).
             await asyncio.gather(*tasks)
 
-    async def unsubscribe_manager(self, manager: OZWManager) -> None:
+    async def _unsubscribe_manager(self, manager: OZWManager) -> None:
         """Unsubscribe a manager."""
-        if self.client_task is None:
-            return
-
         topic = f"{manager.options.topic_prefix}#"
         await self.unsubscribe(topic)
-        self.client_task.cancel()
-        try:
-            await self.client_task
-        except asyncio.CancelledError:
-            pass
 
 
 async def handle_messages(messages: Any, callback: Callable[[str, str], None]) -> None:
