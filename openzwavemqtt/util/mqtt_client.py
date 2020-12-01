@@ -125,7 +125,7 @@ class MQTTClient:
         to_publish = (topic, json.dumps(payload))
         self.publish_queue.put_nowait(to_publish)
 
-    async def handle_publish(self) -> None:
+    async def _handle_publish(self) -> None:
         """Publish messages as they are put on the queue."""
         while True:
             to_publish: tuple = await self.publish_queue.get()
@@ -162,7 +162,7 @@ class MQTTClient:
             # Reset the reconnect interval after successful connection.
             self.reconnect_interval = 1
 
-            publish_task = asyncio.create_task(self.handle_publish())
+            publish_task = asyncio.create_task(self._handle_publish())
             tasks.add(publish_task)
 
             # Messages that doesn't match a filter will get logged and handled here.
