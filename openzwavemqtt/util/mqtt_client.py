@@ -180,7 +180,6 @@ class MQTTClient:
             await self.subscribe(topic)
 
             # Wait for everything to complete (or fail due to, e.g., network errors).
-            # Make sure we await new tasks added while awaiting the first tasks.
             await asyncio.gather(*tasks)
 
     async def unsubscribe_manager(self, manager: OZWManager) -> None:
