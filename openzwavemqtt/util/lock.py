@@ -23,7 +23,7 @@ def get_code_slots(node: OZWNode) -> List[Dict[str, Union[int, bool, str]]]:
 
     return [
         {
-            ATTR_CODE_SLOT: value.index.value,
+            ATTR_CODE_SLOT: value.index,
             ATTR_NAME: value.label,
             ATTR_IN_USE: value.value_set,
         }
@@ -66,10 +66,10 @@ def get_usercodes(node: OZWNode) -> List[Dict[str, Optional[Union[int, bool, str
 
     return [
         {
-            ATTR_CODE_SLOT: value.index.value,
+            ATTR_CODE_SLOT: value.index,
             ATTR_NAME: value.label,
             ATTR_IN_USE: value.value_set,
-            ATTR_USERCODE: value.value if value.value_set else None,
+            ATTR_USERCODE: str(value.value) if value.value_set and else None,
         }
         for value in command_class.values()  # type: ignore
         if value.genre == ValueGenre.USER
