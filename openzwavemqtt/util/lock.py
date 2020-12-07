@@ -76,7 +76,7 @@ def get_usercodes(node: OZWNode) -> List[Dict[str, Optional[Union[int, bool, str
     ]
 
 
-def get_usercode(node: OZWNode, code_slot: int) -> Optional[int]:
+def get_usercode(node: OZWNode, code_slot: int) -> Optional[str]:
     """Get usercode from slot X on the lock."""
     value = node.get_value(CommandClass.USER_CODE, code_slot)
 

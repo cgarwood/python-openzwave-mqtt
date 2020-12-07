@@ -26,7 +26,7 @@ class OZWValue(OZWNodeChildBase):
         return self.data.get("Label")
 
     @property
-    def value(self) -> Optional[Union[int, Dict[str, Any], List[Dict[str, Any]]]]:
+    def value(self) -> Optional[Union[int, str, Dict[str, Any], List[Dict[str, Any]]]]:
         """Return Value."""
         return self.data.get("Value")
 
