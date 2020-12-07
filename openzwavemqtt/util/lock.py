@@ -83,4 +83,4 @@ def get_usercode(node: OZWNode, code_slot: int) -> Optional[str]:
     if not value:
         raise NotFoundError(f"Code slot {code_slot} not found")
 
-    return value.value if value.value_set else None
+    return str(value.value) if value.value_set else None
