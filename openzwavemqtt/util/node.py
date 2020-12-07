@@ -67,7 +67,7 @@ def _set_list_config_parameter(value: OZWValue, new_value: Union[int, str]) -> i
         pass
 
     if isinstance(new_value, (int, str)):
-        for option in value.value["List"]:  # type: ignore
+        for option in value.value["List"]:
             if new_value not in (option["Label"], option["Value"]):
                 continue
             try:
@@ -77,9 +77,7 @@ def _set_list_config_parameter(value: OZWValue, new_value: Union[int, str]) -> i
             value.send_value(payload)  # type: ignore
             return payload
 
-        raise NotFoundError(
-            f"New value is not a valid option ({value.value['List']})"  # type: ignore
-        )
+        raise NotFoundError(f"New value is not a valid option ({value.value['List']})")
 
     raise WrongTypeError(
         (
@@ -120,13 +118,10 @@ def _set_bitset_config_parameter(
         not any(
             bool(
                 ATTR_POSITION in new_bit
-                and new_bit[ATTR_POSITION] == int(bit["Position"])  # type: ignore
+                and new_bit[ATTR_POSITION] == int(bit["Position"])
             )
-            or (
-                ATTR_LABEL in new_bit
-                and new_bit[ATTR_LABEL] == bit["Label"]  # type: ignore
-            )
-            for bit in value.value  # type: ignore
+            or (ATTR_LABEL in new_bit and new_bit[ATTR_LABEL] == bit["Label"])
+            for bit in value.value
         )
         for new_bit in new_value
     ):
@@ -229,21 +224,21 @@ def get_config_parameters(
             value_to_return[ATTR_VALUE] = value.value
 
         elif value.type == ValueType.LIST:
-            value_to_return[ATTR_VALUE] = value.value["Selected"]  # type: ignore
-            value_to_return[ATTR_OPTIONS] = value.value["List"]  # type: ignore
+            value_to_return[ATTR_VALUE] = value.value["Selected"]
+            value_to_return[ATTR_OPTIONS] = value.value["List"]
 
         elif value.type == ValueType.BITSET:
             value_to_return[ATTR_VALUE] = [
                 {
-                    ATTR_LABEL: bit["Label"],  # type: ignore
-                    ATTR_POSITION: int(bit["Position"]),  # type: ignore
-                    ATTR_VALUE: bool(bit["Value"]),  # type: ignore
+                    ATTR_LABEL: bit["Label"],
+                    ATTR_POSITION: int(bit["Position"]),
+                    ATTR_VALUE: bool(bit["Value"]),
                 }
-                for bit in value.value  # type: ignore
+                for bit in value.value
             ]
 
         elif value.type in (ValueType.INT, ValueType.BYTE, ValueType.SHORT):
-            value_to_return[ATTR_VALUE] = int(value.value)  # type: ignore
+            value_to_return[ATTR_VALUE] = int(value.value)
             value_to_return[ATTR_MAX] = value.max
             value_to_return[ATTR_MIN] = value.min
 
