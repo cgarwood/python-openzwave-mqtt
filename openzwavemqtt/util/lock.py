@@ -1,5 +1,5 @@
 """Utility functions for OpenZWave locks."""
-from typing import Dict, List, Union
+from typing import Dict, List, Optional, Union
 
 from ..const import (
     ATTR_CODE_SLOT,
@@ -57,7 +57,7 @@ def clear_usercode(node: OZWNode, code_slot: int) -> None:
     value.send_value(code_slot)  # type: ignore
 
 
-def get_usercodes(node: OZWNode) -> List[Dict[str, Union[int, bool, str]]]:
+def get_usercodes(node: OZWNode) -> List[Dict[str, Optional[Union[int, bool, str]]]]:
     """Get all code slots and usercodes on the lock."""
     command_class = node.get_command_class(CommandClass.USER_CODE)
 
@@ -76,9 +76,7 @@ def get_usercodes(node: OZWNode) -> List[Dict[str, Union[int, bool, str]]]:
     ]
 
 
-def get_usercode(
-    node: OZWNode, code_slot: int
-) -> List[Dict[str, Union[int, bool, str]]]:
+def get_usercode(node: OZWNode, code_slot: int) -> Optional[int]:
     """Get usercode from slot X on the lock."""
     value = node.get_value(CommandClass.USER_CODE, code_slot)
 
