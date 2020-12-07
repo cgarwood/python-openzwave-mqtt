@@ -15,6 +15,7 @@ ATTR_OPTIONS = "options"
 ATTR_PARAMETER = "parameter"
 ATTR_POSITION = "position"
 ATTR_TYPE = "type"
+ATTR_USERCODE = "usercode"
 ATTR_VALUE = "value"
 ATTR_HELP = "help"
 
