@@ -69,7 +69,7 @@ def get_usercodes(node: OZWNode) -> List[Dict[str, Optional[Union[int, bool, str
             ATTR_CODE_SLOT: value.index,
             ATTR_NAME: value.label,
             ATTR_IN_USE: value.value_set,
-            ATTR_USERCODE: str(value.value) if value.value_set and else None,
+            ATTR_USERCODE: str(value.value) if value.value_set else None,
         }
         for value in command_class.values()  # type: ignore
         if value.genre == ValueGenre.USER
