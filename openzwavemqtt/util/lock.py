@@ -1,10 +1,11 @@
 """Utility functions for OpenZWave locks."""
-from typing import Dict, List, Union
+from typing import Dict, List, Optional, Union
 
 from ..const import (
     ATTR_CODE_SLOT,
     ATTR_IN_USE,
     ATTR_NAME,
+    ATTR_USERCODE,
     CommandClass,
     ValueGenre,
     ValueIndex,
@@ -54,3 +55,32 @@ def clear_usercode(node: OZWNode, code_slot: int) -> None:
     value.send_value(code_slot)  # type: ignore
     # Sending twice because the first time it doesn't take
     value.send_value(code_slot)  # type: ignore
+
+
+def get_usercodes(node: OZWNode) -> List[Dict[str, Optional[Union[int, bool, str]]]]:
+    """Get all code slots and usercodes on the lock."""
+    command_class = node.get_command_class(CommandClass.USER_CODE)
+
+    if not command_class:
+        raise NotSupportedError("Node doesn't have code slots")
+
+    return [
+        {
+            ATTR_CODE_SLOT: value.index,
+            ATTR_NAME: value.label,
+            ATTR_IN_USE: value.value_set,
+            ATTR_USERCODE: str(value.value) if value.value_set else None,
+        }
+        for value in command_class.values()  # type: ignore
+        if value.genre == ValueGenre.USER
+    ]
+
+
+def get_usercode(node: OZWNode, code_slot: int) -> Optional[str]:
+    """Get usercode from slot X on the lock."""
+    value = node.get_value(CommandClass.USER_CODE, code_slot)
+
+    if not value:
+        raise NotFoundError(f"Code slot {code_slot} not found")
+
+    return str(value.value) if value.value_set else None

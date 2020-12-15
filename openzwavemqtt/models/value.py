@@ -1,5 +1,5 @@
 """Model for the Value."""
-from typing import Any, cast, Dict, List, Optional, Union
+from typing import Any, cast, Optional
 
 from ..const import (
     EVENT_VALUE_ADDED,
@@ -25,7 +25,7 @@ class OZWValue(OZWNodeChildBase):
         return self.data.get("Label")
 
     @property
-    def value(self) -> Optional[Union[int, Dict[str, Any], List[Dict[str, Any]]]]:
+    def value(self) -> Any:
         """Return Value."""
         return self.data.get("Value")
 
