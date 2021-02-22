@@ -8,7 +8,7 @@ For Home Assistant integration, see the custom component [homeassistant-zwave_mq
 
 ## Install
 
-- Python 3.7+ is required. We support the two latest Python 3 versions released at any one time.
+- Python 3.8+ is required. We support the two latest Python 3 versions released at any one time.
 
 ```sh
 pip install python-openzwave-mqtt
