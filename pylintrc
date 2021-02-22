@@ -16,6 +16,7 @@ good-names=id,i,j,k,ex,Run,_,fp
 # import-outside-toplevel - TODO
 disable=
   bad-continuation,
+  duplicate-code,
   fixme,
   import-outside-toplevel,
   locally-disabled,
