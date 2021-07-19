@@ -1,1 +1,1 @@
-asyncio-mqtt==0.9.1
+asyncio-mqtt==0.10.0
