@@ -78,7 +78,7 @@ async def emulate(args: argparse.Namespace) -> None:
 
     # Parse data into a dict
     mqtt_data = {}
-    with open(args.filename, "rt") as fp:
+    with open(args.filename, "rt", encoding="utf-8") as fp:
         for line in fp:
             item_topic, item_payload = line.strip().split(",", 1)
             mqtt_data[item_topic] = json.loads(item_payload)
