@@ -21,7 +21,7 @@ def get_args() -> argparse.Namespace:
 
 def load_mgr_from_file(mgr: openzwavemqtt.OZWManager, file_path: str) -> None:
     """Load manager from file."""
-    with open(file_path, "rt") as fp:
+    with open(file_path, "rt", encoding="utf-8") as fp:
         for line in fp:
             topic, payload = line.strip().split(",", 1)
             try:
@@ -103,5 +103,5 @@ def main() -> None:
 if __name__ == "__main__":
     try:
         main()
-    except ExitException as err:
-        print(f"Fatal error: {err}")
+    except ExitException as error:
+        print(f"Fatal error: {error}")
