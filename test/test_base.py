@@ -75,12 +75,12 @@ def test_pending_messages(level1, options):
     # Only message for level3 has been received, level2 is none
     level1.process_message(deque(["2", "3"]), {"hello": 1})
     assert level1.get_level2(2) is None
-    assert events == []
+    assert not events
 
     # Message for level2, level3 received, level1 still None
     level1.process_message(deque(["2"]), {"hello": 1})
     assert level1.get_level2(2) is None
-    assert events == []
+    assert not events
 
     # Level 1 receives data, process all child messages.
     level1.process_message(deque(), {"info": 1})
