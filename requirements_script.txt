@@ -1,2 +1,2 @@
-git+git://github.com/beerfactory/hbmqtt.git@07c4c70f061003f208ad7e510b6e8fce4d7b3a6c#egg=hbmqtt
+git+https://github.com/beerfactory/hbmqtt.git@07c4c70f061003f208ad7e510b6e8fce4d7b3a6c#egg=hbmqtt
 paho-mqtt==1.6.1
