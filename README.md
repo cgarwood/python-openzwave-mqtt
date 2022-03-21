@@ -1,5 +1,7 @@
 # python-openzwave-mqtt
 
+**This repository has been archived as the upstream qt-openzwave project is no longer maintained.**
+
 Python library for the OpenZWave MQTT implementation.
 
 Consumes MQTT output from [https://github.com/OpenZWave/qt-openzwave](https://github.com/OpenZWave/qt-openzwave)
